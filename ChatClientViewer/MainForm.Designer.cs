@@ -33,10 +33,10 @@
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.ITContainer = new iTalk.iTalk_ThemeContainer();
             this.iTalk_Panel1 = new iTalk.iTalk_Panel();
-            this.webBrowser4 = new System.Windows.Forms.WebBrowser();
-            this.webBrowser3 = new System.Windows.Forms.WebBrowser();
-            this.webBrowser2 = new System.Windows.Forms.WebBrowser();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.WbChat = new System.Windows.Forms.WebBrowser();
+            this.WbBigFan = new System.Windows.Forms.WebBrowser();
+            this.WbKing = new System.Windows.Forms.WebBrowser();
+            this.WbBj = new System.Windows.Forms.WebBrowser();
             this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
             this.ITContainer.SuspendLayout();
             this.iTalk_Panel1.SuspendLayout();
@@ -48,8 +48,9 @@
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList.Images.SetKeyName(0, "bul_king.gif");
             this.imageList.Images.SetKeyName(1, "bul_red_heart.gif");
-            this.imageList.Images.SetKeyName(2, "bul_s_on.gif");
-            this.imageList.Images.SetKeyName(3, "bul_yellow_heart.gif");
+            this.imageList.Images.SetKeyName(2, "bul_yellow_heart.gif");
+            this.imageList.Images.SetKeyName(3, "bul_gray_heart.gif");
+            this.imageList.Images.SetKeyName(4, "bul_s_on.gif");
             // 
             // ITContainer
             // 
@@ -71,10 +72,10 @@
             // iTalk_Panel1
             // 
             this.iTalk_Panel1.BackColor = System.Drawing.Color.Transparent;
-            this.iTalk_Panel1.Controls.Add(this.webBrowser4);
-            this.iTalk_Panel1.Controls.Add(this.webBrowser3);
-            this.iTalk_Panel1.Controls.Add(this.webBrowser2);
-            this.iTalk_Panel1.Controls.Add(this.webBrowser1);
+            this.iTalk_Panel1.Controls.Add(this.WbChat);
+            this.iTalk_Panel1.Controls.Add(this.WbBigFan);
+            this.iTalk_Panel1.Controls.Add(this.WbKing);
+            this.iTalk_Panel1.Controls.Add(this.WbBj);
             this.iTalk_Panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.iTalk_Panel1.Location = new System.Drawing.Point(3, 28);
             this.iTalk_Panel1.Name = "iTalk_Panel1";
@@ -83,45 +84,45 @@
             this.iTalk_Panel1.TabIndex = 1;
             this.iTalk_Panel1.Text = "iTalk_Panel1";
             // 
-            // webBrowser4
+            // WbChat
             // 
-            this.webBrowser4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser4.Location = new System.Drawing.Point(5, 455);
-            this.webBrowser4.MinimumSize = new System.Drawing.Size(253, 360);
-            this.webBrowser4.Name = "webBrowser4";
-            this.webBrowser4.ScrollBarsEnabled = false;
-            this.webBrowser4.Size = new System.Drawing.Size(324, 361);
-            this.webBrowser4.TabIndex = 5;
+            this.WbChat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.WbChat.Location = new System.Drawing.Point(5, 455);
+            this.WbChat.MinimumSize = new System.Drawing.Size(253, 360);
+            this.WbChat.Name = "WbChat";
+            this.WbChat.ScrollBarsEnabled = false;
+            this.WbChat.Size = new System.Drawing.Size(324, 361);
+            this.WbChat.TabIndex = 5;
             // 
-            // webBrowser3
+            // WbBigFan
             // 
-            this.webBrowser3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.webBrowser3.Location = new System.Drawing.Point(5, 305);
-            this.webBrowser3.MinimumSize = new System.Drawing.Size(253, 150);
-            this.webBrowser3.Name = "webBrowser3";
-            this.webBrowser3.ScrollBarsEnabled = false;
-            this.webBrowser3.Size = new System.Drawing.Size(324, 150);
-            this.webBrowser3.TabIndex = 2;
+            this.WbBigFan.Dock = System.Windows.Forms.DockStyle.Top;
+            this.WbBigFan.Location = new System.Drawing.Point(5, 305);
+            this.WbBigFan.MinimumSize = new System.Drawing.Size(253, 150);
+            this.WbBigFan.Name = "WbBigFan";
+            this.WbBigFan.ScrollBarsEnabled = false;
+            this.WbBigFan.Size = new System.Drawing.Size(324, 150);
+            this.WbBigFan.TabIndex = 2;
             // 
-            // webBrowser2
+            // WbKing
             // 
-            this.webBrowser2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.webBrowser2.Location = new System.Drawing.Point(5, 155);
-            this.webBrowser2.MinimumSize = new System.Drawing.Size(253, 150);
-            this.webBrowser2.Name = "webBrowser2";
-            this.webBrowser2.ScrollBarsEnabled = false;
-            this.webBrowser2.Size = new System.Drawing.Size(324, 150);
-            this.webBrowser2.TabIndex = 1;
+            this.WbKing.Dock = System.Windows.Forms.DockStyle.Top;
+            this.WbKing.Location = new System.Drawing.Point(5, 155);
+            this.WbKing.MinimumSize = new System.Drawing.Size(253, 150);
+            this.WbKing.Name = "WbKing";
+            this.WbKing.ScrollBarsEnabled = false;
+            this.WbKing.Size = new System.Drawing.Size(324, 150);
+            this.WbKing.TabIndex = 1;
             // 
-            // webBrowser1
+            // WbBj
             // 
-            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.webBrowser1.Location = new System.Drawing.Point(5, 5);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(253, 150);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(324, 150);
-            this.webBrowser1.TabIndex = 0;
+            this.WbBj.Dock = System.Windows.Forms.DockStyle.Top;
+            this.WbBj.Location = new System.Drawing.Point(5, 5);
+            this.WbBj.MinimumSize = new System.Drawing.Size(253, 150);
+            this.WbBj.Name = "WbBj";
+            this.WbBj.ScrollBarsEnabled = false;
+            this.WbBj.Size = new System.Drawing.Size(324, 150);
+            this.WbBj.TabIndex = 0;
             // 
             // iTalk_ControlBox1
             // 
@@ -158,10 +159,10 @@
         private System.Windows.Forms.ImageList imageList;
         private iTalk.iTalk_ControlBox iTalk_ControlBox1;
         private iTalk.iTalk_Panel iTalk_Panel1;
-        private System.Windows.Forms.WebBrowser webBrowser1;
-        private System.Windows.Forms.WebBrowser webBrowser3;
-        private System.Windows.Forms.WebBrowser webBrowser2;
-        private System.Windows.Forms.WebBrowser webBrowser4;
+        private System.Windows.Forms.WebBrowser WbBj;
+        private System.Windows.Forms.WebBrowser WbBigFan;
+        private System.Windows.Forms.WebBrowser WbKing;
+        private System.Windows.Forms.WebBrowser WbChat;
     }
 }
 

@@ -256,6 +256,34 @@ namespace WebController
         }
 
         /// <summary>
+        /// 자바스크립트 실행 후 HTML 리턴
+        /// </summary>
+        /// <param name="javascript"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public ResultModel<string> ExecuteJSReturnHtml(string javascript, params object[] args)
+        {
+            // ex1) ->  ((IJavaScriptExecutor)driver).ExecuteScript("window.scrollTo(0, document.body.scrollHeight - 150)"); // 스크롤 이동
+            // ex2) -> SearchListPage.GoPage(0)
+            // (자바스크립트 코드 중 javascript: 는 제외해야 함)
+
+            var result = new ResultModel<string>();
+            try
+            {
+                var resultObject = ((IJavaScriptExecutor)Driver).ExecuteScript(javascript, args);
+                result.ResultValue = resultObject.ToString();
+                Driver.WaitForAjax();
+            }
+            catch (Exception e)
+            {
+                result.ResultValue = string.Empty;
+                result.Err = $"오류가 발생하였습니다. : [{e.Message}]";
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 선택자 객체 가져오기
         /// </summary>
         /// <param name="type"></param>
