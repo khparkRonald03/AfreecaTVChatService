@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HtmlFormat.cs" />
-    <Compile Include="IconUrl.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
