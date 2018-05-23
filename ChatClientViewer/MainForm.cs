@@ -16,14 +16,17 @@ namespace ChatClientViewer
         Thread BackGroundThread;
         string LoginUserID { get; set; } = string.Empty;
 
-        List<BjModel> Bjs = new List<BjModel>();
-        List<KingModel> Kings = new List<KingModel>();
-        List<BigFanModel> BigFans = new List<BigFanModel>();
-        List<ChatModel> Chats = new List<ChatModel>();
+        BjModel Bj = new BjModel();
 
-        Queue<BjModel> BjQueue = new Queue<BjModel>();
-        Queue<KingModel> KingQueue = new Queue<KingModel>();
-        Queue<BigFanModel> BigFanQueue = new Queue<BigFanModel>();
+        List<BjModel> cBjs = new List<BjModel>();
+        List<KingModel> cKings = new List<KingModel>();
+        List<UsersModel> cBigFans = new List<UsersModel>();
+
+        List<BjModel> nBjs = new List<BjModel>();
+        List<KingModel> nKings = new List<KingModel>();
+        List<UsersModel> nBigFans = new List<UsersModel>();
+
+        List<ChatModel> TempChatQueue = new List<ChatModel>();
         Queue<ChatModel> ChatQueue = new Queue<ChatModel>();
 
         public Main()
@@ -41,10 +44,14 @@ namespace ChatClientViewer
             (new ShowHelper()).ShowDialog();
 
             var ts = new ThreadStart(BackGroundProc);
-            BackGroundThread = new Thread(ts);
-            BackGroundThread.IsBackground = true;
+            BackGroundThread = new Thread(ts)
+            {
+                IsBackground = true
+            };
             BackGroundThread.Start();
         }
+
+        #region 방송 정보 수집 (채팅, 접속사용자)
 
         private void BackGroundProc()
         {
@@ -93,15 +100,17 @@ namespace ChatClientViewer
 
                     // 접속 사용자 수집
 
-                    // 열혈팬
-                    var ttt2 = GetNodes("return document.getElementById('lv_ul_topfan').innerHTML", "//li/a");
-                    // <span>flowerfree1</span><em>난마도특^^</em>
+                    // 현재 방송 bj 수집
+                    GetBj();
+
+                    // 열혈팬 수집
+                    GetBigFan();
 
                     // 팬
-                    var ttt3 = GetNodes("return document.getElementById('lv_ul_fan').innerHTML", "//li/a");
+                    var fanNodes = GetNodes("return document.getElementById('lv_ul_fan').innerHTML", "//li/a");
 
                     // 일반시청자
-                    var ttt4 = GetNodes("return document.getElementById('lv_ul_user').innerHTML", "//li/a");
+                    var userNodes = GetNodes("return document.getElementById('lv_ul_user').innerHTML", "//li/a");
 
 
                     // 채팅 수집
@@ -118,6 +127,54 @@ namespace ChatClientViewer
             }
         }
 
+        private void GetBj()
+        {
+            if (Bj != null && !string.IsNullOrEmpty(Bj.ID))
+                return;
+
+            var fanNode = GetNode("return document.getElementById('lv_p_bj').innerHTML", "//li/a");
+            if (fanNode == null)
+                return;
+
+            fanNode.Html;
+        }
+
+        /// <summary>
+        /// 빅팬 수집 (현재 방송의 빅팬이므로 바로 목록에 추가)
+        /// </summary>
+        private void GetBigFan()
+        {
+            // <span>flowerfree1</span><em>난마도특^^</em>
+            var bigFanNodes = GetNodes("return document.getElementById('lv_ul_topfan').innerHTML", "//li/a");
+
+            foreach (var bigFan in bigFanNodes)
+            {
+                var html = bigFan.Html;
+                var bfs = html.Split(new string[] { "<span>", "</span>", "<em>", "</em>" }, StringSplitOptions.None);
+                if (bfs != null && bfs.Length == 2)
+                {
+                    var bigFanModel = new UsersModel()
+                    {
+                        ID = bfs[0],
+                        Nic = bfs[1]
+                    };
+                    bigFanModel.BJs = new List<BjModel>
+                    {
+                        new BjModel()
+                        {
+                            ID = Bj.ID,
+                            Nic = Bj.Nic,
+                            IconUrl = string.Empty,
+                            PictureUrl = string.Empty
+                        }
+                    };
+                }
+
+
+            }
+        }
+
+
         /// <summary>
         /// 광고 스킵버튼 클릭
         /// </summary>
@@ -130,27 +187,42 @@ namespace ChatClientViewer
 
         private BeautifulNode GetNode(string script, string xPath)
         {
-            var ttttt0 = ChromeDriver.ExecuteJSReturnHtml(script);
-            var page0 = new BeautifulPage(ttttt0.ToString());
-            var ttt0 = page0.SelectNode(xPath);
+            int interval = 3;
+            do
+            {
+                var ttttt0 = ChromeDriver.ExecuteJSReturnHtml(script);
+                var page0 = new BeautifulPage(ttttt0.ToString());
+                var ttt0 = page0.SelectNode(xPath);
 
-            return ttt0;
+                if (ttt0 != null)
+                    return ttt0;
+
+                interval--;
+                Thread.Sleep(300);
+            }
+            while (interval > 0);
+
+            return null;
         }
 
         private IEnumerable<BeautifulNode> GetNodes(string script, string xPath)
         {
-            //int interval = 3;
-            //do
-            //{
+            int interval = 3;
+            do
+            {
                 var ttttt0 = ChromeDriver.ExecuteJSReturnHtml(script);
                 var page0 = new BeautifulPage(ttttt0.ToString());
                 var ttt0 = page0.SelectNodes(xPath);
 
-                //interval--;
-                //Thread.Sleep(300);
-            //}
-            //while (interval > 0);
-            return ttt0;
+                if (ttt0 != null)
+                    return ttt0;
+
+                interval--;
+                Thread.Sleep(300);
+            }
+            while (interval > 0);
+
+            return null;
         }
 
         /// <summary>
@@ -201,5 +273,21 @@ namespace ChatClientViewer
                 isFirst = false;
             }
         }
+
+        #endregion
+
+        #region 매칭정보
+
+        private void UsersMatching()
+        {
+
+        }
+
+        private void ChatMatching()
+        {
+
+        }
+
+        #endregion
     }
 }
