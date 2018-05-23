@@ -90,6 +90,7 @@
             this.WbChat.Location = new System.Drawing.Point(5, 455);
             this.WbChat.MinimumSize = new System.Drawing.Size(253, 360);
             this.WbChat.Name = "WbChat";
+            this.WbChat.ScriptErrorsSuppressed = true;
             this.WbChat.ScrollBarsEnabled = false;
             this.WbChat.Size = new System.Drawing.Size(324, 361);
             this.WbChat.TabIndex = 5;
@@ -100,6 +101,7 @@
             this.WbBigFan.Location = new System.Drawing.Point(5, 305);
             this.WbBigFan.MinimumSize = new System.Drawing.Size(253, 150);
             this.WbBigFan.Name = "WbBigFan";
+            this.WbBigFan.ScriptErrorsSuppressed = true;
             this.WbBigFan.ScrollBarsEnabled = false;
             this.WbBigFan.Size = new System.Drawing.Size(324, 150);
             this.WbBigFan.TabIndex = 2;
@@ -110,6 +112,7 @@
             this.WbKing.Location = new System.Drawing.Point(5, 155);
             this.WbKing.MinimumSize = new System.Drawing.Size(253, 150);
             this.WbKing.Name = "WbKing";
+            this.WbKing.ScriptErrorsSuppressed = true;
             this.WbKing.ScrollBarsEnabled = false;
             this.WbKing.Size = new System.Drawing.Size(324, 150);
             this.WbKing.TabIndex = 1;
@@ -120,6 +123,7 @@
             this.WbBj.Location = new System.Drawing.Point(5, 5);
             this.WbBj.MinimumSize = new System.Drawing.Size(253, 150);
             this.WbBj.Name = "WbBj";
+            this.WbBj.ScriptErrorsSuppressed = true;
             this.WbBj.ScrollBarsEnabled = false;
             this.WbBj.Size = new System.Drawing.Size(324, 150);
             this.WbBj.TabIndex = 0;

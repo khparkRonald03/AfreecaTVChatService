@@ -40,7 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UsersModel.cs" />
+    <Compile Include="IconUrl.cs" />
+    <Compile Include="UserModel.cs" />
     <Compile Include="BjModel.cs" />
     <Compile Include="ChatModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -2,7 +2,7 @@
 
 namespace DataModels
 {
-    public class UsersModel
+    public class UserModel
     {
         public UserType Type { get; set; }
 
@@ -30,6 +30,16 @@ namespace DataModels
         /// 아이콘 Url (하위 정보로 쓰일 때 사용) (BJ일경우?)
         /// </summary>
         public string IconUrl { get; set; }
+
+        /// <summary>
+        /// 새로 추가된 요소 여부
+        /// </summary>
+        public bool IsNew { get; set; }
+
+        /// <summary>
+        /// 화면에 표시할 html (재사용을 위해 캐시)
+        /// </summary>
+        public string Html { get; set; }
     }
 
     public enum UserType

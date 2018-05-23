@@ -71,7 +71,7 @@ namespace ChatClientViewer
         ";
 
         /// <summary>
-        /// Bj 하위요소 [파라미터 - 아이디, 회장 아이콘Url]
+        /// Bj 하위요소 [파라미터 - 닉네임, 회장 아이콘Url]
         /// </summary>
         public static string KingHtmlBjChild = @"
                     <span>{0}</span>
@@ -136,6 +136,12 @@ namespace ChatClientViewer
                 </div>
             </div>
         </div>
+
+        <script>
+            function AddHtml(html) {
+                document.getElementById('chat_memoyo').insertAdjacentHTML('beforeend', html);
+            }    
+        </script>
         ";
 
         /// <summary>
