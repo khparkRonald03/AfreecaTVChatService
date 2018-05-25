@@ -1,8 +1,11 @@
-﻿namespace DataModels
+﻿using System;
+
+namespace DataModels
 {
     /// <summary>
     /// 아프리카 아이콘 모음
     /// </summary>
+    [Serializable]
     public static class IconUrl
     {
         /// <summary>

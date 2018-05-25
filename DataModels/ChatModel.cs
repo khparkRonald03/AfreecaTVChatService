@@ -1,5 +1,8 @@
-﻿namespace DataModels
+﻿using System;
+
+namespace DataModels
 {
+    [Serializable]
     public class ChatModel
     {
         /// <summary>

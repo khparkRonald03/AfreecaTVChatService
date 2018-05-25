@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DataModels
 {
+    [Serializable]
     public class UserModel
     {
         public UserType Type { get; set; }

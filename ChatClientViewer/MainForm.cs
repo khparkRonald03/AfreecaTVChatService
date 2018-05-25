@@ -24,8 +24,8 @@ namespace ChatClientViewer
         List<UserModel> cUsers = new List<UserModel>();
         List<UserModel> nUsers = new List<UserModel>();
 
-        List<ChatModel> TempChatQueue = new List<ChatModel>();
-        Queue<ChatModel> ChatQueue = new Queue<ChatModel>();
+        //List<ChatModel> TempChatQueue = new List<ChatModel>();
+        List<ChatModel> ChatQueue = new List<ChatModel>();
 
         delegate void Control_Invoker();
         delegate void Control_Invoker_ParamInt(int i);
@@ -33,11 +33,6 @@ namespace ChatClientViewer
         public Main()
         {
             InitializeComponent();
-            
-            //webBrowser1.DocumentText = HtmlFormat.BjHtml;
-            //webBrowser2.DocumentText = HtmlFormat.KingHtml;
-            //webBrowser3.DocumentText = HtmlFormat.BigFanHtml;
-            //webBrowser4.DocumentText = HtmlFormat.ChatHtml;
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -145,7 +140,7 @@ namespace ChatClientViewer
         private void InitProc()
         {
             //test - http://play.afreecatv.com/khm11903/203956099
-            LoginUserID = "gks2wl"; // #######
+            LoginUserID = "dusckdno1"; // #######
 
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
 
@@ -243,7 +238,7 @@ namespace ChatClientViewer
                 var NicAndIdArray = NicAndId.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
                 if (NicAndIdArray != null && NicAndIdArray.Length == 3)
                 {
-                    TempChatQueue.Add(new ChatModel()
+                    ChatQueue.Add(new ChatModel()
                     {
                         ID = NicAndIdArray[1],
                         Nic = NicAndIdArray[0],
@@ -509,14 +504,14 @@ namespace ChatClientViewer
         /// </summary>
         private void ChatMatching()
         {
-            int cCnt = ChatQueue.Count;
+            //int cCnt = ChatQueue.Count;
 
-            var temp = ChatQueue;
-            foreach (var chat in ChatQueue)
-            {
-                //if (cUsers.Any(u => u.ID == chat.ID)) // test #####################
-                ChatQueue.Enqueue(chat);
-            }
+            //var temp = ChatQueue;
+            //foreach (var chat in ChatQueue)
+            //{
+            //    //if (cUsers.Any(u => u.ID == chat.ID)) // test #####################
+            //    ChatQueue.Enqueue(chat);
+            //}
 
             SetChat();
         }
@@ -539,13 +534,19 @@ namespace ChatClientViewer
                 }
                 else
                 {
-                    var tempList = CloneList(TempChatQueue);
-                    TempChatQueue.Clear();
-
                     // 아니면 하단에 추가
-                    foreach (var chat in tempList)
+                    int endIndx = ChatQueue.Count;
+                    for (int idx = 0; idx < endIndx; idx++)
                     {
-                        WbChat.Document.InvokeScript("AddHtml", new object[] { chat.Html });
+                        if (!ChatQueue[idx].IsNew)
+                            continue;
+
+                        var html = ChatQueue[idx].Html;
+                        html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-60px;'>");
+
+                        WbChat.Document.InvokeScript("AddHtml", new object[] { ChatQueue[idx].Html });
+                        ChatQueue[idx].IsNew = false;
+                        Thread.Sleep(200);
                     }
                 }
             }
