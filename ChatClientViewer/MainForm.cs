@@ -28,7 +28,7 @@ namespace ChatClientViewer
         List<ChatModel> ChatQueue = new List<ChatModel>();
 
         delegate void Control_Invoker();
-        delegate void Control_Invoker_ParamInt(int i);
+        delegate void Control_Invoker_ParamStr(string s);
 
         public Main()
         {
@@ -165,8 +165,6 @@ namespace ChatClientViewer
             int interval = 3;
             do
             {
-                //var t = ChromeDriver.ExecuteJSReturnHtml(script);
-                //var page0 = new BeautifulPage(t.ResultValue);
                 var page0 = new BeautifulPage(script);
 
                 var ttt0 = page0.SelectNodes(xPath).ToList();
@@ -504,51 +502,53 @@ namespace ChatClientViewer
         /// </summary>
         private void ChatMatching()
         {
-            //int cCnt = ChatQueue.Count;
+            // 아니면 하단에 추가
+            string html = string.Empty;
+            int endIndx = ChatQueue.Count;
+            for (int idx = 0; idx < endIndx; idx++)
+            {
+                if (!ChatQueue[idx].IsNew)
+                    continue;
 
-            //var temp = ChatQueue;
-            //foreach (var chat in ChatQueue)
-            //{
-            //    //if (cUsers.Any(u => u.ID == chat.ID)) // test #####################
-            //    ChatQueue.Enqueue(chat);
-            //}
+                html = ChatQueue[idx].Html;
+                    
+                ChatQueue[idx].IsNew = false;
+            }
 
-            SetChat();
+            html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-30px;'>");
+            SetChat(html);
+            //Thread.Sleep(10000);
         }
 
-        private void SetChat()
+        private void InitChat()
         {
             if (WbChat.InvokeRequired)
             {
-                var ci = new Control_Invoker(SetChat);
+                var ci = new Control_Invoker(InitChat);
                 this.BeginInvoke(ci, null);
             }
             else
             {
-                // 크로스 스레드 처리해주기
+                string paramHtml = HtmlFormat.ChatHtml;
+                WbChat.DocumentText = paramHtml;
+            }
+
+        }
+
+        private void SetChat(string html)
+        {
+            if (WbChat.InvokeRequired)
+            {
+                var ci = new Control_Invoker_ParamStr(SetChat);
+                this.BeginInvoke(ci, html);
+            }
+            else
+            {
                 // 처음이면 폼 모두 생성
                 if (string.IsNullOrEmpty(WbChat.DocumentText))
-                {
-                    string paramHtml = HtmlFormat.ChatHtml;
-                    WbChat.DocumentText = paramHtml;
-                }
+                    InitChat();
                 else
-                {
-                    // 아니면 하단에 추가
-                    int endIndx = ChatQueue.Count;
-                    for (int idx = 0; idx < endIndx; idx++)
-                    {
-                        if (!ChatQueue[idx].IsNew)
-                            continue;
-
-                        var html = ChatQueue[idx].Html;
-                        html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-60px;'>");
-
-                        WbChat.Document.InvokeScript("AddHtml", new object[] { ChatQueue[idx].Html });
-                        ChatQueue[idx].IsNew = false;
-                        Thread.Sleep(200);
-                    }
-                }
+                    WbChat.Document.InvokeScript("AddHtml", new object[] { html });
             }
             
         }
