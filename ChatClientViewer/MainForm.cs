@@ -8,6 +8,8 @@ using System.Threading;
 using System.Windows.Forms;
 using WebController;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace ChatClientViewer
 {
@@ -56,6 +58,9 @@ namespace ChatClientViewer
         {
             ChromeDriver = new Controller(false);
 
+            // 먹통 됐을때 다시 시작
+            reStart:
+
             var startResult = ChromeDriver.Start();
             if (!startResult.ResultValue)
             {
@@ -65,60 +70,73 @@ namespace ChatClientViewer
 
             // 페이지 상태 초기화
             InitProc();
-
+            bool isFirst = true;
+            bool isStart = false;
+            int startInterval = 10;
             while (true)
             {
+                Thread.Sleep(7000);
                 //광고스킵
-                ClickPromotionBtnSkip();
+                if (!isStart)
+                    ClickPromotionBtnSkip();
 
                 // 채팅 가져오기
-                var ttt0 = GetChatNodes("return document.getElementById('chat_memoyo').innerHTML", "//dl");
+                //var ttt0 = GetChatNodes("return document.getElementById('chat_memoyo').innerHTML", "//dl");
+                var pageSource = ChromeDriver.GetPageSource();
+                var ttt0 = GetChatNodes(pageSource.ResultValue, "//*[@id='chat_memoyo']/dl");
 
-                if (ttt0.Count > 0)
+
+                if (ttt0.Count <= 1)
                 {
-                    // 접속 사용자 버튼 클릭
-                    ShowSetboxViewer();
-
-                    // 접속 사용자 수집
-
-                    // 현재 방송 bj 수집
-                    GetBj();
-
-                    // 열혈팬 수집
-                    GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//li/a");
-
-                    // 팬 수집
-                    GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//li/a");
-
-                    // 일반시청자
-                    GetUser("return document.getElementById('lv_ul_user').innerHTML", "//li/a");
-
-
-                    // 채팅 수집
-                    GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
+                    Thread.Sleep(300);
+                    startInterval--;
+                    if (startInterval == 0)
+                    {
+                        ChromeDriver.Close();
+                        goto reStart;
+                    }
+                    continue;
                 }
 
-                BackGroundMatchingProc();
-                Thread.Sleep(1500);
+                // 정상 시작
+                if (ttt0.Count > 1)
+                {
+                    // 접속 사용자 버튼 클릭
+                    if (!ShowSetboxViewer())
+                        continue;
+
+                    // 접속 사용자 수집 무한루프
+                    while (true)
+                    {
+                        // 현재 방송 bj 수집
+                        if (isFirst)
+                        {
+                            GetBj();
+                            isFirst = false;
+                        }
+
+                        isStart = true;
+
+                        // 열혈팬 수집
+                        GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
+
+                        // 팬 수집
+                        GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//a");
+
+                        // 일반시청자
+                        GetUser("return document.getElementById('lv_ul_user').innerHTML", "//a");
+
+                        // 채팅 수집
+                        GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
+
+                        // 
+                        BackGroundMatchingProc();
+                        Thread.Sleep(1500);
+                    }
+                    
+                }
+                
             }
-        }
-
-        private List<BeautifulNode> GetChatNodes(string script, string xPath)
-        {
-            var script0 = script;
-            int interval = 3;
-            do
-            {
-                var t = ChromeDriver.ExecuteJSReturnHtml(script0);
-                var page0 = new BeautifulPage(t.ResultValue);
-                if (page0.SelectNodes(xPath) is List<BeautifulNode> ttt0 && ttt0.Count > 0)
-                    return ttt0;
-
-                interval--;
-            }
-            while (interval > 0);
-
-            return new List<BeautifulNode>();
         }
 
         /// <summary>
@@ -126,6 +144,9 @@ namespace ChatClientViewer
         /// </summary>
         private void InitProc()
         {
+            //test - http://play.afreecatv.com/khm11903/203956099
+            LoginUserID = "gks2wl"; // #######
+
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
 
             Thread.Sleep(500);
@@ -144,17 +165,47 @@ namespace ChatClientViewer
             Thread.Sleep(500);
         }
 
+        private List<BeautifulNode> GetChatNodes(string script, string xPath)
+        {
+            int interval = 3;
+            do
+            {
+                //var t = ChromeDriver.ExecuteJSReturnHtml(script);
+                //var page0 = new BeautifulPage(t.ResultValue);
+                var page0 = new BeautifulPage(script);
+
+                var ttt0 = page0.SelectNodes(xPath).ToList();
+                if (ttt0 != null && ttt0.Count > 0)
+                    return ttt0;
+
+                interval--;
+
+                Thread.Sleep(1500);
+            }
+            while (interval > 0);
+
+            return new List<BeautifulNode>();
+        }
+
         private void GetBj()
         {
             if (Bj != null && !string.IsNullOrEmpty(Bj.ID))
                 return;
 
-            var fanNode = GetNode("return document.getElementById('lv_p_bj').innerHTML", "//li/a");
+            var fanNode = GetNode("return document.getElementById('lv_p_bj').innerHTML", "//a");
             if (fanNode == null)
                 return;
 
             var html = fanNode.Html;
-            var bfs = html.Split(new string[] { "<span>", "</span>", "<em>", "</em>" }, StringSplitOptions.None);
+            if (html == null)
+                return;
+
+            var bfs = html.Split(new string[] { "<span>", "</span>", "<em>", "</em>" }, StringSplitOptions.RemoveEmptyEntries);
+            if (bfs != null && bfs.Length == 2)
+            {
+                Bj.ID = bfs[1];
+                Bj.Nic = bfs[0];
+            }
         }
 
         /// <summary>
@@ -168,7 +219,7 @@ namespace ChatClientViewer
             foreach (var bigFan in bigFanNodes)
             {
                 var html = bigFan.Html;
-                var bfs = html.Split(new string[] { "<span>", "</span>", "<em>", "</em>" }, StringSplitOptions.None);
+                var bfs = html.Split(new string[] { "<span>", "</span>", "<em>", "</em>" }, StringSplitOptions.RemoveEmptyEntries);
                 if (bfs != null && bfs.Length == 2)
                 {
                     var userModel = new UserModel()
@@ -188,15 +239,16 @@ namespace ChatClientViewer
             var ttt00 = GetNodes(script, xPath);
             foreach (var tt in ttt00)
             {
-                var NicAndId = tt.Text; // nic(id):
-                var NicAndIdArray = NicAndId.Split(new string[] { "(", ")" }, StringSplitOptions.None);
-                if (NicAndIdArray != null && NicAndIdArray.Length == 2)
+                var NicAndId = tt.Text; // nic(id):대화
+                var NicAndIdArray = NicAndId.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
+                if (NicAndIdArray != null && NicAndIdArray.Length == 3)
                 {
                     TempChatQueue.Add(new ChatModel()
                     {
                         ID = NicAndIdArray[1],
                         Nic = NicAndIdArray[0],
-                        Html = tt.Html,
+                        Html = $"<dl class=''> {tt.Html} </dl>",
+                        IsNew = true
                     });
                 }
                 else
@@ -225,7 +277,7 @@ namespace ChatClientViewer
             do
             {
                 var ttttt0 = ChromeDriver.ExecuteJSReturnHtml(script);
-                var page0 = new BeautifulPage(ttttt0.ToString());
+                var page0 = new BeautifulPage(ttttt0.ResultValue);
                 var ttt0 = page0.SelectNode(xPath);
 
                 if (ttt0 != null)
@@ -245,7 +297,8 @@ namespace ChatClientViewer
             do
             {
                 var ttttt0 = ChromeDriver.ExecuteJSReturnHtml(script);
-                var page0 = new BeautifulPage(ttttt0.ToString());
+                var page0 = new BeautifulPage(ttttt0.ResultValue);
+                //var page0 = new BeautifulPage(script);
                 var ttt0 = page0.SelectNodes(xPath);
 
                 if (ttt0 != null)
@@ -264,18 +317,22 @@ namespace ChatClientViewer
         /// </summary>
         private bool ShowSetboxViewer()
         {
-            // 채팅 클래스 on 인지 확인
-            // //*[@id="setbox_viewer"]/a    
+            
             int interval = 3;
             do
             {
                 var ttt = GetNode("return document.getElementById('setbox_viewer').innerHTML", "//a");
+
+                // 채팅 클래스 on 인지 확인
                 if (ttt.Class == "on")
                     return true;
-                
-                var script0 = "$('#setbox_viewer').click()";
-                var t = ChromeDriver.ExecuteJS(script0);
 
+                var script0 = "$('#setbox_viewer > a').click()";
+                var t = ChromeDriver.ExecuteJS(script0);
+                var tttt = GetNode("return document.getElementById('setbox_viewer').innerHTML", "//a");
+                if (tttt.Class == "on")
+                    return true;
+                
                 interval--;
                 Thread.Sleep(300);
             }
@@ -358,7 +415,7 @@ namespace ChatClientViewer
             foreach (var user in cUsers)
                 user.IsNew = false;
 
-            // 매칭 서비스에서 데이터 받아오기
+            // 매칭 서비스에서 데이터 받아오기 ##########
 
             if (nUsers.Count <= 0)
                 return;
@@ -454,44 +511,39 @@ namespace ChatClientViewer
         {
             int cCnt = ChatQueue.Count;
 
-            foreach (var chat in TempChatQueue)
+            var temp = ChatQueue;
+            foreach (var chat in ChatQueue)
             {
-                if (cUsers.Any(u => u.ID == chat.ID))
-                    ChatQueue.Enqueue(chat);
+                //if (cUsers.Any(u => u.ID == chat.ID)) // test #####################
+                ChatQueue.Enqueue(chat);
             }
 
-            if (cCnt == ChatQueue.Count)
-                return;
-
-            SetChat(cCnt);
+            SetChat();
         }
 
-        private void SetChat(int cCnt)
+        private void SetChat()
         {
             if (WbChat.InvokeRequired)
             {
-                var ci = new Control_Invoker_ParamInt(SetChat);
-                this.BeginInvoke(ci, cCnt);
+                var ci = new Control_Invoker(SetChat);
+                this.BeginInvoke(ci, null);
             }
             else
             {
                 // 크로스 스레드 처리해주기
                 // 처음이면 폼 모두 생성
-                if (cCnt == 0)
+                if (string.IsNullOrEmpty(WbChat.DocumentText))
                 {
-                    string html = string.Empty;
-                    foreach (var chatq in ChatQueue)
-                    {
-                        html += chatq.Html;
-                    }
-
-                    string paramHtml = string.Format(HtmlFormat.ChatHtml, html);
+                    string paramHtml = HtmlFormat.ChatHtml;
                     WbChat.DocumentText = paramHtml;
                 }
                 else
                 {
+                    var tempList = CloneList(TempChatQueue);
+                    TempChatQueue.Clear();
+
                     // 아니면 하단에 추가
-                    foreach (var chat in TempChatQueue)
+                    foreach (var chat in tempList)
                     {
                         WbChat.Document.InvokeScript("AddHtml", new object[] { chat.Html });
                     }
@@ -500,6 +552,15 @@ namespace ChatClientViewer
             
         }
 
+        public List<T> CloneList<T>(List<T> oldList)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            MemoryStream stream = new MemoryStream();
+            formatter.Serialize(stream, oldList);
+            stream.Position = 0;
+            return (List<T>)formatter.Deserialize(stream);
+        }
         #endregion
+
     }
 }

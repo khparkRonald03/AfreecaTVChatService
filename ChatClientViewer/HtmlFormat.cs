@@ -123,7 +123,7 @@ namespace ChatClientViewer
         #region 채팅
 
         public static string ChatHtml = @"
-        < link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
+        <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
         <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
         <!--<div id='chatbox' class='chatbox' style='width:100%;'>-->
         <div class='fan_rank' style='height:360px;overflow:auto;'>
@@ -132,7 +132,7 @@ namespace ChatClientViewer
             </div>
             <div id='chat_area' class='chat_area' style=''>
                 <div id='chat_memoyo' class='chat_memoyo'>
-                    {0}
+                    
                 </div>
             </div>
         </div>

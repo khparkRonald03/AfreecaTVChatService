@@ -16,5 +16,10 @@
         /// 수집 된 채팅 html
         /// </summary>
         public string Html { get; set; }
+
+        /// <summary>
+        /// 새로추가된 채팅인지 여부
+        /// </summary>
+        public bool IsNew { get; set; }
     }
 }

@@ -40,6 +40,7 @@ namespace WebController
             {
                 Options = new ChromeOptions();
                 Options.AddArgument("headless");
+                Options.AddArgument("mute-audio");
 
                 Service = ChromeDriverService.CreateDefaultService();
                 Service.HideCommandPromptWindow = true;
