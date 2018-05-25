@@ -548,7 +548,7 @@ namespace ChatClientViewer
                 if (string.IsNullOrEmpty(WbChat.DocumentText))
                     InitChat();
                 else
-                    WbChat.Document.InvokeScript("AddHtml", new object[] { html });
+                    WbChat.Document.InvokeScript("AddChatHtml", new object[] { html });
             }
             
         }
