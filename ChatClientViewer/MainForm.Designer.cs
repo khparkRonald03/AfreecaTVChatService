@@ -32,14 +32,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.ITContainer = new iTalk.iTalk_ThemeContainer();
-            this.iTalk_Panel1 = new iTalk.iTalk_Panel();
             this.WbChat = new System.Windows.Forms.WebBrowser();
-            this.WbBigFan = new System.Windows.Forms.WebBrowser();
-            this.WbKing = new System.Windows.Forms.WebBrowser();
-            this.WbBj = new System.Windows.Forms.WebBrowser();
+            this.WbUser = new System.Windows.Forms.WebBrowser();
             this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.ITContainer.SuspendLayout();
-            this.iTalk_Panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageList
@@ -55,7 +56,7 @@
             // ITContainer
             // 
             this.ITContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(246)))), ((int)(((byte)(246)))));
-            this.ITContainer.Controls.Add(this.iTalk_Panel1);
+            this.ITContainer.Controls.Add(this.splitContainer1);
             this.ITContainer.Controls.Add(this.iTalk_ControlBox1);
             this.ITContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ITContainer.Font = new System.Drawing.Font("Segoe UI", 8F);
@@ -69,64 +70,23 @@
             this.ITContainer.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultLocation;
             this.ITContainer.TabIndex = 0;
             // 
-            // iTalk_Panel1
-            // 
-            this.iTalk_Panel1.BackColor = System.Drawing.Color.Transparent;
-            this.iTalk_Panel1.Controls.Add(this.WbChat);
-            this.iTalk_Panel1.Controls.Add(this.WbBigFan);
-            this.iTalk_Panel1.Controls.Add(this.WbKing);
-            this.iTalk_Panel1.Controls.Add(this.WbBj);
-            this.iTalk_Panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.iTalk_Panel1.Location = new System.Drawing.Point(3, 28);
-            this.iTalk_Panel1.Name = "iTalk_Panel1";
-            this.iTalk_Panel1.Padding = new System.Windows.Forms.Padding(5);
-            this.iTalk_Panel1.Size = new System.Drawing.Size(334, 821);
-            this.iTalk_Panel1.TabIndex = 1;
-            this.iTalk_Panel1.Text = "iTalk_Panel1";
-            // 
             // WbChat
             // 
             this.WbChat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WbChat.Location = new System.Drawing.Point(5, 455);
-            this.WbChat.MinimumSize = new System.Drawing.Size(253, 360);
+            this.WbChat.Location = new System.Drawing.Point(0, 0);
             this.WbChat.Name = "WbChat";
             this.WbChat.ScriptErrorsSuppressed = true;
-            this.WbChat.ScrollBarsEnabled = false;
-            this.WbChat.Size = new System.Drawing.Size(324, 361);
+            this.WbChat.Size = new System.Drawing.Size(334, 506);
             this.WbChat.TabIndex = 5;
             // 
-            // WbBigFan
+            // WbUser
             // 
-            this.WbBigFan.Dock = System.Windows.Forms.DockStyle.Top;
-            this.WbBigFan.Location = new System.Drawing.Point(5, 305);
-            this.WbBigFan.MinimumSize = new System.Drawing.Size(253, 150);
-            this.WbBigFan.Name = "WbBigFan";
-            this.WbBigFan.ScriptErrorsSuppressed = true;
-            this.WbBigFan.ScrollBarsEnabled = false;
-            this.WbBigFan.Size = new System.Drawing.Size(324, 150);
-            this.WbBigFan.TabIndex = 2;
-            // 
-            // WbKing
-            // 
-            this.WbKing.Dock = System.Windows.Forms.DockStyle.Top;
-            this.WbKing.Location = new System.Drawing.Point(5, 155);
-            this.WbKing.MinimumSize = new System.Drawing.Size(253, 150);
-            this.WbKing.Name = "WbKing";
-            this.WbKing.ScriptErrorsSuppressed = true;
-            this.WbKing.ScrollBarsEnabled = false;
-            this.WbKing.Size = new System.Drawing.Size(324, 150);
-            this.WbKing.TabIndex = 1;
-            // 
-            // WbBj
-            // 
-            this.WbBj.Dock = System.Windows.Forms.DockStyle.Top;
-            this.WbBj.Location = new System.Drawing.Point(5, 5);
-            this.WbBj.MinimumSize = new System.Drawing.Size(253, 150);
-            this.WbBj.Name = "WbBj";
-            this.WbBj.ScriptErrorsSuppressed = true;
-            this.WbBj.ScrollBarsEnabled = false;
-            this.WbBj.Size = new System.Drawing.Size(324, 150);
-            this.WbBj.TabIndex = 0;
+            this.WbUser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.WbUser.Location = new System.Drawing.Point(0, 0);
+            this.WbUser.Name = "WbUser";
+            this.WbUser.ScriptErrorsSuppressed = true;
+            this.WbUser.Size = new System.Drawing.Size(334, 311);
+            this.WbUser.TabIndex = 0;
             // 
             // iTalk_ControlBox1
             // 
@@ -137,6 +97,26 @@
             this.iTalk_ControlBox1.Size = new System.Drawing.Size(77, 19);
             this.iTalk_ControlBox1.TabIndex = 0;
             this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 28);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.AccessibleRole = System.Windows.Forms.AccessibleRole.ScrollBar;
+            this.splitContainer1.Panel1.Controls.Add(this.WbUser);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.AutoScroll = true;
+            this.splitContainer1.Panel2.Controls.Add(this.WbChat);
+            this.splitContainer1.Size = new System.Drawing.Size(334, 821);
+            this.splitContainer1.SplitterDistance = 311;
+            this.splitContainer1.TabIndex = 6;
             // 
             // Main
             // 
@@ -152,7 +132,10 @@
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.Load += new System.EventHandler(this.Main_Load);
             this.ITContainer.ResumeLayout(false);
-            this.iTalk_Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -162,11 +145,9 @@
         private iTalk.iTalk_ThemeContainer ITContainer;
         private System.Windows.Forms.ImageList imageList;
         private iTalk.iTalk_ControlBox iTalk_ControlBox1;
-        private iTalk.iTalk_Panel iTalk_Panel1;
-        private System.Windows.Forms.WebBrowser WbBj;
-        private System.Windows.Forms.WebBrowser WbBigFan;
-        private System.Windows.Forms.WebBrowser WbKing;
+        private System.Windows.Forms.WebBrowser WbUser;
         private System.Windows.Forms.WebBrowser WbChat;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 

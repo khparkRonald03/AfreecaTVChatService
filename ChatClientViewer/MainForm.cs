@@ -10,6 +10,7 @@ using WebController;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Timers;
 
 namespace ChatClientViewer
 {
@@ -17,6 +18,8 @@ namespace ChatClientViewer
     {
         Controller ChromeDriver;
         Thread BackGroundCrawlingThread;
+        System.Timers.Timer timer = new System.Timers.Timer();
+
         string LoginUserID { get; set; } = string.Empty;
 
         BjModel Bj = new BjModel();
@@ -39,12 +42,16 @@ namespace ChatClientViewer
         {
             (new ShowHelper()).ShowDialog();
 
+            WbUser.DocumentText = HtmlFormat.UserContainerHtml;
+            WbChat.DocumentText = HtmlFormat.ChatHtml;
+
             var ts1 = new ThreadStart(BackGroundCrawling);
             BackGroundCrawlingThread = new Thread(ts1)
             {
                 IsBackground = true
             };
             BackGroundCrawlingThread.Start();
+
         }
 
         #region 방송 정보 수집 (채팅, 접속사용자)
@@ -93,45 +100,44 @@ namespace ChatClientViewer
                     continue;
                 }
 
-                // 정상 시작
-                if (ttt0.Count > 1)
+                // 현재 방송 bj 수집
+                if (isFirst)
                 {
-                    // 접속 사용자 버튼 클릭
-                    if (!ShowSetboxViewer())
-                        continue;
-
-                    // 접속 사용자 수집 무한루프
-                    while (true)
-                    {
-                        // 현재 방송 bj 수집
-                        if (isFirst)
-                        {
-                            GetBj();
-                            isFirst = false;
-                        }
-
-                        isStart = true;
-
-                        // 열혈팬 수집
-                        GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
-
-                        // 팬 수집
-                        GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//a");
-
-                        // 일반시청자
-                        GetUser("return document.getElementById('lv_ul_user').innerHTML", "//a");
-
-                        // 채팅 수집
-                        GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
-
-                        // 
-                        BackGroundMatchingProc();
-                        Thread.Sleep(1500);
-                    }
-                    
+                    GetBj();
+                    isFirst = false;
                 }
-                
+
+                isStart = true;
+
+                // 접속 사용자 버튼 클릭
+                if (!ShowSetboxViewer())
+                    continue;
+
+                timer.Interval = 2000;
+                timer.Elapsed += new ElapsedEventHandler(Timer_Elapsed);
+                timer.Start();
+
+                break;
             }
+        }
+
+        // 접속 사용자 수집
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // 열혈팬 수집
+            GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
+
+            // 팬 수집
+            GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//a");
+
+            // 일반시청자
+            GetUser("return document.getElementById('lv_ul_user').innerHTML", "//a");
+
+            // 채팅 수집
+            GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
+
+            // UI 디스플레이
+            BackGroundMatchingProc();
         }
 
         /// <summary>
@@ -140,7 +146,7 @@ namespace ChatClientViewer
         private void InitProc()
         {
             //test - http://play.afreecatv.com/khm11903/203956099
-            LoginUserID = "dusckdno1"; // #######
+            LoginUserID = "llilka"; // #######
 
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
 
@@ -379,7 +385,10 @@ namespace ChatClientViewer
         /// </summary>
         private void RemoveLeaveUser()
         {
-            if (cUsers.Count <= 0)
+            if (cUsers == null || cUsers.Count <= 0)
+                return;
+
+            if (nUsers == null || nUsers.Count <= 0)
                 return;
 
             // 퇴장 사용자 제거
@@ -413,10 +422,16 @@ namespace ChatClientViewer
             if (nUsers.Count <= 0)
                 return;
 
+            // test ##########################
+            //foreach(var i in nUsers)
+            //{
+            //    i.Type = UserType.King;
+            //}
+
             cUsers.AddRange(nUsers);
 
             // 사용자 리프레쉬 동작
-            SetUsers();
+            SetUsers(); 
         }
 
         /// <summary>
@@ -453,9 +468,10 @@ namespace ChatClientViewer
                             if (string.IsNullOrEmpty(user.Html))
                             {
                                 string kingBjsHtml = string.Empty;
-                                foreach (var bj in user.BJs)
+                                if (user.BJs != null)
                                 {
-                                    kingBjsHtml += string.Format(HtmlFormat.KingHtmlBjChild, bj.Nic, bj.IconUrl);
+                                    foreach (var bj in user.BJs)
+                                        kingBjsHtml += string.Format(HtmlFormat.KingHtmlBjChild, bj.Nic, bj.IconUrl);
                                 }
                                 kingHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, kingBjsHtml);
                             }
@@ -470,10 +486,12 @@ namespace ChatClientViewer
                             if (string.IsNullOrEmpty(user.Html))
                             {
                                 string bingFanBjsHtml = string.Empty;
-                                foreach (var bj in user.BJs)
+                                if (user.BJs != null)
                                 {
-                                    bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
+                                    foreach (var bj in user.BJs)
+                                        bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
                                 }
+                                
                                 bigFanHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, bingFanBjsHtml);
                             }
                             else
@@ -484,13 +502,24 @@ namespace ChatClientViewer
                     }
                 }
 
-                string tmpBjHtml = string.Format(HtmlFormat.BjHtml, bjHtml);
-                string tmpKingHtml = string.Format(HtmlFormat.KingHtml, kingHtml);
-                string tmpBigFanHtml = string.Format(HtmlFormat.BigFanHtml, bigFanHtml);
-
-                WbBj.DocumentText = tmpBjHtml;
-                WbKing.DocumentText = tmpKingHtml;
-                WbBigFan.DocumentText = tmpBigFanHtml;
+                if (!string.IsNullOrEmpty(bjHtml))
+                {
+                    string bjCon = string.Format(HtmlFormat.UserTableHtml, bjHtml);
+                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_BJ", bjCon });
+                }
+                
+                if (!string.IsNullOrEmpty(kingHtml))
+                {
+                    string kingCon = string.Format(HtmlFormat.UserTableHtml, kingHtml);
+                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_King", kingCon });
+                }
+                
+                if (!string.IsNullOrEmpty(bigFanHtml))
+                {
+                    string bigFanCon = string.Format(HtmlFormat.UserTableHtml, bigFanHtml);
+                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanCon });
+                }
+                
 
                 nUsers.Clear();
             }
@@ -547,10 +576,10 @@ namespace ChatClientViewer
                 // 처음이면 폼 모두 생성
                 if (string.IsNullOrEmpty(WbChat.DocumentText))
                     InitChat();
-                else
-                    WbChat.Document.InvokeScript("AddChatHtml", new object[] { html });
+
+                WbChat.Document.InvokeScript("AddChatHtml", new object[] { html });
             }
-            
+
         }
 
         public List<T> CloneList<T>(List<T> oldList)

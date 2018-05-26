@@ -8,28 +8,56 @@ namespace ChatClientViewer
 {
     public static class HtmlFormat
     {
-        public static string ContainerHtml = @"
+        public static string UserContainerHtml = @"
         <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
+        <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
         <div>
-            {0}
-        </div>
-        ";
-
-        #region BJ
-
-        /// <summary>
-        /// 전체 HTML [파라미터 - 하위 요소]
-        /// </summary>
-        public static string BjHtml = @"
-            <div class='fan_rank' style='height:145px;overflow:auto;'>
+            <div class='fan_rank' style='height:33%; overflow:auto;'>
                 <div class='tit_area' style='width:100%;'>
                     <div class='title' id='fan_txt'>BJ</div>
                 </div>
-                <table id='sTopFanStarBalloon' style='table-layout:fixed;'>
-                    {0}
-                </table>
+                <div id='sTopFanStarBalloon_BJ'>
+                </div>
+                
             </div>
+            <div class='fan_rank' style='height:33%; overflow:auto;'>
+                <div class='tit_area' style='width:100%;'>
+                    <div class='title' id='fan_txt'>회장</div>
+                </div>
+                <div id='sTopFanStarBalloon_King'>
+                </div>
+            </div>
+            <div class='fan_rank' style='height:33%; overflow:auto;'>
+                <div class='tit_area' style='width:100%;'>
+                    <div class='title' id='fan_txt'>열혈팬</div>
+                </div>
+                <div id='sTopFanStarBalloon_BigFan'>
+                </div>
+            </div>
+        </div>
+
+        <script>
+                function AddUserHtml(id, html) {
+                    // DelUserHtml(id);
+                    document.getElementById(id).innerHTML = html;
+                }
+
+                function DelUserHtml(id) {
+                    var lo_table = document.getElementById(id);
+
+                    for (var i=0; i < lo_table.rows.length; i++) {
+                        lo_table.deleteRow(i);
+                    }
+                }
+        </script>
         ";
+
+        public static string UserTableHtml = @"
+                    <table>
+                        {0}
+                    </table>";
+
+        #region BJ
 
         /// <summary>
         /// 하위요소 [파라미터 - 아이디, 닉네임, 사진url]
@@ -47,20 +75,6 @@ namespace ChatClientViewer
         #endregion
 
         #region 회장
-
-        /// <summary>
-        ///  - 하위요소
-        /// </summary>
-        public static string KingHtml = @"
-            <div class='fan_rank' style='height:145px;overflow:auto;'>
-                <div class='tit_area' style='width:100%;'>
-                    <div class='title' id='fan_txt'>회장</div>
-                </div>
-                <table id='sTopFanStarBalloon' style='height:100px; overflow-y:scroll;'>
-                    {0}
-                </table>
-            </div>
-        ";
 
         /// <summary>
         /// 하위요소 [파라미터 - 아이디, 닉네임, 포함된 bj정보]
@@ -86,20 +100,6 @@ namespace ChatClientViewer
         #endregion
 
         #region 열혈팬
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static string BigFanHtml = @"
-            <div class='fan_rank' style='height:145px;overflow:auto;'>
-                <div class='tit_area' style='width:100%;'>
-                    <div class='title' id='fan_txt'>열혈팬</div>
-                </div>
-                <table id='sTopFanStarBalloon' style='height:100px; overflow-y:scroll;'>
-                    {0}
-                </table>
-            </div>
-        ";
 
         /// <summary>
         ///  - 아이디, 닉네임, BJ정보
@@ -129,8 +129,7 @@ namespace ChatClientViewer
         public static string ChatHtml = @"
             <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
             <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
-            <!--<div id='chatbox' class='chatbox' style='width:100%;'>-->
-            <div class='fan_rank' style='height:360px;overflow:auto;'>
+            <div class='fan_rank' style='height:100%;overflow:auto;'>
                 <div class='tit_area' style='width:100%; display:block;'>
                     <div class='title' id='fan_txt'>채팅</div>
                 </div>
