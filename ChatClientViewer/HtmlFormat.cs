@@ -142,9 +142,37 @@ namespace ChatClientViewer
 
             <script>
                 function AddChatHtml(html) {
+                    var currentScroll = GetScrollXY();
+
                     document.getElementById('chat_memoyo').insertAdjacentHTML('beforeend', html);
-                    document.body.scrollTop = document.body.scrollHeight;
-                }    
+
+                    //var element = document.getElementById('fan_rank');
+                    //element.scrollTop = element.scrollHeight - element.clientHeight;
+
+                    document.getElementById('fan_rank').scrollTop = document.getElementById('fan_rank').scrollHeight;
+
+                    // document.documentElement.scrollTop = currentScroll.x // X 좌표
+                    // document.documentElement.scrollLeft = currentScroll.y // Y 좌표
+                } 
+
+                function GetScrollXY() {
+                    var scrOfX = 0, scrOfY = 0;
+                    if( typeof( window.pageYOffset ) == 'number' ) {
+                        //Netscape compliant
+                        scrOfY = window.pageYOffset;
+                        scrOfX = window.pageXOffset;
+                    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
+                        //DOM compliant
+                        scrOfY = document.body.scrollTop;
+                        scrOfX = document.body.scrollLeft;
+                    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
+                        //IE6 standards compliant mode
+                        scrOfY = document.documentElement.scrollTop;
+                        scrOfX = document.documentElement.scrollLeft;
+                    } 
+
+                    return { x:scrOfX, y:scrOfY };
+                }
             </script>
         ";
 

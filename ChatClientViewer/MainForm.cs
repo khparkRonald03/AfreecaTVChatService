@@ -24,10 +24,10 @@ namespace ChatClientViewer
 
         BjModel Bj = new BjModel();
 
+        object LockObject = new object();
+
         List<UserModel> cUsers = new List<UserModel>();
         List<UserModel> nUsers = new List<UserModel>();
-
-        //List<ChatModel> TempChatQueue = new List<ChatModel>();
         List<ChatModel> ChatQueue = new List<ChatModel>();
 
         delegate void Control_Invoker();
@@ -531,7 +531,7 @@ namespace ChatClientViewer
         /// </summary>
         private void ChatMatching()
         {
-            // 아니면 하단에 추가
+            // 하단에 추가
             string html = string.Empty;
             int endIndx = ChatQueue.Count;
             for (int idx = 0; idx < endIndx; idx++)
@@ -546,7 +546,7 @@ namespace ChatClientViewer
 
             html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-30px;'>");
             SetChat(html);
-            //Thread.Sleep(10000);
+
         }
 
         private void InitChat()
@@ -578,6 +578,8 @@ namespace ChatClientViewer
                     InitChat();
 
                 WbChat.Document.InvokeScript("AddChatHtml", new object[] { html });
+                WbChat.Document.Body.ScrollIntoView(false);
+
             }
 
         }
