@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ChatClientViewer
+namespace ChatClientViewerLogin
 {
     static class Program
     {
@@ -12,11 +12,11 @@ namespace ChatClientViewer
         /// 해당 응용 프로그램의 주 진입점입니다.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main(args));
+            Application.Run(new Login());
         }
     }
 }

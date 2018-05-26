@@ -21,6 +21,7 @@ namespace ChatClientViewer
         System.Timers.Timer timer = new System.Timers.Timer();
 
         string LoginUserID { get; set; } = string.Empty;
+        string LoginuserPW { get; set; } = string.Empty;
 
         BjModel Bj = new BjModel();
 
@@ -33,13 +34,40 @@ namespace ChatClientViewer
         delegate void Control_Invoker();
         delegate void Control_Invoker_ParamStr(string s);
 
-        public Main()
+        public Main(string[] args)
         {
             InitializeComponent();
+
+            if (args != null && args.Length == 2)
+            {
+                LoginUserID = args[0];
+                LoginuserPW = args[1];
+            }
+
+#if DEBUG
+            // test #####
+            if (string.IsNullOrEmpty(LoginUserID))
+                LoginUserID = "";
+
+            if (string.IsNullOrEmpty(LoginuserPW))
+                LoginuserPW = "test";
+#endif
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(LoginUserID))
+            {
+                this.Close();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(LoginuserPW))
+            {
+                this.Close();
+                return;
+            }
+
             (new ShowHelper()).ShowDialog();
 
             WbUser.DocumentText = HtmlFormat.UserContainerHtml;
@@ -51,7 +79,6 @@ namespace ChatClientViewer
                 IsBackground = true
             };
             BackGroundCrawlingThread.Start();
-
         }
 
         #region 방송 정보 수집 (채팅, 접속사용자)
@@ -145,9 +172,6 @@ namespace ChatClientViewer
         /// </summary>
         private void InitProc()
         {
-            //test - http://play.afreecatv.com/khm11903/203956099
-            LoginUserID = "llilka"; // #######
-
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
 
             Thread.Sleep(500);

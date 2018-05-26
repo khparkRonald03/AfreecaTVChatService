@@ -8,13 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ChatClientViewer
+namespace ChatClientViewerLogin
 {
-    public partial class Login : Form
+    public partial class ShowHelper : Form
     {
-        public Login()
+        public ShowHelper()
         {
             InitializeComponent();
+        }
+
+        private void ShowHelper_Shown(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
