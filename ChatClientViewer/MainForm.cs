@@ -208,11 +208,11 @@ namespace ChatClientViewer
         }
 
         /// <summary>
-        /// 열혈팬 수집 (현재 방송의 빅팬이므로 바로 목록에 추가)
+        /// 열혈팬 수집
         /// </summary>
         private void GetUser(string script, string xPath)
         {
-            // ex_ <span>flowerfree1</span><em>난마도특^^</em>
+            // ex -> <span>flowerfree1</span><em>난마도특^^</em>
             var bigFanNodes = GetNodes(script, xPath);
 
             foreach (var bigFan in bigFanNodes)
@@ -224,7 +224,8 @@ namespace ChatClientViewer
                     var userModel = new UserModel()
                     {
                         ID = bfs[0],
-                        Nic = bfs[1]
+                        Nic = bfs[1],
+                        Type = UserType.King, // test########################
                     };
 
                     nUsers.Add(userModel);
@@ -297,7 +298,6 @@ namespace ChatClientViewer
             {
                 var ttttt0 = ChromeDriver.ExecuteJSReturnHtml(script);
                 var page0 = new BeautifulPage(ttttt0.ResultValue);
-                //var page0 = new BeautifulPage(script);
                 var ttt0 = page0.SelectNodes(xPath);
 
                 if (ttt0 != null)
@@ -414,8 +414,8 @@ namespace ChatClientViewer
         private void UsersMatching()
         {
             // 기존 항목 모두 최신 추가 항목 지우기
-            foreach (var user in cUsers)
-                user.IsNew = false;
+            //foreach (var user in cUsers)
+            //    user.IsNew = false;
 
             // 매칭 서비스에서 데이터 받아오기 ##########
 

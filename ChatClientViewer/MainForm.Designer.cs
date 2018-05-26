@@ -32,10 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.ITContainer = new iTalk.iTalk_ThemeContainer();
-            this.WbChat = new System.Windows.Forms.WebBrowser();
-            this.WbUser = new System.Windows.Forms.WebBrowser();
-            this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.WbUser = new System.Windows.Forms.WebBrowser();
+            this.WbChat = new System.Windows.Forms.WebBrowser();
+            this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -69,34 +69,7 @@
             this.ITContainer.SmartBounds = false;
             this.ITContainer.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultLocation;
             this.ITContainer.TabIndex = 0;
-            // 
-            // WbChat
-            // 
-            this.WbChat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WbChat.Location = new System.Drawing.Point(0, 0);
-            this.WbChat.Name = "WbChat";
-            this.WbChat.ScriptErrorsSuppressed = true;
-            this.WbChat.Size = new System.Drawing.Size(334, 506);
-            this.WbChat.TabIndex = 5;
-            // 
-            // WbUser
-            // 
-            this.WbUser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WbUser.Location = new System.Drawing.Point(0, 0);
-            this.WbUser.Name = "WbUser";
-            this.WbUser.ScriptErrorsSuppressed = true;
-            this.WbUser.Size = new System.Drawing.Size(334, 311);
-            this.WbUser.TabIndex = 0;
-            // 
-            // iTalk_ControlBox1
-            // 
-            this.iTalk_ControlBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.iTalk_ControlBox1.BackColor = System.Drawing.Color.Transparent;
-            this.iTalk_ControlBox1.Location = new System.Drawing.Point(259, -1);
-            this.iTalk_ControlBox1.Name = "iTalk_ControlBox1";
-            this.iTalk_ControlBox1.Size = new System.Drawing.Size(77, 19);
-            this.iTalk_ControlBox1.TabIndex = 0;
-            this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
+            this.ITContainer.Text = "ABJ v1.1";
             // 
             // splitContainer1
             // 
@@ -118,6 +91,34 @@
             this.splitContainer1.SplitterDistance = 311;
             this.splitContainer1.TabIndex = 6;
             // 
+            // WbUser
+            // 
+            this.WbUser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.WbUser.Location = new System.Drawing.Point(0, 0);
+            this.WbUser.Name = "WbUser";
+            this.WbUser.ScriptErrorsSuppressed = true;
+            this.WbUser.Size = new System.Drawing.Size(334, 311);
+            this.WbUser.TabIndex = 0;
+            // 
+            // WbChat
+            // 
+            this.WbChat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.WbChat.Location = new System.Drawing.Point(0, 0);
+            this.WbChat.Name = "WbChat";
+            this.WbChat.ScriptErrorsSuppressed = true;
+            this.WbChat.Size = new System.Drawing.Size(334, 506);
+            this.WbChat.TabIndex = 5;
+            // 
+            // iTalk_ControlBox1
+            // 
+            this.iTalk_ControlBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.iTalk_ControlBox1.BackColor = System.Drawing.Color.Transparent;
+            this.iTalk_ControlBox1.Location = new System.Drawing.Point(259, -1);
+            this.iTalk_ControlBox1.Name = "iTalk_ControlBox1";
+            this.iTalk_ControlBox1.Size = new System.Drawing.Size(77, 19);
+            this.iTalk_ControlBox1.TabIndex = 0;
+            this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -129,6 +130,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(126, 39);
             this.Name = "Main";
+            this.Text = "ABJ v1.1";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.Load += new System.EventHandler(this.Main_Load);
             this.ITContainer.ResumeLayout(false);

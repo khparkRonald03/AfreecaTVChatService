@@ -34,9 +34,9 @@ namespace DataModels
         public string IconUrl { get; set; }
 
         /// <summary>
-        /// 새로 추가된 요소 여부
+        /// 새로 추가된 요소 여부 (전부다 리프레쉬 해주니까 필요없음)
         /// </summary>
-        public bool IsNew { get; set; }
+        //public bool IsNew { get; set; }
 
         /// <summary>
         /// 화면에 표시할 html (재사용을 위해 캐시)
