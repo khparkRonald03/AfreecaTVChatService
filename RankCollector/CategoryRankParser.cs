@@ -31,10 +31,14 @@ namespace RankCollector
 
         private BjModel GetBjModel(ALLRANK allrank, RankingType rankingType)
         {
+            if (string.IsNullOrEmpty(allrank.Bj_id))
+                return new BjModel();
+
             var bjModel = new BjModel()
             {
                 BjID = allrank.Bj_id,
                 BjNick = allrank.Bj_nick,
+                BjImgUrl = $"http://stimg.afreecatv.com/LOGO/{allrank.Bj_id.Substring(0, 2)}/{allrank.Bj_id}/{allrank.Bj_id}.jpg"
             };
 
             if (!int.TryParse(allrank.Total_rank, out int rank))
