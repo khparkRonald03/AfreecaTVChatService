@@ -5,12 +5,12 @@ using System.Text.RegularExpressions;
 
 namespace avj.Common
 {
-    public abstract class MySqlModelObject
+    public abstract class MySqlModelObject_
     {
         /// <summary>
         /// 데이터베이스에 관련된 기능을 제공합니다.
         /// </summary>
-        protected MySqlControl sql = new MySqlControl();
+        protected MySqlControl_ sql = new MySqlControl_();
 
         /// <summary>
         /// sql파라매터정보를 설정합니다.

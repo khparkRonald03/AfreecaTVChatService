@@ -1,6 +1,6 @@
 ﻿namespace avj.Common
 {
-    public enum MysqlDacDbType
+    public enum MysqlDbType
     {
         //
         // 요약:
@@ -58,10 +58,6 @@
         //     Time
         //     The range is '-838:59:59' to '838:59:59'.
         Time = 11,
-        //
-        // 요약:
-        //     DateTime The supported range is '1000-01-01 00:00:00' to '9999-12-31 23:59:59'.
-        DateTime = 12,
         //
         // 요약:
         //     Datetime The supported range is '1000-01-01 00:00:00' to '9999-12-31 23:59:59'.

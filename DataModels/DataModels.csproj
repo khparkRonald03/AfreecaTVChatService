@@ -40,11 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IconUrl.cs" />
-    <Compile Include="UserModel.cs" />
-    <Compile Include="BjModel.cs" />
-    <Compile Include="ChatModel.cs" />
+    <Compile Include="ClientModels\IconUrl.cs" />
+    <Compile Include="ClientModels\UserModel.cs" />
+    <Compile Include="ClientModels\BjModel.cs" />
+    <Compile Include="ClientModels\ChatModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerModels\CategoryRank.cs" />
+    <Compile Include="ServerModels\RankBigFan.cs" />
+    <Compile Include="ServerModels\RankBjModel.cs" />
+    <Compile Include="ServerModels\RankCollectorSettingsModel.cs" />
+    <Compile Include="ServerModels\RankUserModel.cs" />
+    <Compile Include="ServerModels\Supporters.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

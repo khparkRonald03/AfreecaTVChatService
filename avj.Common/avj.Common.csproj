@@ -46,11 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MySql\MySql.cs" />
-    <Compile Include="MySql\MySqlControl.cs" />
-    <Compile Include="MySql\MySqlModelObject.cs" />
+    <Compile Include="MySql\MySql_.cs" />
+    <Compile Include="MySql\MySqlControl_.cs" />
+    <Compile Include="MySql\MySqlModelObject_.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlBase\SqlBaseCore.cs" />
+    <Compile Include="SqlBase\MySql.cs" />
     <Compile Include="SqlBase\SqlServer.cs" />
     <Compile Include="SqlBase\SqlParams.cs" />
     <Compile Include="SqlBase\DataTransferObjectHelper.cs" />

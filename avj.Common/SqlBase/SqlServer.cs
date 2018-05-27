@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace avj.Common
 {
-    public class DacCoreSqlServer
+    public class SqlServer
     {
         //private string SqlServerConnectionString = ConfigurationManager.AppSettings["SqlServerConn"].ToString();
-        private readonly string SqlServerConnectionString = "Server=ronald03s-mssql-01.cfav9hfzfs7y.ap-northeast-2.rds.amazonaws.com;Database=Ronald03s;Persist Security Info=True;User ID=ronald03;Password=ky850224";
+        //private readonly string SqlServerConnectionString = "Server=ronald03s-mssql-01.cfav9hfzfs7y.ap-northeast-2.rds.amazonaws.com;Database=Ronald03s;Persist Security Info=True;User ID=ronald03;Password=ky850224";
+        private readonly string SqlServerConnectionString = ConfigurationManager.AppSettings["SqlServerConn"].ToString();
 
-        public Tresult GetDataModel<Tresult>(string procedure, List<DacSqlServerParam> dacParams)
+        public Tresult GetDataModel<Tresult>(string procedure, List<SqlServerParam> dacParams)
         {
             var ds = GetDataSet(procedure, dacParams);
             return GetDataToModel<Tresult>(ds);
@@ -21,7 +23,7 @@ namespace avj.Common
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public DataSet GetDataSet(string procedure, List<DacSqlServerParam> dacParams)
+        public DataSet GetDataSet(string procedure, List<SqlServerParam> dacParams)
         {
             var ds = new DataSet();
             var param = TransferParamsType(dacParams);
@@ -52,7 +54,7 @@ namespace avj.Common
             return obj;
         }
 
-        private List<SqlParameter> TransferParamsType(List<DacSqlServerParam> dacParams)
+        private List<SqlParameter> TransferParamsType(List<SqlServerParam> dacParams)
         {
             var mySqlParams = new List<SqlParameter>();
             foreach (var dacParam in dacParams)

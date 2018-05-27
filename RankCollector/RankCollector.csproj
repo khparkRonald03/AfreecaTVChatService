@@ -55,16 +55,17 @@
     <Compile Include="CategoryRankParser.cs" />
     <Compile Include="Common\CommonWeb.cs" />
     <Compile Include="Common\RankingType.cs" />
-    <Compile Include="Model\BigFan.cs" />
-    <Compile Include="Model\BjModel.cs" />
-    <Compile Include="Model\CategoryRank.cs" />
-    <Compile Include="Model\Supporters.cs" />
-    <Compile Include="Model\UserModel.cs" />
     <Compile Include="BjPagePaser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataModels\DataModels.csproj">
+      <Project>{cc7c0d11-9575-406b-b52a-a9a83ad63ac5}</Project>
+      <Name>DataModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

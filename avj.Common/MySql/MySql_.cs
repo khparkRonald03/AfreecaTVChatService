@@ -6,14 +6,30 @@ using System.Data;
 
 namespace avj.Common
 {
-    public class DacCore
+    public class MySql_
     {
+        public MySql_()
+        {
+            //
+            // TODO: 여기에 생성자 논리를 추가합니다.
+            //
+        }
 
-        private readonly string myConnectionString = ConfigurationManager.AppSettings["MySqlConn"].ToString();
+        private string myConnectionString = ConfigurationManager.AppSettings["MySqlConn"].ToString();
+        //private string myConnectionString = "server=localhost;port=3306;Database=bratvillage;User Id=bratvillage_user;Password=p@ssw0rd;allow user variables=true;";
         public int nCommandTime = 0;
 
         #region 파라미터
-        
+        /// <summary>
+        /// 파라미터 모음
+        /// </summary>
+        public List<MySqlParameter> SqlParams = new List<MySqlParameter>();
+
+        //internal MySqlParameter AddParam(string v, MySqlDbType varChar, ParameterDirection input, object asset_id)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
         /// <summary>
         /// 파라미터추가
         /// </summary>
@@ -78,6 +94,11 @@ namespace avj.Common
         }
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public int GetScalarInt(string query)
         {
             MySqlConnection conn;
@@ -152,14 +173,12 @@ namespace avj.Common
         /// </summary>
         /// <param name="procedure"></param>
         /// <param name="pc"></param>
-        public void ExecuteNonQuery(string procedure, List<DacMysqlParam> dacParams)
+        public void ExecuteNonQuery(string procedure, List<MySqlParameter> pc)
         {
             MySqlConnection conn;
 
             try
             {
-                var pc = TransferParamsType(dacParams);
-
                 conn = new MySqlConnection
                 {
                     ConnectionString = myConnectionString
@@ -247,21 +266,13 @@ namespace avj.Common
             }
         }
 
-        public Tresult GetDataModel<Tresult>(string query)
-        {
-            var ds = GetDataSet(query);
-            return GetDataToModel<Tresult>(ds);
-        }
-
         /// <summary>
         /// 데이터 셋 가져오기
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public DataSet GetDataSet(string procedure, List<DacMysqlParam> dacParams)
+        public DataSet GetDataSet(string procedure, List<MySqlParameter> pc)
         {
-            var pc = TransferParamsType(dacParams);
-
             DataSet ds = new DataSet();
             MySqlConnection conn;
             MySqlCommand cmd;
@@ -288,12 +299,13 @@ namespace avj.Common
 
         }
 
-        public Tresult GetDataModel<Tresult>(string procedure, List<DacMysqlParam> dacParams)
-        {
-            var ds = GetDataSet(procedure, dacParams);
-            return GetDataToModel<Tresult>(ds);
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sqlQuery"></param>
+        /// <param name="pageNo"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         public DataSet GetDataSet(string sqlQuery, int pageNo, int pageSize)
         {
             DataSet ds = new DataSet();
@@ -315,6 +327,7 @@ namespace avj.Common
                     sqlQuery = "SELECT " + sqlQuery.Substring(7, sqlQuery.Length - 7) + string.Format(" LIMIT {0}; ", pageNo * pageSize);
                 }
 
+
                 conn.ConnectionString = myConnectionString;
                 cmd.CommandType = CommandType.Text;
                 cmd.Connection = conn;
@@ -335,20 +348,8 @@ namespace avj.Common
             return ds;
         }
 
-        public Tresult GetDataModel<Tresult>(string sqlQuery, int pageNo, int pageSize)
-        {
-            var ds = GetDataSet(sqlQuery, pageNo, pageSize);
-            return GetDataToModel<Tresult>(ds);
-        }
-
-        private Tresult GetDataToModel<Tresult>(DataSet ds)
-        {
-            var obj = Activator.CreateInstance<Tresult>();
-            obj = (Tresult)ds.Tables[0].ToDataObject(typeof(Tresult));
-            return obj;
-        }
-
         #region GetDbTypeSize
+
         /// <summary>
         /// GetDbTypeSize
         /// </summary>
@@ -381,17 +382,7 @@ namespace avj.Common
             }
             return 0;
         }
+
         #endregion
-
-        private List<MySqlParameter> TransferParamsType(List<DacMysqlParam> dacParams)
-        {
-            var mySqlParams = new List<MySqlParameter>();
-            foreach(var dacParam in dacParams)
-            {
-                mySqlParams.Add(AddParam(dacParam.ParamName, (MySqlDbType)dacParam.DbType, ParameterDirection.Input, dacParam.ParamValue));
-            }
-
-            return mySqlParams;
-        }
     }
 }

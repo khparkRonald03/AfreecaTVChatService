@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DataModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace RankCollector
 {
     public class BjPagePaser : CommonWeb
     {
-        public List<UserModel> GetBigFans(string bjID)
+        public List<RankUserModel> GetBigFans(string bjID)
         {
-            var result = new List<UserModel>();
+            var result = new List<RankUserModel>();
 
             var url = $"http://live.afreecatv.com:8057/api/best_bj_action.php?szAction=GetBestBJDetail&szType=json&uid={bjID}&szBeforeCallBack=_bigfan&callback=_bigfan";
 
@@ -22,10 +23,10 @@ namespace RankCollector
             if (string.IsNullOrEmpty(bigFanString))
                 return result;
 
-            BigFan bigFan = null;
+            RankBigFan bigFan = null;
             try
             {
-                bigFan = JsonConvert.DeserializeObject<BigFan>(bigFanString);
+                bigFan = JsonConvert.DeserializeObject<RankBigFan>(bigFanString);
             }
             catch (Exception e)
             {
@@ -35,7 +36,7 @@ namespace RankCollector
 
             for (int Idx = 0; Idx < bigFan.Starballoon_top.Count; Idx++)
             {
-                var item = new UserModel()
+                var item = new RankUserModel()
                 {
                     BjID = bjID,
                     UserID = bigFan.Starballoon_top[Idx].User_id,
@@ -49,9 +50,9 @@ namespace RankCollector
             return result;
         }
 
-        public List<UserModel> GetSupporters(string bjID)
+        public List<RankUserModel> GetSupporters(string bjID)
         {
-            var result = new List<UserModel>();
+            var result = new List<RankUserModel>();
 
             // 사용자별 구분 문자열
             int unicode = 004;
@@ -95,7 +96,7 @@ namespace RankCollector
                 if (userInfo.Length != 2)
                     continue;
 
-                var item = new UserModel()
+                var item = new RankUserModel()
                 {
                     BjID = bjID,
                     UserID = userInfo[0].Replace(replaceString, ""),

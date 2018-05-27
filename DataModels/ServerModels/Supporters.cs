@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RankCollector
+namespace DataModels
 {
     public class Supporters
     {

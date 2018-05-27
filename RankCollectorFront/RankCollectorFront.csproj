@@ -54,6 +54,10 @@
       <Project>{89f4523f-a6fb-4eff-859e-c00667c96960}</Project>
       <Name>avj.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataModels\DataModels.csproj">
+      <Project>{cc7c0d11-9575-406b-b52a-a9a83ad63ac5}</Project>
+      <Name>DataModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RankCollector\RankCollector.csproj">
       <Project>{4738a72e-8780-4506-9ab6-f62bf2227ece}</Project>
       <Name>RankCollector</Name>

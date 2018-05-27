@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataModels;
 using RankCollector;
 
 namespace RankCollectorFront
 {
-    class Program
+    public class Program
     {
+        RankCollectorSettingsModel Settings = new RankCollectorSettingsModel();
+
         static void Main(string[] args)
         {
             // 1. BJ 수집
             int endPage = 2;
             var categoryRankParser = new CategoryRankParser();
-            var resultBjModels = new List<BjModel>();
+            var resultBjModels = new List<RankBjModel>();
             
             foreach (RankingType rankingType in Enum.GetValues(typeof(RankingType)))
             {
@@ -53,7 +56,7 @@ namespace RankCollectorFront
 
             // 2. 사용자 수집
             var bjPagePaser = new BjPagePaser();
-            var resultUserModel = new List<UserModel>();
+            var resultUserModel = new List<RankUserModel>();
 
             // BJ 수집 리스트 루프 돌기
             foreach (var BjModel in resultBjModels)

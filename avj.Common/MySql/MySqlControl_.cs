@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace avj.Common
 {
-    public class MySqlControl
+    public class MySqlControl_
     {
         private string sqlQuery         = string.Empty;
         private bool isProcedure        = true;
@@ -52,7 +52,7 @@ namespace avj.Common
         }
 
 
-        public MySqlControl()
+        public MySqlControl_()
         {
             this.parameters = new Hashtable();
         }

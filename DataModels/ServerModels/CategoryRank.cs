@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RankCollector
+namespace DataModels
 {
     /// <summary>
     /// Jsoon에서 변환 된

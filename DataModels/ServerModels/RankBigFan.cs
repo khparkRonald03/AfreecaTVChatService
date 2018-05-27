@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace RankCollector
+namespace DataModels
 {
-    public class BigFan
+    public class RankBigFan
     {
         public int Result { get; set; }
         public string Bj_id { get; set; }

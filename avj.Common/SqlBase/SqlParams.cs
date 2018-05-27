@@ -1,12 +1,12 @@
 ﻿namespace avj.Common
 {
-    public class DacMysqlParam
+    public class MysqlParam
     {
         public string ParamName { get; set; }
-        public MysqlDacDbType DbType { get; set; }
+        public MysqlDbType DbType { get; set; }
         public object ParamValue { get; set; }
 
-        public DacMysqlParam(string p_ParamName, MysqlDacDbType p_DbType, object p_ParamValue)
+        public MysqlParam(string p_ParamName, MysqlDbType p_DbType, object p_ParamValue)
         {
             ParamName = p_ParamName;
             DbType = p_DbType;
@@ -14,13 +14,13 @@
         }
     }
 
-    public class DacSqlServerParam
+    public class SqlServerParam
     {
         public string ParamName { get; set; }
         public SqlServerDbType DbType { get; set; }
         public object ParamValue { get; set; }
 
-        public DacSqlServerParam(string p_ParamName, SqlServerDbType p_DbType, object p_ParamValue)
+        public SqlServerParam(string p_ParamName, SqlServerDbType p_DbType, object p_ParamValue)
         {
             ParamName = p_ParamName;
             DbType = p_DbType;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,9 @@ namespace RankCollector
 {
     public class CategoryRankParser : CommonWeb
     {
-        public List<BjModel> GetData(RankingType rankingType, int page)
+        public List<RankBjModel> GetData(RankingType rankingType, int page)
         {
-            var result = new List<BjModel>();
+            var result = new List<RankBjModel>();
 
             var categoryRank = GetCategoryRank(rankingType, page);
 
@@ -23,18 +24,18 @@ namespace RankCollector
             return result;
         }
 
-        public void SetTargetRank(BjModel fromModel, BjModel toModel, RankingType rankingType)
+        public void SetTargetRank(RankBjModel fromModel, RankBjModel toModel, RankingType rankingType)
         {
-            int rank = GetRank(fromModel, rankingType);
+            int? rank = GetRank(fromModel, rankingType);
             SetRank(ref toModel, rank, rankingType);
         }
 
-        private BjModel GetBjModel(ALLRANK allrank, RankingType rankingType)
+        private RankBjModel GetBjModel(ALLRANK allrank, RankingType rankingType)
         {
             if (string.IsNullOrEmpty(allrank.Bj_id))
-                return new BjModel();
+                return new RankBjModel();
 
-            var bjModel = new BjModel()
+            var bjModel = new RankBjModel()
             {
                 BjID = allrank.Bj_id,
                 BjNick = allrank.Bj_nick,
@@ -49,7 +50,7 @@ namespace RankCollector
             return bjModel;
         }
 
-        private void SetRank(ref BjModel bjModel, int rank, RankingType rankingType)
+        private void SetRank(ref RankBjModel bjModel, int? rank, RankingType rankingType)
         {
             switch (rankingType)
             {
@@ -119,7 +120,7 @@ namespace RankCollector
             }
         }
 
-        private int GetRank(BjModel bjModel, RankingType rankingType)
+        private int? GetRank(RankBjModel bjModel, RankingType rankingType)
         {
             switch (rankingType)
             {
