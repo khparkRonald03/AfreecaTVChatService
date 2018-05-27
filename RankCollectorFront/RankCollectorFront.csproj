@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MysqlDbConnector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -49,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\avj.Common\avj.Common.csproj">
+      <Project>{89f4523f-a6fb-4eff-859e-c00667c96960}</Project>
+      <Name>avj.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RankCollector\RankCollector.csproj">
       <Project>{4738a72e-8780-4506-9ab6-f62bf2227ece}</Project>
       <Name>RankCollector</Name>

@@ -80,6 +80,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -104,6 +105,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -129,6 +131,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -154,6 +157,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -180,6 +184,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -207,6 +212,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -230,6 +236,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -254,6 +261,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -279,6 +287,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -304,6 +313,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -330,6 +340,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -357,6 +368,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -380,6 +392,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -403,6 +416,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -427,6 +441,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -450,6 +465,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -474,6 +490,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -507,6 +524,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return null;
             }
         }
@@ -530,6 +548,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return 0;
             }
         }
@@ -555,6 +574,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return 0;
             }
         }
@@ -579,6 +599,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return 0;
             }
         }
@@ -602,6 +623,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return string.Empty;
             }
         }
@@ -626,6 +648,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return string.Empty;
             }
         }
@@ -651,6 +674,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return string.Empty;
             }
         }
@@ -667,6 +691,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return false;
             }
         }
@@ -705,6 +730,7 @@ namespace avj.Common
             }
             catch (Exception ex)
             {
+                string log = ex.Message;
                 return string.Empty;
             }
         }
@@ -1070,8 +1096,9 @@ namespace avj.Common
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                string log = ex.Message;
                 return false;
             }
             finally

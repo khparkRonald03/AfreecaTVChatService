@@ -50,6 +50,12 @@
     <Compile Include="MySql\MySqlControl.cs" />
     <Compile Include="MySql\MySqlModelObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlBase\SqlBaseCore.cs" />
+    <Compile Include="SqlBase\SqlServer.cs" />
+    <Compile Include="SqlBase\SqlParams.cs" />
+    <Compile Include="SqlBase\DataTransferObjectHelper.cs" />
+    <Compile Include="SqlBase\DbType.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
