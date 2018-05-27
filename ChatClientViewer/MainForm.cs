@@ -174,12 +174,6 @@ namespace ChatClientViewer
         {
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
 
-            Thread.Sleep(500);
-            //ChromeDriver.ClickTag(ElementsSelectType.Id, "livePlayer");
-            //ChromeDriver.ClickTag(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[6]/div[2]/div[1]/button");
-            //ChromeDriver.ClickTag(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[6]/div[2]/div[1]/div/button");
-            //ChromeDriver.ClickTag(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[6]/div[2]/div[1]/div/ul/li[1]/button");
-
             Thread.Sleep(200);
             ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > button').click()");
             Thread.Sleep(200);
@@ -187,7 +181,7 @@ namespace ChatClientViewer
             Thread.Sleep(200);
             // html5 변환 버튼
             ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box.on > div > ul > li:nth-child(1) > button').click()");
-            Thread.Sleep(500);
+            Thread.Sleep(200);
         }
 
         private List<BeautifulNode> GetChatNodes(string script, string xPath)

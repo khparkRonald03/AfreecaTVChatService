@@ -13,6 +13,11 @@
         public string BjNick { get; set; }
 
         /// <summary>
+        /// BJ 사진 url
+        /// </summary>
+        public string BjImgUrl { get; set; }
+
+        /// <summary>
         /// 아프리카 신입bj 랭킹
         /// </summary>
         public int RookieRanking { get; set; }
