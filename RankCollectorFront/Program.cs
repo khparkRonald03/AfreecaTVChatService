@@ -68,6 +68,9 @@ namespace RankCollectorFront
             }
 
             ;
+
+            // resultBjModels
+            // resultUserModel
         }
     }
 }
