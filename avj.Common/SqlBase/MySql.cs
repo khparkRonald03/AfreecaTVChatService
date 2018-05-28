@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace avj.Common
 {
@@ -118,8 +119,8 @@ namespace avj.Common
         /// <returns></returns>
         public int ExecuteNonQuery(string query)
         {
-            MySqlConnection conn;
-
+            MySqlConnection conn = null;
+            MySqlCommand com = null;
             int result = 0;
 
             try
@@ -129,21 +130,23 @@ namespace avj.Common
                     ConnectionString = myConnectionString
                 };
 
-                MySqlCommand com = conn.CreateCommand();
+                com = conn.CreateCommand();
                 conn.Open();
                 com.CommandText = query;
                 com.CommandTimeout = 3600;
 
                 result = com.ExecuteNonQuery();
 
-                conn.Close();
-
                 return result;
             }
             catch (MySqlException ex)
             {
                 string log = ex.Message;
-                throw;
+                return -1;
+            }
+            finally
+            {
+                conn?.Close();
             }
         }
 
@@ -152,12 +155,15 @@ namespace avj.Common
         /// </summary>
         /// <param name="procedure"></param>
         /// <param name="pc"></param>
-        public void ExecuteNonQuery(string procedure, List<MysqlParam> dacParams)
+        public void ExecuteNonQuery(string procedure, List<MysqlParam> dacParams, CommandType commondType = CommandType.StoredProcedure)
         {
-            MySqlConnection conn;
+            MySqlConnection conn = null;
+            MySqlCommand com = null;
 
             try
             {
+                GetValidationData(ref dacParams);
+
                 var pc = TransferParamsType(dacParams);
 
                 conn = new MySqlConnection
@@ -165,10 +171,10 @@ namespace avj.Common
                     ConnectionString = myConnectionString
                 };
 
-                MySqlCommand com = conn.CreateCommand();
+                com = conn.CreateCommand();
 
                 com.CommandText = procedure;
-                com.CommandType = CommandType.StoredProcedure;
+                com.CommandType = commondType;
                 com.CommandTimeout = 3600;
 
                 if (pc != null)
@@ -198,17 +204,109 @@ namespace avj.Common
                 }
 
                 conn.Open();
-
                 com.ExecuteNonQuery();
-
-                conn.Close();
-
             }
             catch (MySqlException ex)
             {
                 string log = ex.Message;
-                throw;
             }
+            finally
+            {
+                conn?.Close();
+            }
+        }
+
+        private List<MysqlParam> GetValidationData(ref List<MysqlParam> dacParams)
+        {
+            GetValidationData(ref dacParams);
+
+            var data = new List<MysqlParam>();
+
+            if (dacParams != null)
+            {
+                foreach (var item in dacParams)
+                {
+                    try
+                    {
+                        string keyValue = item.ParamName;
+                        string itemValue = item.ParamValue?.ToString() ?? string.Empty;
+
+                        //null이면 빈값으로 설정
+                        if (string.IsNullOrEmpty(itemValue) == true)
+                        {
+                            itemValue = string.Empty;
+                        }
+
+                        if (itemValue != string.Empty)
+                        {
+                            //html태그가 포함되어있다면 빈값으로 설정
+                            if (Regex.IsMatch(itemValue, @"<[^>]+>") == true)
+                            {
+                                itemValue = string.Empty;
+                            }
+
+                            //향후 방어할 필요가 있는 문자가 생기면 추가...
+                            //참고 : http://wikisecurity.net/guide:asp.net_%EA%B0%9C%EB%B0%9C_%EB%B3%B4%EC%95%88_%EA%B0%80%EC%9D%B4%EB%93%9C
+                            string[] arrCheck = new string[] {
+                                                                "/*"
+                                                              , "*/"
+                                                              , "@@"
+                                                              , "char"
+                                                              , "nchar"
+                                                              , "varchar"
+                                                              , "nvarchar"
+                                                              , "alter"
+                                                              , "begin"
+                                                              , "cast"
+                                                              , "create"
+                                                              , "cursor"
+                                                              , "declare"
+                                                              , "select"
+                                                              , "insert"
+                                                              , "update"
+                                                              , "delete"
+                                                              , "drop"
+                                                              , "execute"
+                                                              , "fetch"
+                                                              , "kill"
+                                                              , "open"
+                                                              , "sys"
+                                                              , "sysobjects"
+                                                              , "syscolumns"
+                                                              , "<script"
+                                                              , "<iframe"
+                                                              , "<frame"
+                                                              , "<frameset"
+                                                              , "<applet"
+                                                              , "<html"
+                                                              , "<meta"
+                                                              , "<object"
+                                                         };
+
+                            if (itemValue != string.Empty)
+                            {
+                                //내용 체크 : 방어 문자가 포함되어있다면 빈값으로 설정
+                                for (int i = 0; i < arrCheck.Length; i++)
+                                {
+                                    if (itemValue.ToLower().IndexOf(arrCheck[i]) > -1)
+                                    {
+                                        itemValue = string.Empty;
+                                    }
+                                }
+                            }
+                        }
+
+                        item.ParamValue = System.Web.HttpUtility.HtmlEncode(itemValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        string lgo = ex.Message;
+                        item.ParamValue = string.Empty;
+                    }
+                }
+            }
+
+            return data;
         }
 
         /// <summary>
@@ -243,7 +341,7 @@ namespace avj.Common
             catch (MySqlException ex)
             {
                 string log = ex.Message;
-                throw;
+                return new DataSet();
             }
         }
 
@@ -260,6 +358,8 @@ namespace avj.Common
         /// <returns></returns>
         public DataSet GetDataSet(string procedure, List<MysqlParam> dacParams)
         {
+            GetValidationData(ref dacParams);
+
             var pc = TransferParamsType(dacParams);
 
             DataSet ds = new DataSet();
@@ -290,6 +390,8 @@ namespace avj.Common
 
         public Tresult GetDataModel<Tresult>(string procedure, List<MysqlParam> dacParams)
         {
+            GetValidationData(ref dacParams);
+
             var ds = GetDataSet(procedure, dacParams);
             return GetDataToModel<Tresult>(ds);
         }
@@ -385,6 +487,8 @@ namespace avj.Common
 
         private List<MySqlParameter> TransferParamsType(List<MysqlParam> dacParams)
         {
+            GetValidationData(ref dacParams);
+
             var mySqlParams = new List<MySqlParameter>();
             foreach(var dacParam in dacParams)
             {

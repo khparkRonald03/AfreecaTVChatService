@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace avj.Common
 {
@@ -14,8 +15,102 @@ namespace avj.Common
 
         public Tresult GetDataModel<Tresult>(string procedure, List<SqlServerParam> dacParams)
         {
+            GetValidationData(ref dacParams);
             var ds = GetDataSet(procedure, dacParams);
             return GetDataToModel<Tresult>(ds);
+        }
+
+        private List<SqlServerParam> GetValidationData(ref List<SqlServerParam> dacParams)
+        {
+            GetValidationData(ref dacParams);
+
+            var data = new List<SqlServerParam>();
+
+            if (dacParams != null)
+            {
+                foreach (var item in dacParams)
+                {
+                    try
+                    {
+                        string keyValue = item.ParamName;
+                        string itemValue = item.ParamValue?.ToString() ?? string.Empty;
+
+                        //null이면 빈값으로 설정
+                        if (string.IsNullOrEmpty(itemValue) == true)
+                        {
+                            itemValue = string.Empty;
+                        }
+
+                        if (itemValue != string.Empty)
+                        {
+                            //html태그가 포함되어있다면 빈값으로 설정
+                            if (Regex.IsMatch(itemValue, @"<[^>]+>") == true)
+                            {
+                                itemValue = string.Empty;
+                            }
+
+                            //향후 방어할 필요가 있는 문자가 생기면 추가...
+                            //참고 : http://wikisecurity.net/guide:asp.net_%EA%B0%9C%EB%B0%9C_%EB%B3%B4%EC%95%88_%EA%B0%80%EC%9D%B4%EB%93%9C
+                            string[] arrCheck = new string[] {
+                                                                "/*"
+                                                              , "*/"
+                                                              , "@@"
+                                                              , "char"
+                                                              , "nchar"
+                                                              , "varchar"
+                                                              , "nvarchar"
+                                                              , "alter"
+                                                              , "begin"
+                                                              , "cast"
+                                                              , "create"
+                                                              , "cursor"
+                                                              , "declare"
+                                                              , "select"
+                                                              , "insert"
+                                                              , "update"
+                                                              , "delete"
+                                                              , "drop"
+                                                              , "execute"
+                                                              , "fetch"
+                                                              , "kill"
+                                                              , "open"
+                                                              , "sys"
+                                                              , "sysobjects"
+                                                              , "syscolumns"
+                                                              , "<script"
+                                                              , "<iframe"
+                                                              , "<frame"
+                                                              , "<frameset"
+                                                              , "<applet"
+                                                              , "<html"
+                                                              , "<meta"
+                                                              , "<object"
+                                                         };
+
+                            if (itemValue != string.Empty)
+                            {
+                                //내용 체크 : 방어 문자가 포함되어있다면 빈값으로 설정
+                                for (int i = 0; i < arrCheck.Length; i++)
+                                {
+                                    if (itemValue.ToLower().IndexOf(arrCheck[i]) > -1)
+                                    {
+                                        itemValue = string.Empty;
+                                    }
+                                }
+                            }
+                        }
+
+                        item.ParamValue = System.Web.HttpUtility.HtmlEncode(itemValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        string lgo = ex.Message;
+                        item.ParamValue = string.Empty;
+                    }
+                }
+            }
+
+            return data;
         }
 
         /// <summary>
@@ -25,6 +120,7 @@ namespace avj.Common
         /// <returns></returns>
         public DataSet GetDataSet(string procedure, List<SqlServerParam> dacParams)
         {
+            GetValidationData(ref dacParams);
             var ds = new DataSet();
             var param = TransferParamsType(dacParams);
 
@@ -56,6 +152,7 @@ namespace avj.Common
 
         private List<SqlParameter> TransferParamsType(List<SqlServerParam> dacParams)
         {
+            GetValidationData(ref dacParams);
             var mySqlParams = new List<SqlParameter>();
             foreach (var dacParam in dacParams)
             {

@@ -11,9 +11,11 @@ namespace RankCollectorFront
 {
     public class MysqlDbConnector : MySql
     {
+        readonly RankCollectorSettingsModel rankCollectorSettingsModel;
+
         public MysqlDbConnector()
         {
-
+            rankCollectorSettingsModel = GetSettings();
         }
 
         public RankCollectorSettingsModel GetSettings()
@@ -39,12 +41,12 @@ namespace RankCollectorFront
 
         public void SetInitBjValues()
         {
-            var mysqlParams = new List<MysqlParam>
-            {
-                new MysqlParam("@iWorkingTag", MysqlDbType.VarChar, "AP")
-            };
+            string query = @"
+            SET SQL_SAFE_UPDATES = 0; 
+           UPDATE `abjchat`.`abj_BjRank` SET `Valid` = 'N';
+            ";
 
-            ExecuteNonQuery("dbo.sp_Contents", mysqlParams);
+            ExecuteNonQuery(query);
         }
 
         public void SetBjModels(List<RankBjModel> bjModels)
@@ -55,10 +57,12 @@ namespace RankCollectorFront
 
         private void SetBjModel(RankBjModel bjModel)
         {
+            bjModel.HistoryDepth = rankCollectorSettingsModel.LastHistoryDepth;
+
             var mysqlParams = new List<MysqlParam>
             {
                 // 동작 구분
-                new MysqlParam("@iWorkingTag", MysqlDbType.VarChar, "AP"),
+                //new MysqlParam("@p_WorkingTag", MysqlDbType.VarChar, "AP"),
 
                 // BJ 아이디
                 new MysqlParam("@BjID", MysqlDbType.VarChar, bjModel.BjID),
@@ -68,6 +72,9 @@ namespace RankCollectorFront
 
                 // BJ 사진 url
                 new MysqlParam("@BjImgUrl", MysqlDbType.VarChar, bjModel.BjImgUrl),
+
+                // 
+                new MysqlParam("@HistoryDepth", MysqlDbType.Int16, bjModel.HistoryDepth),
 
                 // 아프리카 신입bj 랭킹
                 new MysqlParam("@RookieRanking", MysqlDbType.Int16, bjModel.RookieRanking),
@@ -136,21 +143,21 @@ namespace RankCollectorFront
                 //new MysqlParam("@iId", MysqlDbType.VarChar, bjModel.Valid),
 
                 // 추가된 날짜
-                new MysqlParam("@AddDate", MysqlDbType.Datetime, bjModel.AddDate)
+                //new MysqlParam("@AddDate", MysqlDbType.Datetime, bjModel.AddDate)
 
             };
 
-            ExecuteNonQuery("dbo.sp_Contents", mysqlParams);
+            ExecuteNonQuery(Query.InsertAbjBjRank, mysqlParams, System.Data.CommandType.Text);
         }
 
         public void SetInitUserValues()
         {
-            var mysqlParams = new List<MysqlParam>
-            {
-                new MysqlParam("@iWorkingTag", MysqlDbType.VarChar, "AP")
-            };
+            string query = @"
+            SET SQL_SAFE_UPDATES = 0; 
+               UPDATE `abjchat`.`abj_UserRank` SET `Valid` = 'N';
+                ";
 
-            ExecuteNonQuery("dbo.sp_Contents", mysqlParams);
+            ExecuteNonQuery(query);
         }
 
         public void SetUserModels(List<RankUserModel> userModels)
@@ -161,10 +168,12 @@ namespace RankCollectorFront
 
         private void SetUserModel(RankUserModel userModel)
         {
+            userModel.HistoryDepth = rankCollectorSettingsModel.LastHistoryDepth;
+
             var mysqlParams = new List<MysqlParam>
             {
                 // 동작 구분
-                new MysqlParam("@iWorkingTag", MysqlDbType.VarChar, "AP"),
+                //new MysqlParam("@WorkingTag", MysqlDbType.VarChar, "AP"),
 
                 // Bj 아이디
                 new MysqlParam("@BjID", MysqlDbType.VarChar, userModel.BjID),
@@ -175,20 +184,22 @@ namespace RankCollectorFront
                 // 사용자 닉네임
                 new MysqlParam("@UserNick", MysqlDbType.VarChar, userModel.UserNick),
 
+                new MysqlParam("@HistoryDepth", MysqlDbType.Int16, userModel.HistoryDepth),
+
                 // 빅팬 순위
                 new MysqlParam("@BigFanRanking", MysqlDbType.Int16, userModel.BigFanRanking),
 
                 // 서포터 순위
                 new MysqlParam("@SupportRanking", MysqlDbType.Int16, userModel.SupportRanking),
 
-                // 값 유효성 여부
-                //new MysqlParam("@BjID", MysqlDbType.VarChar, userModel.Valid),
+                // 값 유효성 여부 -> 기본값 'N'
+                //new MysqlParam("@Valid", MysqlDbType.VarChar, userModel.Valid),
 
                 // 추가된 날짜
-                new MysqlParam("@AddDate", MysqlDbType.Datetime, userModel.AddDate),
+                //new MysqlParam("@AddDate", MysqlDbType.Datetime, userModel.AddDate),
             };
 
-            ExecuteNonQuery("dbo.sp_Contents", mysqlParams);
+            ExecuteNonQuery(Query.InsertAbjUserRank, mysqlParams);
         }
     }
 }

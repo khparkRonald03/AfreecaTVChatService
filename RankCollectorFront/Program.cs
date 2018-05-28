@@ -14,6 +14,7 @@ namespace RankCollectorFront
 
         static void Main(string[] args)
         {
+
             // 1. BJ 수집
             int endPage = 2;
             var categoryRankParser = new CategoryRankParser();
@@ -72,8 +73,14 @@ namespace RankCollectorFront
 
             ;
 
-            // resultBjModels
-            // resultUserModel
+            var mysqlDbConnector = new MysqlDbConnector();
+            mysqlDbConnector.SetInitBjValues();
+            mysqlDbConnector.SetBjModels(resultBjModels);
+
+            mysqlDbConnector.SetInitUserValues();
+            mysqlDbConnector.SetUserModels(resultUserModel);
+
+            ;
         }
     }
 }

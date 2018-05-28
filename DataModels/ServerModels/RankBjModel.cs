@@ -2,6 +2,7 @@
 
 namespace DataModels
 {
+    [Serializable]
     public class RankBjModel
     {
         /// <summary>
@@ -13,6 +14,11 @@ namespace DataModels
         /// BJ 닉네임
         /// </summary>
         public string BjNick { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? HistoryDepth { get; set; }
 
         /// <summary>
         /// BJ 사진 url
