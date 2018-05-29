@@ -15,7 +15,6 @@ namespace avj.BizDac
 
         public RankCollectorSettingsModel GetSettings()
         {
-            //sqlQuery 설정
             var sqlQuery = RankCollectorSettingsQuery.SelectSettings;
             
             var result = Dac.GetSettings(sqlQuery);

@@ -28,12 +28,12 @@ namespace DataModels
         /// <summary>
         /// 빅팬 순위
         /// </summary>
-        public int? BigFanRanking { get; set; }
+        public int BigFanRanking { get; set; }
 
         /// <summary>
         /// 서포터 순위
         /// </summary>
-        public int? SupportRanking { get; set; }
+        public int SupportRanking { get; set; }
 
         /// <summary>
         /// 값 유효성 여부

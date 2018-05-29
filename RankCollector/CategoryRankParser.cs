@@ -26,7 +26,7 @@ namespace RankCollector
 
         public void SetTargetRank(RankBjModel fromModel, RankBjModel toModel, RankingType rankingType)
         {
-            int? rank = GetRank(fromModel, rankingType);
+            int rank = GetRank(fromModel, rankingType);
             SetRank(ref toModel, rank, rankingType);
         }
 
@@ -50,7 +50,7 @@ namespace RankCollector
             return bjModel;
         }
 
-        private void SetRank(ref RankBjModel bjModel, int? rank, RankingType rankingType)
+        private void SetRank(ref RankBjModel bjModel, int rank, RankingType rankingType)
         {
             switch (rankingType)
             {
@@ -120,7 +120,7 @@ namespace RankCollector
             }
         }
 
-        private int? GetRank(RankBjModel bjModel, RankingType rankingType)
+        private int GetRank(RankBjModel bjModel, RankingType rankingType)
         {
             switch (rankingType)
             {

@@ -36,10 +36,15 @@ namespace avj.BizDac
 
         #endregion
 
+        #region 랭킹 매칭
+
         public static string SelectAllValidYUserRank = @"
             SELECT * 
               FROM abjchat.abj_UserRank
-             WHERE Valid = 'Y';
+             WHERE Valid = 'Y'
+               AND BigFanRanking != 0;
         ";
+
+        #endregion
     }
 }
