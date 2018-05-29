@@ -186,6 +186,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MatchingController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DataCache\RankBjDataCache.cs" />
+    <Compile Include="DataCache\RankUserModelDataCache.cs" />
+    <Compile Include="DataCache\DataCacheCore\DataCacheCore.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -278,6 +281,14 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\avj.BizDac\avj.BizDac.csproj">
+      <Project>{c47b2f31-fea3-4cc3-967a-d7ae9f1bc891}</Project>
+      <Name>avj.BizDac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\avj.Common\avj.Common.csproj">
+      <Project>{89f4523f-a6fb-4eff-859e-c00667c96960}</Project>
+      <Name>avj.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataModels\DataModels.csproj">
       <Project>{cc7c0d11-9575-406b-b52a-a9a83ad63ac5}</Project>
       <Name>DataModels</Name>
