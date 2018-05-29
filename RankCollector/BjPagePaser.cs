@@ -36,11 +36,17 @@ namespace RankCollector
 
             for (int Idx = 0; Idx < bigFan.Starballoon_top.Count; Idx++)
             {
+                var userNick = bigFan.Starballoon_top[Idx].User_nick;
+                if (userNick.Contains("#") && userNick.Contains(":3"))
+                {
+                    userNick = userNick?.Replace(":3", "")?.Substring(1) ?? userNick;
+                }
+
                 var item = new RankUserModel()
                 {
                     BjID = bjID,
                     UserID = bigFan.Starballoon_top[Idx].User_id,
-                    UserNick = bigFan.Starballoon_top[Idx].User_nick,
+                    UserNick = userNick,
                     BigFanRanking = Idx + 1
                 };
 

@@ -25,7 +25,7 @@ namespace avj.BizDac
 
         #region 랭킹 매칭
 
-        public void SetLastActionDateSettings()
+        public void SetAferSettings()
         {
             var sqlQuery = RankCollectorSettingsQuery.UpdateLastActionDate;
 

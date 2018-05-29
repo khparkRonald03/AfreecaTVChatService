@@ -32,5 +32,10 @@ namespace DataModels
         /// 서포터
         /// </summary>
         public static string BulSupporter = "http://res.afreecatv.com/mybs/img/bul_s_on.gif";
+
+        /// <summary>
+        /// 이미지 없는 BJ 의 이미지
+        /// </summary>
+        public static string BjNonImage = "http://www.afreecatv.com/images/aftv_search/non.jpg";
     }
 }

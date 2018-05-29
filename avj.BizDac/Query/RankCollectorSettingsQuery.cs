@@ -22,7 +22,8 @@ namespace avj.BizDac
 
         public static string UpdateLastActionDate = @"
             UPDATE `abjchat`.`abj_RankCollectorSettings`
-               SET `LastActionDate` = now()
+               SET `LastActionDate` = now(),
+                   `LastHistoryDepth` = LastHistoryDepth + 1
              WHERE `Idx` = 1;
             ";
 

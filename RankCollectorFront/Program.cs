@@ -81,6 +81,7 @@ namespace RankCollectorFront
             bizUserRank.SetInitUserValues();
             bizUserRank.SetUserModels(resultUserModel);
 
+            bizSettings.SetAferSettings();
             ;
         }
     }
