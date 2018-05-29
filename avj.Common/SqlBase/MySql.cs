@@ -218,8 +218,6 @@ namespace avj.Common
 
         private List<MysqlParam> GetValidationData(ref List<MysqlParam> dacParams)
         {
-            GetValidationData(ref dacParams);
-
             var data = new List<MysqlParam>();
 
             if (dacParams != null)
@@ -356,7 +354,7 @@ namespace avj.Common
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public DataSet GetDataSet(string procedure, List<MysqlParam> dacParams)
+        public DataSet GetDataSet(string procedure, List<MysqlParam> dacParams, CommandType commandType)
         {
             GetValidationData(ref dacParams);
 
@@ -372,7 +370,7 @@ namespace avj.Common
             myAdapter = new MySqlDataAdapter();
 
             conn.ConnectionString = myConnectionString;
-            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandType = commandType;
             cmd.Connection = conn;
             cmd.CommandText = procedure;
 
@@ -388,11 +386,11 @@ namespace avj.Common
 
         }
 
-        public Tresult GetDataModel<Tresult>(string procedure, List<MysqlParam> dacParams)
+        public Tresult GetDataModel<Tresult>(string procedure, List<MysqlParam> dacParams, CommandType commandType = CommandType.StoredProcedure)
         {
             GetValidationData(ref dacParams);
 
-            var ds = GetDataSet(procedure, dacParams);
+            var ds = GetDataSet(procedure, dacParams, commandType);
             return GetDataToModel<Tresult>(ds);
         }
 

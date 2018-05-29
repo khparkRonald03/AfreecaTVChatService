@@ -8,6 +8,8 @@ namespace avj.BizDac
 {
     public class RankUserQuery
     {
+        #region 랭킹 수집
+
         public static string UpdateInitUserValues = @"
             SET SQL_SAFE_UPDATES = 0; 
                UPDATE `abjchat`.`abj_UserRank` SET `Valid` = 'N';
@@ -30,6 +32,14 @@ namespace avj.BizDac
         @BigFanRanking,
         @SupportRanking,
         NOW());
+        ";
+
+        #endregion
+
+        public static string SelectAllValidYUserRank = @"
+            SELECT * 
+              FROM abjchat.abj_UserRank
+             WHERE Valid = 'Y';
         ";
     }
 }

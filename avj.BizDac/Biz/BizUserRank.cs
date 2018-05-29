@@ -11,12 +11,17 @@ namespace avj.BizDac
     {
         readonly RankCollectorSettingsModel rankCollectorSettingsModel;
 
+        DacUserRank Dac { get; set; }
+
         public BizUserRank()
         {
-
+            Dac = new DacUserRank();
         }
 
+        #region 랭킹 수집
+
         public BizUserRank(RankCollectorSettingsModel settingsModel)
+            : this()
         {
             rankCollectorSettingsModel = settingsModel;
         }
@@ -25,23 +30,29 @@ namespace avj.BizDac
         {
             string query = RankUserQuery.UpdateInitUserValues;
 
-            var dac = new DacUserRank();
-            dac.SetInitUserValues(query);
+            Dac.SetInitUserValues(query);
         }
 
         public void SetUserModels(List<RankUserModel> userModels)
         {
             var insertAbjUserRank = RankUserQuery.InsertAbjUserRank;
 
-            var dac = new DacUserRank();
-
             foreach (var userModel in userModels)
             {
                 userModel.HistoryDepth = rankCollectorSettingsModel.LastHistoryDepth;
-                dac.SetUserModel(insertAbjUserRank, userModel);
+                Dac.SetUserModel(insertAbjUserRank, userModel);
             }
                 
         }
 
+        #endregion
+
+        public List<RankUserModel> GetAllRankUserModels()
+        {
+            string query = RankUserQuery.SelectAllValidYUserRank;
+
+            var result = Dac.GetAllRankUserModels(query);
+            return result;
+        }
     }
 }

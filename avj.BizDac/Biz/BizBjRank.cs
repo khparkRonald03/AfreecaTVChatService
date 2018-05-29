@@ -11,34 +11,47 @@ namespace avj.BizDac
     {
         readonly RankCollectorSettingsModel rankCollectorSettingsModel;
 
+        DacBjRank Dac { get; set; }
+
         public BizBjRank()
         {
+            Dac = new DacBjRank();
         }
 
         public BizBjRank(RankCollectorSettingsModel RankCollectorSettingsModel)
+            : this()
         {
             rankCollectorSettingsModel = RankCollectorSettingsModel;
         }
 
+        #region 랭킹 수집
+
         public void SetInitBjValues()
         {
             string query = BjRankQuery.UpdateInitBjValues;
-            var dac = new DacBjRank();
-            dac.SetInitBjValues(query);
+            Dac.SetInitBjValues(query);
         }
 
         public void SetBjModels(List<RankBjModel> bjModels)
         {
             var query = BjRankQuery.InsertAbjBjRank;
 
-            var dac = new DacBjRank();
-
             foreach (var bjModel in bjModels)
             {
                 bjModel.HistoryDepth = rankCollectorSettingsModel.LastHistoryDepth;
-                dac.SetBjModel(bjModel, query);
+                Dac.SetBjModel(bjModel, query);
             }
                 
+        }
+
+        #endregion
+
+        public List<RankBjModel> GetAllRankBjModels()
+        {
+            string query = BjRankQuery.SelectAllValidYBjRank;
+
+            var result = Dac.GetAllRankBjModels(query);
+            return result;
         }
     }
 }

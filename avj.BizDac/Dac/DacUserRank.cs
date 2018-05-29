@@ -10,7 +10,6 @@ namespace avj.BizDac
 {
     public class DacUserRank : MySql
     {
-
         public void SetInitUserValues(string query)
         {
             ExecuteNonQuery(query);
@@ -48,6 +47,12 @@ namespace avj.BizDac
             };
 
             ExecuteNonQuery(query, mysqlParams);
+        }
+
+        public List<RankUserModel> GetAllRankUserModels(string query)
+        {
+            var result = GetDataModel<List<RankUserModel>>(query);
+            return result;
         }
     }
 }

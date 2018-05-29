@@ -107,5 +107,12 @@ namespace avj.BizDac
 
             ExecuteNonQuery(query, mysqlParams, System.Data.CommandType.Text);
         }
+
+        public List<RankBjModel> GetAllRankBjModels(string query)
+        {
+            var result = GetDataModel<List<RankBjModel>>(query);
+            return result;
+        }
+
     }
 }
