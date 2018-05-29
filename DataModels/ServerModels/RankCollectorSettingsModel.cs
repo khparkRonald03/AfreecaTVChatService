@@ -11,6 +11,8 @@ namespace DataModels
 
         public string ActionWeek { get; set; }
 
-        public DateTime? ActionTime { get; set; }
+        public string ActionTime { get; set; } // 11:00
+
+        public DateTime? LastActionDate { get; set; }
     }
 }

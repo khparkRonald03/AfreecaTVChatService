@@ -12,16 +12,13 @@ namespace avj.BizDac
     {
         public RankCollectorSettingsModel GetSettings(string sqlQuery)
         {
-            try
-            {
-                //목록데이터반환
-                return GetDataModel<RankCollectorSettingsModel>(sqlQuery);
-            }
-            catch (Exception ex)
-            {
-                string log = ex.Message;
-                return new RankCollectorSettingsModel();
-            }
+            //목록데이터반환
+            return GetDataModel<RankCollectorSettingsModel>(sqlQuery);
+        }
+
+        public void SetLastActionDateSettings(string query)
+        {
+            ExecuteNonQuery(query);
         }
     }
 }

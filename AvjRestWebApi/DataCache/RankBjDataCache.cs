@@ -33,7 +33,7 @@ namespace AvjRestWebApi.DataCache
         // 0. 캐시 데이터 별 고유 키를 정의하여 줍니다.
         private readonly string KeyOfGetRankBjModels = "KeyOfGetRankBjModels";
 
-        public List<RankBjModel> GetRankUserModels
+        public List<RankBjModel> GetRankBjModels
         {
             get
             {

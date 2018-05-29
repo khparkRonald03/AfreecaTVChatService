@@ -1,4 +1,5 @@
-﻿using DataModels;
+﻿using AvjRestWebApi.DataCache;
+using DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,12 @@ namespace AvjRestWebApi.Controllers
         {
             //user.Id = Guid.NewGuid();
             //UsersController.Users.Add(user);
+
+            var rankBjModels = RankBjDataCache.Instance.GetRankBjModels;
+
+            var rankUserModels = RankUserModelDataCache.Instance.GetRankUserModels;
+
+
             return user;
         }
     }

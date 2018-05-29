@@ -1,9 +1,4 @@
 ﻿using DataModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace avj.BizDac
 {
@@ -25,6 +20,17 @@ namespace avj.BizDac
             
             var result = Dac.GetSettings(sqlQuery);
             return result;
+        }
+
+        #endregion
+
+        #region 랭킹 매칭
+
+        public void SetLastActionDateSettings()
+        {
+            var sqlQuery = RankCollectorSettingsQuery.UpdateLastActionDate;
+
+            Dac.SetLastActionDateSettings(sqlQuery);
         }
 
         #endregion

@@ -10,11 +10,22 @@ namespace avj.BizDac
     {
         #region 랭킹 수집
 
-        public static string SelectSettings = @"SELECT Idx
-                                              , LastHistoryDepth 
-                                           FROM abjchat.RankCollectorSettings 
-                                          WHERE Idx = 1;
-                                        ";
+        public static string SelectSettings = @"
+            SELECT Idx
+                 , LastHistoryDepth 
+              FROM abjchat.RankCollectorSettings 
+             WHERE Idx = 1;
+        ";
+        #endregion
+
+        #region 랭킹 매칭
+
+        public static string UpdateLastActionDate = @"
+            UPDATE `abjchat`.`abj_RankCollectorSettings`
+               SET `LastActionDate` = now()
+             WHERE `Idx` = 1;
+            ";
+
         #endregion
     }
 }
