@@ -1,64 +1,22 @@
-﻿using System;
+﻿using avj.Common;
+using DataModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using avj.Common;
-using DataModels;
-using RankCollector;
 
-namespace RankCollectorFront
+namespace avj.BizDac
 {
-    public class MysqlDbConnector : MySql
+    public class DacBjRank : MySql
     {
-        readonly RankCollectorSettingsModel rankCollectorSettingsModel;
-
-        public MysqlDbConnector()
+        public void SetInitBjValues(string query)
         {
-            rankCollectorSettingsModel = GetSettings();
-        }
-
-        public RankCollectorSettingsModel GetSettings()
-        {
-            try
-            {
-                //sqlQuery 설정
-                var sqlQuery = @"SELECT Idx
-                                      , LastHistoryDepth 
-                                   FROM abjchat.RankCollectorSettings 
-                                  WHERE Idx = 1;
-                                ";
-
-                //목록데이터반환
-                return GetDataModel<RankCollectorSettingsModel>(sqlQuery);
-            }
-            catch (Exception ex)
-            {
-                string log = ex.Message;
-                return new RankCollectorSettingsModel();
-            }
-        }
-
-        public void SetInitBjValues()
-        {
-            string query = @"
-            SET SQL_SAFE_UPDATES = 0; 
-           UPDATE `abjchat`.`abj_BjRank` SET `Valid` = 'N';
-            ";
-
             ExecuteNonQuery(query);
         }
 
-        public void SetBjModels(List<RankBjModel> bjModels)
+        public void SetBjModel(RankBjModel bjModel, string query)
         {
-            foreach (var bjModel in bjModels)
-                SetBjModel(bjModel);
-        }
-
-        private void SetBjModel(RankBjModel bjModel)
-        {
-            bjModel.HistoryDepth = rankCollectorSettingsModel.LastHistoryDepth;
-
             var mysqlParams = new List<MysqlParam>
             {
                 // 동작 구분
@@ -147,59 +105,7 @@ namespace RankCollectorFront
 
             };
 
-            ExecuteNonQuery(Query.InsertAbjBjRank, mysqlParams, System.Data.CommandType.Text);
-        }
-
-        public void SetInitUserValues()
-        {
-            string query = @"
-            SET SQL_SAFE_UPDATES = 0; 
-               UPDATE `abjchat`.`abj_UserRank` SET `Valid` = 'N';
-                ";
-
-            ExecuteNonQuery(query);
-        }
-
-        public void SetUserModels(List<RankUserModel> userModels)
-        {
-            foreach (var userModel in userModels)
-                SetUserModel(userModel);
-        }
-
-        private void SetUserModel(RankUserModel userModel)
-        {
-            userModel.HistoryDepth = rankCollectorSettingsModel.LastHistoryDepth;
-
-            var mysqlParams = new List<MysqlParam>
-            {
-                // 동작 구분
-                //new MysqlParam("@WorkingTag", MysqlDbType.VarChar, "AP"),
-
-                // Bj 아이디
-                new MysqlParam("@BjID", MysqlDbType.VarChar, userModel.BjID),
-
-                // 사용자 아이디 (사용자별 중복가능)
-                new MysqlParam("@UserID", MysqlDbType.VarChar, userModel.UserID),
-
-                // 사용자 닉네임
-                new MysqlParam("@UserNick", MysqlDbType.VarChar, userModel.UserNick),
-
-                new MysqlParam("@HistoryDepth", MysqlDbType.Int16, userModel.HistoryDepth),
-
-                // 빅팬 순위
-                new MysqlParam("@BigFanRanking", MysqlDbType.Int16, userModel.BigFanRanking),
-
-                // 서포터 순위
-                new MysqlParam("@SupportRanking", MysqlDbType.Int16, userModel.SupportRanking),
-
-                // 값 유효성 여부 -> 기본값 'N'
-                //new MysqlParam("@Valid", MysqlDbType.VarChar, userModel.Valid),
-
-                // 추가된 날짜
-                //new MysqlParam("@AddDate", MysqlDbType.Datetime, userModel.AddDate),
-            };
-
-            ExecuteNonQuery(Query.InsertAbjUserRank, mysqlParams);
+            ExecuteNonQuery(query, mysqlParams, System.Data.CommandType.Text);
         }
     }
 }

@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crypto\CryptHelper.cs" />
+    <Compile Include="Crypto\EBBED23F9502403799B0DD0B906A11E0.cs" />
     <Compile Include="MySql\MySql_.cs" />
     <Compile Include="MySql\MySqlControl_.cs" />
     <Compile Include="MySql\MySqlModelObject_.cs" />

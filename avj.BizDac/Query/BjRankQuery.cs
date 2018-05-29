@@ -1,32 +1,17 @@
-﻿using DataModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RankCollectorFront
+namespace avj.BizDac
 {
-    public class Query
+    public class BjRankQuery
     {
-        public static string InsertAbjUserRank = @"
-        INSERT INTO `abjchat`.`abj_UserRank`
-        (`BjID`,
-        `HistoryDepth`,
-        `UserID`,
-        `UserNick`,
-        `BigFanRanking`,
-        `SupportRanking`,
-        `AddDate`)
-        VALUES
-        (@BjID,
-        @HistoryDepth,
-        @UserID,
-        @UserNick,
-        @BigFanRanking,
-        @SupportRanking,
-        NOW());
-        ";
+        public static string UpdateInitBjValues = @"
+            SET SQL_SAFE_UPDATES = 0; 
+               UPDATE `abjchat`.`abj_BjRank` SET `Valid` = 'N';
+                ";
 
         public static string InsertAbjBjRank = @"
         INSERT INTO `abjchat`.`abj_BjRank`

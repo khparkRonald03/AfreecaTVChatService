@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatClientViewerLogin", "Ch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "avj.Common", "avj.Common\avj.Common.csproj", "{89F4523F-A6FB-4EFF-859E-C00667C96960}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvjRestWebApi", "AvjRestWebApi\AvjRestWebApi.csproj", "{041365AA-A5A7-48DD-8506-4156D25A628E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "avj.BizDac", "avj.BizDac\avj.BizDac.csproj", "{C47B2F31-FEA3-4CC3-967A-D7AE9F1BC891}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{89F4523F-A6FB-4EFF-859E-C00667C96960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89F4523F-A6FB-4EFF-859E-C00667C96960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89F4523F-A6FB-4EFF-859E-C00667C96960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{041365AA-A5A7-48DD-8506-4156D25A628E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{041365AA-A5A7-48DD-8506-4156D25A628E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{041365AA-A5A7-48DD-8506-4156D25A628E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{041365AA-A5A7-48DD-8506-4156D25A628E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C47B2F31-FEA3-4CC3-967A-D7AE9F1BC891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C47B2F31-FEA3-4CC3-967A-D7AE9F1BC891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C47B2F31-FEA3-4CC3-967A-D7AE9F1BC891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C47B2F31-FEA3-4CC3-967A-D7AE9F1BC891}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

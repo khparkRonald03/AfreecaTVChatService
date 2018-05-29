@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using avj.BizDac;
 using DataModels;
 using RankCollector;
 
@@ -10,8 +9,6 @@ namespace RankCollectorFront
 {
     public class Program
     {
-        RankCollectorSettingsModel Settings = new RankCollectorSettingsModel();
-
         static void Main(string[] args)
         {
 
@@ -73,12 +70,16 @@ namespace RankCollectorFront
 
             ;
 
-            var mysqlDbConnector = new MysqlDbConnector();
-            mysqlDbConnector.SetInitBjValues();
-            mysqlDbConnector.SetBjModels(resultBjModels);
+            var bizSettings = new BizRankCollectorSettings();
+            var Settings = bizSettings.GetSettings();
 
-            mysqlDbConnector.SetInitUserValues();
-            mysqlDbConnector.SetUserModels(resultUserModel);
+            var bizBjRank = new BizBjRank(Settings);
+            bizBjRank.SetInitBjValues();
+            bizBjRank.SetBjModels(resultBjModels);
+
+            var bizUserRank = new BizUserRank(Settings);
+            bizUserRank.SetInitUserValues();
+            bizUserRank.SetUserModels(resultUserModel);
 
             ;
         }
