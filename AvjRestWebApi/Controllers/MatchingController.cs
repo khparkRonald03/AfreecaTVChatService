@@ -12,7 +12,7 @@ namespace AvjRestWebApi.Controllers
     //[RoutePrefix("api/users")]
     public class MatchingController : ApiController
     {
-        [HttpGet]
+        //[HttpGet]
         //[HttpPost]
         [Route("Matching/UsersMatching")]
         public List<UserModel> UsersMatching (JsonModel jsonModel)

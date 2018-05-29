@@ -83,13 +83,6 @@
     <Compile Include="ShowHelper.Designer.cs">
       <DependentUpon>ShowHelper.cs</DependentUpon>
     </Compile>
-    <Compile Include="TestWebApiForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TestWebApiForm.Designer.cs">
-      <DependentUpon>TestWebApiForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WebApiCaller.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -104,9 +97,6 @@
     </Compile>
     <EmbeddedResource Include="ShowHelper.resx">
       <DependentUpon>ShowHelper.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestWebApiForm.resx">
-      <DependentUpon>TestWebApiForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -51,7 +51,9 @@
     <Compile Include="Query\RankCollectorSettingsQuery.cs" />
     <Compile Include="Query\RankUserQuery.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\avj.Common\avj.Common.csproj">
       <Project>{89f4523f-a6fb-4eff-859e-c00667c96960}</Project>
