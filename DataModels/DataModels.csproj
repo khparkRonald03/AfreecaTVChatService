@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientModels\IconUrl.cs" />
+    <Compile Include="ClientModels\JsonModel.cs" />
     <Compile Include="ClientModels\UserModel.cs" />
     <Compile Include="ClientModels\BjModel.cs" />
     <Compile Include="ClientModels\ChatModel.cs" />

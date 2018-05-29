@@ -56,6 +56,14 @@ namespace ChatClientViewer
 
         private void Main_Load(object sender, EventArgs e)
         {
+#if DEBUG
+            //test
+            ;
+            TestWebApiForm test = new TestWebApiForm();
+            return;
+
+#endif
+
             if (string.IsNullOrEmpty(LoginUserID))
             {
                 this.Close();

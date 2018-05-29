@@ -13,7 +13,7 @@ namespace avj.BizDac
         public static string SelectSettings = @"
             SELECT Idx
                  , LastHistoryDepth 
-              FROM abjchat.RankCollectorSettings 
+              FROM abjchat.abj_RankCollectorSettings
              WHERE Idx = 1;
         ";
         #endregion

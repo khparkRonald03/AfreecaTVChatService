@@ -9,17 +9,32 @@ using System.Web.Http;
 
 namespace AvjRestWebApi.Controllers
 {
+    //[RoutePrefix("api/users")]
     public class MatchingController : ApiController
     {
-        [HttpPost]
-        [Route("")]
-        public UserModel UserMatching (BjModel bj, UserModel user)
+        [HttpGet]
+        //[HttpPost]
+        [Route("Matching/UsersMatching")]
+        public List<UserModel> UsersMatching (JsonModel jsonModel)
         {
             //user.Id = Guid.NewGuid();
             //UsersController.Users.Add(user);
 
             // bj 확인은 테스트 기간때 기능 추가하기 ### 
 
+            var bj = jsonModel.BjModel;
+            var users = jsonModel.UserModels;
+
+            foreach (var user in users)
+            {
+                UserMatching(bj, user);
+            }
+
+            return users;
+        }
+
+        private UserModel UserMatching(BjModel bj, UserModel user)
+        {
             var rankBjModels = RankBjDataCache.Instance.GetRankBjModels;
             var rankUserModels = RankUserModelDataCache.Instance.GetRankUserModels;
 
@@ -90,7 +105,6 @@ namespace AvjRestWebApi.Controllers
                 }
 
             }
-
 
             return user;
         }

@@ -46,7 +46,7 @@ namespace avj.BizDac
                 //new MysqlParam("@AddDate", MysqlDbType.Datetime, userModel.AddDate),
             };
 
-            ExecuteNonQuery(query, mysqlParams);
+            ExecuteNonQuery(query, mysqlParams, System.Data.CommandType.Text);
         }
 
         public List<RankUserModel> GetAllRankUserModels(string query)
