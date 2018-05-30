@@ -12,25 +12,30 @@ namespace AvjRestWebApi.Controllers
     //[RoutePrefix("api/users")]
     public class MatchingController : ApiController
     {
-        //[HttpGet]
-        //[HttpPost]
+        //[AllowAnonymous]
+        [HttpPost]
         [Route("Matching/UsersMatching")]
-        public List<UserModel> UsersMatching (JsonModel jsonModel)
+        public JsonModel UsersMatching (JsonModel jsonModel)
         {
             //user.Id = Guid.NewGuid();
             //UsersController.Users.Add(user);
 
             // bj 확인은 테스트 기간때 기능 추가하기 ### 
+            var result = new JsonModel();
+
 
             var bj = jsonModel.BjModel;
             var users = jsonModel.UserModels;
 
+            result.UserModels = new List<UserModel>();
             foreach (var user in users)
             {
-                UserMatching(bj, user);
+                var tmp = UserMatching(bj, user);
+                result.UserModels.Add(tmp);
             }
 
-            return users;
+            result.BjModel = bj;
+            return result;
         }
 
         private UserModel UserMatching(BjModel bj, UserModel user)
@@ -54,7 +59,7 @@ namespace AvjRestWebApi.Controllers
                 user.BJs = new List<BjModel>();
 
             // 빅팬 매칭
-            if (rankUserModels.Any(b => b.BjID == user.ID))
+            if (rankUserModels.Any(b => b.UserID == user.ID))
             {
                 foreach (var bjModel in rankBjModels)
                 {
@@ -62,7 +67,7 @@ namespace AvjRestWebApi.Controllers
 
                     foreach (var userModel in matchingBjUser)
                     {
-                        if (userModel.BjID != user.ID)
+                        if (userModel.UserID != user.ID)
                             continue;
 
                         var Addbj = new BjModel()
