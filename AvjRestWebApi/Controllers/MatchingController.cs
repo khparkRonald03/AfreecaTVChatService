@@ -36,9 +36,9 @@ namespace AvjRestWebApi.Controllers
                                          join cBj in users on sBj.BjID equals cBj.ID
                                          select sBj)?.ToList();
 
-                        var clientBjs = from sBj in RankBjDataCache.Instance.GetRankBjModels
+                        var clientBjs = (from sBj in RankBjDataCache.Instance.GetRankBjModels
                                         join cBj in users on sBj.BjID equals cBj.ID
-                                        select cBj;
+                                        select cBj)?.Distinct();
 
                         if (serverBjs != null && serverBjs.Count > 0)
                         {
@@ -58,7 +58,7 @@ namespace AvjRestWebApi.Controllers
 
                         var clientUsers = (from sUsers in RankUserModelDataCache.Instance.GetRankUserModels
                                            join cUsers in users on sUsers.UserID equals cUsers.ID
-                                           select cUsers)?.ToList();
+                                           select cUsers)?.Distinct()?.ToList();
 
                         if (serverUsers != null && serverUsers.Count > 0)
                         {
@@ -111,7 +111,7 @@ namespace AvjRestWebApi.Controllers
         /// <returns></returns>
         private List<UserModel> BigFanUserMatching(BjModel bj, List<UserModel> clientUsers, List<RankUserModel> serverUsers)
         {
-            for (int clientUserIdx = 0; clientUserIdx < clientUsers.Count; clientUserIdx++)
+            Parallel.For(0, clientUsers.Count, (clientUserIdx) =>
             {
                 if (clientUsers[clientUserIdx].BJs == null)
                     clientUsers[clientUserIdx].BJs = new List<BjModel>();
@@ -155,8 +155,7 @@ namespace AvjRestWebApi.Controllers
 
                     clientUsers[clientUserIdx].BJs.Add(Addbj);
                 });
-
-            }
+            });
 
             return clientUsers;
         }
