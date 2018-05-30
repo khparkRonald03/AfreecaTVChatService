@@ -12,24 +12,9 @@ namespace ChatClientViewer
     /// </summary>
     public class WebApiCaller
     {
-        static HttpClient client = new HttpClient();
+        HttpClient client = new HttpClient();
 
-        public static void GetMatchingData(JsonModel jsonModel)
-        {
-            RunAsync(jsonModel).GetAwaiter().GetResult();
-        }
-        
-        static async Task<JsonModel> MatchingJsonModelAsync(JsonModel jsonModel)
-        {
-            HttpResponseMessage response = await client.PostAsJsonAsync($"Matching/UsersMatching", jsonModel);
-            response.EnsureSuccessStatusCode();
-
-            // Deserialize the updated product from the response body.
-            jsonModel = await response.Content.ReadAsAsync<JsonModel>();
-            return jsonModel;
-        }
-
-        static async Task RunAsync(JsonModel jsonModel)
+        async Task<JsonModel> RunAsync(JsonModel jsonModel)
         {
             // Update port # in the following line.
             client.BaseAddress = new Uri("http://localhost:11351/");
@@ -38,14 +23,21 @@ namespace ChatClientViewer
 
             try
             {
-                var result = await MatchingJsonModelAsync(jsonModel);
+                HttpResponseMessage response = await client.PostAsJsonAsync($"Matching/UsersMatching", jsonModel);
+
+                response.EnsureSuccessStatusCode();
+
+                // Deserialize the updated product from the response body.
+                jsonModel = await response.Content.ReadAsAsync<JsonModel>();
+                return jsonModel;
             }
             catch (Exception e)
             {
                 string log = e.Message;
+                return null;
             }
 
         }
-        
+
     }
 }
