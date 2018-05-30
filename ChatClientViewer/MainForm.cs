@@ -65,7 +65,7 @@ namespace ChatClientViewer
         List<ChatModel> cChatQueue = new List<ChatModel>();
         List<ChatModel> nChatQueue = new List<ChatModel>();
 
-        Queue<Task<JsonModel>> jsonModels = new Queue<Task<JsonModel>>();
+        Queue<JsonModel> jsonModels = new Queue<JsonModel>();
 
         delegate void Control_Invoker();
         delegate void Control_Invoker_ParamStr(string s);
@@ -491,11 +491,18 @@ namespace ChatClientViewer
             //    user.IsNew = false;
             ;
             // web api 매칭 요청
-            jsonModels.Enqueue(webApiCaller.RunAsync(new JsonModel()
+            CallWebApi(tmpnUsers);
+        }
+
+        public async void CallWebApi(List<UserModel> userModels)
+        {
+            var returnJModels =  await webApiCaller.RunAsync(new JsonModel()
             {
                 BjModel = Bj,
-                UserModels = tmpnUsers
-            }));
+                UserModels = userModels
+            });
+
+            jsonModels.Enqueue(returnJModels);
         }
 
         //private void UIRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -525,7 +532,7 @@ namespace ChatClientViewer
                 try
                 {
                     var jModel = jsonModels.First();
-                    var apiUsers = jModel?.Result?.UserModels;
+                    var apiUsers = jModel?.UserModels;
                     if (apiUsers != null)
                     {
                         tmpUsers.AddRange(apiUsers);
