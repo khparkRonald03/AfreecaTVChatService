@@ -14,13 +14,16 @@ namespace ChatClientViewer
     {
         HttpClient client = new HttpClient();
 
-        public async Task<JsonModel> RunAsync(JsonModel jsonModel)
+        public WebApiCaller()
         {
             // Update port # in the following line.
             client.BaseAddress = new Uri("http://localhost:11351/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
 
+        public async Task<JsonModel> RunAsync(JsonModel jsonModel)
+        {
             try
             {
                 HttpResponseMessage response = await client.PostAsJsonAsync($"Matching/UsersMatching", jsonModel);

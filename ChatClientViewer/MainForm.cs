@@ -70,6 +70,8 @@ namespace ChatClientViewer
         delegate void Control_Invoker();
         delegate void Control_Invoker_ParamStr(string s);
         delegate void Control_Invoker_ParamStrs(string s1, string s2, string s3);
+        delegate void Control_Invoker_ParamJsonModel(JsonModel jsonModel);
+        delegate void Control_Invoker_ParamUserModles(List<UserModel> userModels);
 
         public Main(string[] args)
         {
@@ -84,7 +86,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "nila25";
+                LoginUserID = "yeseul0104";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -176,36 +178,36 @@ namespace ChatClientViewer
                 if (!ShowSetboxViewer())
                     continue;
 
-                //GetUserTimer.Interval = 2000;
-                //GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
-                //GetUserTimer.Start();
+                GetUserTimer.Interval = 2000;
+                GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
+                GetUserTimer.Start();
 
-                //DataDisplayTimer.Interval = 2000;
-                //DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
-                //DataDisplayTimer.Start();
+                DataDisplayTimer.Interval = 2000;
+                DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
+                DataDisplayTimer.Start();
 
 
-                var ts2 = new ThreadStart(GetUserTimer_Elapsed);
-                BackGround1 = new Thread(ts2)
-                {
-                    IsBackground = true
-                };
-                BackGround1.Start();
+                //var ts2 = new ThreadStart(GetUserTimer_Elapsed);
+                //BackGround1 = new Thread(ts2)
+                //{
+                //    IsBackground = true
+                //};
+                //BackGround1.Start();
 
-                var ts3 = new ThreadStart(UIRefreshTimer_Elapsed);
-                BackGround2 = new Thread(ts3)
-                {
-                    IsBackground = true
-                };
-                BackGround2.Start();
+                //var ts3 = new ThreadStart(UIRefreshTimer_Elapsed);
+                //BackGround2 = new Thread(ts3)
+                //{
+                //    IsBackground = true
+                //};
+                //BackGround2.Start();
 
                 break;
             }
         }
 
         // 접속 사용자 수집
-        //private void GetUserTimer_Elapsed(object sender, ElapsedEventArgs e)
-        private void GetUserTimer_Elapsed()
+        private void GetUserTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //private void GetUserTimer_Elapsed()
         {
             lock (LockObject)
             {
@@ -486,27 +488,46 @@ namespace ChatClientViewer
 
             //nUsers = tmpnUsers;
 
-            // 기존 항목 모두 최신 추가 항목 지우기
-            //foreach (var user in cUsers)
-            //    user.IsNew = false;
             ;
             // web api 매칭 요청
-            CallWebApi(tmpnUsers);
+            var returnJModel = Task.Run(() => CallWebApi(tmpnUsers)).Result;
+
+            lock (LockObject)
+            {
+                var cloneModel = CloneModel(returnJModel);
+                jsonModels.Enqueue(cloneModel);
+            }
+               
+            ;
         }
 
-        public async void CallWebApi(List<UserModel> userModels)
+        private async Task<JsonModel> CallWebApi(List<UserModel> userModels)
         {
-            var returnJModels =  await webApiCaller.RunAsync(new JsonModel()
+            var returnJModels = await webApiCaller.RunAsync(new JsonModel()
             {
                 BjModel = Bj,
                 UserModels = userModels
-            });
+            }).ConfigureAwait(true);
 
-            jsonModels.Enqueue(returnJModels);
+            return returnJModels;
         }
 
-        //private void UIRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
-        private void UIRefreshTimer_Elapsed()
+        private void AddJsonModels(JsonModel jModel)
+        {
+            if (WbUser.InvokeRequired)
+            {
+                var ci = new Control_Invoker_ParamJsonModel(AddJsonModels);
+                this.BeginInvoke(ci, jModel);
+            }
+            else
+            {
+                jsonModels.Enqueue(jModel);
+            }
+
+        }
+
+        private void UIRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //private void UIRefreshTimer_Elapsed()
         {
             lock (LockObject)
             {
@@ -550,6 +571,7 @@ namespace ChatClientViewer
 
             foreach (var apiUser in tmpUsers)
             {
+                // 여기서 cUsers에 없음... 확인해보기 ######################################################
                 var user = cUsers.Find(c => c.ID == apiUser.ID);
                 if (user != null && string.IsNullOrEmpty(user.ID))
                 {
@@ -559,7 +581,7 @@ namespace ChatClientViewer
                 }
             }
 
-            // 혹시모를 중복 제거
+            // 혹시모를 중복 제거 // ############################### -> 이게
             cUsers = cUsers.Distinct().ToList();
 
             //while (jsonModels.Count > 0)
@@ -746,6 +768,15 @@ namespace ChatClientViewer
             formatter.Serialize(stream, oldList);
             stream.Position = 0;
             return (List<T>)formatter.Deserialize(stream);
+        }
+
+        private T CloneModel<T>(T oldModel)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            MemoryStream stream = new MemoryStream();
+            formatter.Serialize(stream, oldModel);
+            stream.Position = 0;
+            return (T)formatter.Deserialize(stream);
         }
         #endregion
 
