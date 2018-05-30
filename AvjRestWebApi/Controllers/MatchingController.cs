@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace AvjRestWebApi.Controllers
@@ -18,44 +19,57 @@ namespace AvjRestWebApi.Controllers
         {
 
             // bj 확인은 테스트 기간때 기능 추가하기 ### 
-            var result = new JsonModel();
-            result.UserModels = new List<UserModel>();
+            var result = new JsonModel
+            {
+                UserModels = new List<UserModel>()
+            };
 
             var bj = jsonModel.BjModel;
             var users = jsonModel.UserModels;
 
-            var serverBjs = (from sBj in RankBjDataCache.Instance.GetRankBjModels
-                        join cBj in users on sBj.BjID equals cBj.ID
-                        select sBj)?.ToList();
-
-            var clientBjs = from sBj in RankBjDataCache.Instance.GetRankBjModels
-                            join cBj in users on sBj.BjID equals cBj.ID
-                            select cBj;
-
-            if (serverBjs != null && serverBjs.Count > 0)
+            Parallel.For(0, 2, (i) =>
             {
-                foreach (var user in clientBjs)
+                switch (i)
                 {
-                    var tmp = BjUserMatching(bj, user, serverBjs);
-                    if (tmp != null)
-                    result.UserModels.Add(tmp);
+                    case 0:
+                        var serverBjs = (from sBj in RankBjDataCache.Instance.GetRankBjModels
+                                         join cBj in users on sBj.BjID equals cBj.ID
+                                         select sBj)?.ToList();
+
+                        var clientBjs = from sBj in RankBjDataCache.Instance.GetRankBjModels
+                                        join cBj in users on sBj.BjID equals cBj.ID
+                                        select cBj;
+
+                        if (serverBjs != null && serverBjs.Count > 0)
+                        {
+                            foreach (var user in clientBjs)
+                            {
+                                var tmp = BjUserMatching(bj, user, serverBjs);
+                                if (tmp != null)
+                                    result.UserModels.Add(tmp);
+                            }
+                        }
+                        break;
+
+                    case 1:
+                        var serverUsers = (from sUsers in RankUserModelDataCache.Instance.GetRankUserModels
+                                           join cUsers in users on sUsers.UserID equals cUsers.ID
+                                           select sUsers).ToList();
+
+                        var clientUsers = (from sUsers in RankUserModelDataCache.Instance.GetRankUserModels
+                                           join cUsers in users on sUsers.UserID equals cUsers.ID
+                                           select cUsers)?.ToList();
+
+                        if (serverUsers != null && serverUsers.Count > 0)
+                        {
+                            var tmp = BigFanUserMatching(bj, clientUsers, serverUsers);
+                            if (tmp != null)
+                                result.UserModels.AddRange(tmp);
+                        }
+                        break;
                 }
-            }
-
-            var serverUsers = (from sUsers in RankUserModelDataCache.Instance.GetRankUserModels
-                           join cUsers in users on sUsers.UserID equals cUsers.ID
-                           select sUsers).ToList();
-
-            var clientUsers = (from sUsers in RankUserModelDataCache.Instance.GetRankUserModels
-                              join cUsers in users on sUsers.UserID equals cUsers.ID
-                              select cUsers)?.ToList();
-
-            if (serverUsers != null && serverUsers.Count > 0)
-            {
-                var tmp = BigFanUserMatching(bj, clientUsers, serverUsers);
-                if (tmp != null)
-                    result.UserModels.AddRange(tmp);
-            }
+                
+            });
 
             result.BjModel = bj;
             return result;
@@ -97,53 +111,52 @@ namespace AvjRestWebApi.Controllers
         /// <returns></returns>
         private List<UserModel> BigFanUserMatching(BjModel bj, List<UserModel> clientUsers, List<RankUserModel> serverUsers)
         {
-            foreach (var cUser in clientUsers)
+            for (int clientUserIdx = 0; clientUserIdx < clientUsers.Count; clientUserIdx++)
             {
-                if (cUser.BJs == null)
-                    cUser.BJs = new List<BjModel>();
+                if (clientUsers[clientUserIdx].BJs == null)
+                    clientUsers[clientUserIdx].BJs = new List<BjModel>();
 
-                var matchingUser = serverUsers.FindAll(b => b.UserID == cUser.ID);
+                var matchingUser = serverUsers.FindAll(b => b.UserID == clientUsers[clientUserIdx].ID);
 
-                    foreach (var userModel in matchingUser)
+                Parallel.For(0, matchingUser.Count, (matchingUserIdx) => {
+
+                    var Addbj = new BjModel()
                     {
-                        var Addbj = new BjModel()
-                        {
-                            ID = userModel.BjID,
-                            Nic = userModel.BjNic,
-                        };
+                        ID = matchingUser[matchingUserIdx].BjID,
+                        Nic = matchingUser[matchingUserIdx].BjNic,
+                    };
 
-                        int bigFanRanking = userModel.BigFanRanking;
-                        if (bigFanRanking == 1)
-                        {
-                            // 1등 회장
-                            cUser.Type = UserType.King;
-                            Addbj.IconUrl = IconUrl.BulKing;
-                        }
-                        else if (bigFanRanking >= 2 && bigFanRanking <= 5)
-                        {
-                            // 2~5등
-                            cUser.Type = UserType.BigFan;
-                            Addbj.IconUrl = IconUrl.BulRedHeart;
-                        }
-                        else if (bigFanRanking >= 6 && bigFanRanking <= 10)
-                        {
-                            // 6~10등
-                            cUser.Type = UserType.BigFan;
-                            Addbj.IconUrl = IconUrl.BulYellowHeart;
+                    int bigFanRanking = matchingUser[matchingUserIdx].BigFanRanking;
+                    if (bigFanRanking == 1)
+                    {
+                        // 1등 회장
+                        clientUsers[clientUserIdx].Type = UserType.King;
+                        Addbj.IconUrl = IconUrl.BulKing;
+                    }
+                    else if (bigFanRanking >= 2 && bigFanRanking <= 5)
+                    {
+                        // 2~5등
+                        clientUsers[clientUserIdx].Type = UserType.BigFan;
+                        Addbj.IconUrl = IconUrl.BulRedHeart;
+                    }
+                    else if (bigFanRanking >= 6 && bigFanRanking <= 10)
+                    {
+                        // 6~10등
+                        clientUsers[clientUserIdx].Type = UserType.BigFan;
+                        Addbj.IconUrl = IconUrl.BulYellowHeart;
 
-                        }
-                        else if (bigFanRanking >= 11 && bigFanRanking <= 20)
-                        {
-                            // 11~20등
-                            cUser.Type = UserType.BigFan;
-                            Addbj.IconUrl = IconUrl.BulGrayHeart;
-                        }
-
-                        cUser.BJs.Add(Addbj);
+                    }
+                    else if (bigFanRanking >= 11 && bigFanRanking <= 20)
+                    {
+                        // 11~20등
+                        clientUsers[clientUserIdx].Type = UserType.BigFan;
+                        Addbj.IconUrl = IconUrl.BulGrayHeart;
                     }
 
-                }
+                    clientUsers[clientUserIdx].BJs.Add(Addbj);
+                });
 
+            }
 
             return clientUsers;
         }
