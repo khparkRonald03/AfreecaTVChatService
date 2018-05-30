@@ -132,6 +132,7 @@
             this.Name = "Main";
             this.Text = "ABJ v1.1";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.Load += new System.EventHandler(this.Main_Load);
             this.ITContainer.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);

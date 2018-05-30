@@ -19,6 +19,8 @@ namespace ChatClientViewer
     {
         Controller ChromeDriver;
         Thread BackGroundCrawlingThread;
+        Thread BackGround1;
+        Thread BackGround2;
 
         System.Timers.Timer GetUserTimer = new System.Timers.Timer();
         System.Timers.Timer DataDisplayTimer = new System.Timers.Timer();
@@ -30,10 +32,36 @@ namespace ChatClientViewer
 
         BjModel Bj = new BjModel();
 
-        object LockObject = new object();
+        readonly object LockObject = new object();
 
         List<UserModel> cUsers = new List<UserModel>();
-        List<UserModel> nUsers = new List<UserModel>();
+
+        List<UserModel> N_Users;
+        List<UserModel> nUsers
+        {
+            get
+            {
+                if (N_Users == null)
+                {
+                    lock (LockObject)
+                    {
+                        if (N_Users == null)
+                            N_Users = new List<UserModel>();
+                    }
+                }
+
+                lock (LockObject)
+                {
+                    N_Users = N_Users.FindAll(n => n.IsNew);
+                    return N_Users;
+                }
+            }
+            set
+            {
+                N_Users = value;
+            }
+        }
+
         List<ChatModel> cChatQueue = new List<ChatModel>();
         List<ChatModel> nChatQueue = new List<ChatModel>();
 
@@ -41,6 +69,7 @@ namespace ChatClientViewer
 
         delegate void Control_Invoker();
         delegate void Control_Invoker_ParamStr(string s);
+        delegate void Control_Invoker_ParamStrs(string s1, string s2, string s3);
 
         public Main(string[] args)
         {
@@ -55,7 +84,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "";
+                LoginUserID = "nila25";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -147,35 +176,55 @@ namespace ChatClientViewer
                 if (!ShowSetboxViewer())
                     continue;
 
-                GetUserTimer.Interval = 2000;
-                GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
-                GetUserTimer.Start();
+                //GetUserTimer.Interval = 2000;
+                //GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
+                //GetUserTimer.Start();
 
-                DataDisplayTimer.Interval = 2000;
-                DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
-                DataDisplayTimer.Start();
+                //DataDisplayTimer.Interval = 2000;
+                //DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
+                //DataDisplayTimer.Start();
+
+
+                var ts2 = new ThreadStart(GetUserTimer_Elapsed);
+                BackGround1 = new Thread(ts2)
+                {
+                    IsBackground = true
+                };
+                BackGround1.Start();
+
+                var ts3 = new ThreadStart(UIRefreshTimer_Elapsed);
+                BackGround2 = new Thread(ts3)
+                {
+                    IsBackground = true
+                };
+                BackGround2.Start();
 
                 break;
             }
         }
 
         // 접속 사용자 수집
-        private void GetUserTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //private void GetUserTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void GetUserTimer_Elapsed()
         {
-            // 열혈팬 수집
-            GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
+            lock (LockObject)
+            {
+                // 열혈팬 수집
+                GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
 
-            // 팬 수집
-            GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//a");
+                // 팬 수집
+                GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//a");
 
-            // 일반시청자
-            GetUser("return document.getElementById('lv_ul_user').innerHTML", "//a");
+                // 일반시청자
+                GetUser("return document.getElementById('lv_ul_user').innerHTML", "//a");
 
-            // 채팅 수집
-            GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
+                // 채팅 수집
+                GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
 
-            // 퇴장 사용자 제거 데이터 매칭 하고 받아오기
-            RemoveLeaveUserAndWebApiMatching();
+                // 퇴장 사용자 제거 데이터 매칭 하고 받아오기
+                RemoveLeaveUserAndWebApiMatching();
+            }
+                
         }
 
         /// <summary>
@@ -184,8 +233,9 @@ namespace ChatClientViewer
         private void InitProc()
         {
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
+            ChromeDriver.ExecuteJS("window.resizeTo(1024, 768);");
 
-            Thread.Sleep(200);
+            Thread.Sleep(400);
             ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > button').click()");
             Thread.Sleep(200);
             ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > div > button').click()");
@@ -254,6 +304,7 @@ namespace ChatClientViewer
                     {
                         ID = bfs[0],
                         Nic = bfs[1],
+                        IsNew = true,
                     };
 
                     nUsers.Add(userModel);
@@ -401,8 +452,9 @@ namespace ChatClientViewer
         /// </summary>
         private void RemoveLeaveUserAndWebApiMatching()
         {
-            if (cUsers == null || cUsers.Count <= 0)
-                return;
+            // 여긴 cUsers 이거 안들어간 상황
+            //if (cUsers == null || cUsers.Count <= 0)
+            //    return;
 
             if (nUsers == null || nUsers.Count <= 0)
                 return;
@@ -414,22 +466,30 @@ namespace ChatClientViewer
 
             cUsers = tmpcUsers;
 
+            var cloneUsers = CloneList(nUsers);
+
             // 기존 사용자 데이터 매칭 사용자에서 제거
-            var tmpnUsers = (from nUser in nUsers
+            var tmpnUsers = (from nUser in cloneUsers
                              join cUser in cUsers on nUser.ID equals cUser.ID into users
                              from cUser in users.DefaultIfEmpty()
                              where cUser is null
                              select nUser).ToList();
 
-            foreach(var tUser in tmpnUsers)
+            foreach (var tUser in tmpnUsers)
                 tUser.IsNew = true;
 
-            nUsers = tmpnUsers;
+            foreach (var user in nUsers)
+            {
+                if (cloneUsers.Any(c => c.ID == user.ID))
+                    user.IsNew = false;
+            }
+
+            //nUsers = tmpnUsers;
 
             // 기존 항목 모두 최신 추가 항목 지우기
             //foreach (var user in cUsers)
             //    user.IsNew = false;
-
+            ;
             // web api 매칭 요청
             jsonModels.Enqueue(webApiCaller.RunAsync(new JsonModel()
             {
@@ -438,16 +498,20 @@ namespace ChatClientViewer
             }));
         }
 
-        private void UIRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //private void UIRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void UIRefreshTimer_Elapsed()
         {
-            // web api에서 받아온 데이터 현재 사용자모델에 추가
-            ApiDataToUserModel();
+            lock (LockObject)
+            {
+                // web api에서 받아온 데이터 현재 사용자모델에 추가
+                ApiDataToUserModel();
 
-            // 접속 사용자 화면에 리프레쉬
-            UsersRefresh();
+                // 접속 사용자 화면에 리프레쉬
+                UsersRefresh();
 
-            // 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
-            ChatRefresh();
+                // 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
+                ChatRefresh();
+            }
         }
 
         /// <summary>
@@ -455,19 +519,55 @@ namespace ChatClientViewer
         /// </summary>
         private void ApiDataToUserModel()
         {
+            var tmpUsers = new List<UserModel>();
             while (jsonModels.Count > 0)
             {
-                var taskJsonModel = jsonModels.Dequeue();
-
-                var users = taskJsonModel?.Result?.UserModels ?? new List<UserModel>();
-                foreach (var user in users)
+                try
                 {
-                    cUsers.Add(user);
+                    var jModel = jsonModels.First();
+                    var apiUsers = jModel?.Result?.UserModels;
+                    if (apiUsers != null)
+                    {
+                        tmpUsers.AddRange(apiUsers);
+                        jsonModels.Dequeue();
+                    }
+                }
+                catch(Exception e)
+                {
+                    string log = e.Message;
+                    return;
+                }
+            }
+
+            tmpUsers = tmpUsers?.Distinct()?.ToList();
+
+            foreach (var apiUser in tmpUsers)
+            {
+                var user = cUsers.Find(c => c.ID == apiUser.ID);
+                if (user != null && string.IsNullOrEmpty(user.ID))
+                {
+                    user.Type = apiUser.Type;
+                    user.PictureUrl = apiUser.PictureUrl;
+                    user.IconUrl = apiUser.IconUrl;
                 }
             }
 
             // 혹시모를 중복 제거
             cUsers = cUsers.Distinct().ToList();
+
+            //while (jsonModels.Count > 0)
+            //{
+            //    var taskJsonModel = jsonModels.Dequeue();
+
+            //    var users = taskJsonModel?.Result?.UserModels ?? new List<UserModel>();
+            //    foreach (var user in users)
+            //    {
+            //        cUsers.Add(user);
+            //    }
+            //}
+
+            //// 혹시모를 중복 제거
+            //cUsers = cUsers.Distinct().ToList();
         }
 
         /// <summary>
@@ -475,75 +575,78 @@ namespace ChatClientViewer
         /// </summary>
         private void UsersRefresh()
         {
+            // 우선은 nUsers로 추가 된 사용자가 있는지 판단
+            if (nUsers.Count <= 0)
+                return;
+
+            string bjHtml = string.Empty;
+            string kingHtml = string.Empty;
+            string bigFanHtml = string.Empty;
+
+            // 사용자 리프레쉬 동작
+            foreach (var user in cUsers)
+            {
+                switch (user.Type)
+                {
+                    case UserType.BJ:
+
+                        if (string.IsNullOrEmpty(user.Html))
+                            bjHtml += string.Format(HtmlFormat.BjHtmlChild, user.ID, user.Nic, user.PictureUrl);
+                        else
+                            bjHtml += user.Html;
+                        break;
+
+                    case UserType.King:
+
+                        if (string.IsNullOrEmpty(user.Html))
+                        {
+                            string kingBjsHtml = string.Empty;
+                            if (user.BJs != null)
+                            {
+                                foreach (var bj in user.BJs)
+                                    kingBjsHtml += string.Format(HtmlFormat.KingHtmlBjChild, bj.Nic, bj.IconUrl);
+                            }
+                            kingHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, kingBjsHtml);
+                        }
+                        else
+                        {
+                            kingHtml += user.Html;
+                        }
+                        break;
+
+                    case UserType.BigFan:
+
+                        if (string.IsNullOrEmpty(user.Html))
+                        {
+                            string bingFanBjsHtml = string.Empty;
+                            if (user.BJs != null)
+                            {
+                                foreach (var bj in user.BJs)
+                                    bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
+                            }
+
+                            bigFanHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, bingFanBjsHtml);
+                        }
+                        else
+                        {
+                            bigFanHtml += user.Html;
+                        }
+                        break;
+                }
+            }
+
+            SetUserHtml(bjHtml, kingHtml, bigFanHtml);
+        }
+
+        private void SetUserHtml(string bjHtml, string kingHtml, string bigFanHtml)
+        {
             if (WbUser.InvokeRequired)
             {
-                var ci = new Control_Invoker(UsersRefresh);
-                this.BeginInvoke(ci, null);
+                var ci = new Control_Invoker_ParamStrs(SetUserHtml);
+                this.BeginInvoke(ci, bjHtml, kingHtml, bigFanHtml);
             }
             else
             {
-                // 우선은 nUsers로 추가 된 사용자가 있는지 판단
-                if (nUsers.Count <= 0)
-                    return;
-
-                nUsers.Clear();
-
-                string bjHtml = string.Empty;
-                string kingHtml = string.Empty;
-                string bigFanHtml = string.Empty;
-
-                // 사용자 리프레쉬 동작
-                foreach (var user in cUsers)
-                {
-                    switch (user.Type)
-                    {
-                        case UserType.BJ:
-
-                            if (string.IsNullOrEmpty(user.Html))
-                                bjHtml += string.Format(HtmlFormat.BjHtmlChild, user.ID, user.Nic, user.PictureUrl);
-                            else
-                                bjHtml += user.Html;
-                            break;
-
-                        case UserType.King:
-
-                            if (string.IsNullOrEmpty(user.Html))
-                            {
-                                string kingBjsHtml = string.Empty;
-                                if (user.BJs != null)
-                                {
-                                    foreach (var bj in user.BJs)
-                                        kingBjsHtml += string.Format(HtmlFormat.KingHtmlBjChild, bj.Nic, bj.IconUrl);
-                                }
-                                kingHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, kingBjsHtml);
-                            }
-                            else
-                            {
-                                kingHtml += user.Html;
-                            }
-                            break;
-
-                        case UserType.BigFan:
-
-                            if (string.IsNullOrEmpty(user.Html))
-                            {
-                                string bingFanBjsHtml = string.Empty;
-                                if (user.BJs != null)
-                                {
-                                    foreach (var bj in user.BJs)
-                                        bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
-                                }
-
-                                bigFanHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, bingFanBjsHtml);
-                            }
-                            else
-                            {
-                                bigFanHtml += user.Html;
-                            }
-                            break;
-                    }
-                }
-
                 if (!string.IsNullOrEmpty(bjHtml))
                 {
                     string bjCon = string.Format(HtmlFormat.UserTableHtml, bjHtml);
@@ -561,7 +664,6 @@ namespace ChatClientViewer
                     string bigFanCon = string.Format(HtmlFormat.UserTableHtml, bigFanHtml);
                     WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanCon });
                 }
-
             }
         }
 
@@ -630,7 +732,7 @@ namespace ChatClientViewer
 
         }
 
-        public List<T> CloneList<T>(List<T> oldList)
+        private List<T> CloneList<T>(List<T> oldList)
         {
             BinaryFormatter formatter = new BinaryFormatter();
             MemoryStream stream = new MemoryStream();
@@ -640,5 +742,11 @@ namespace ChatClientViewer
         }
         #endregion
 
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            BackGroundCrawlingThread?.Abort();
+            BackGround1?.Abort();
+            BackGround2?.Abort();
+        }
     }
 }

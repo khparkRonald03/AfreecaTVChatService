@@ -41,12 +41,17 @@ namespace WebController
                 Options = new ChromeOptions();
                 Options.AddArgument("headless");
                 Options.AddArgument("mute-audio");
+                Options.AddArgument("--start-maximized");
 
                 Service = ChromeDriverService.CreateDefaultService();
                 Service.HideCommandPromptWindow = true;
             }
             else
             {
+                Options = new ChromeOptions();
+                Options.AddArgument("mute-audio");
+                Options.AddArgument("--start-maximized");
+
                 Service = ChromeDriverService.CreateDefaultService();
                 Service.HideCommandPromptWindow = true;
             }
@@ -71,11 +76,7 @@ namespace WebController
             var result = new ResultModel<bool>();
             try
             {
-                if (IsSilentMode)
-                    Driver = new ChromeDriver(Service, Options);
-                else
-                    Driver = new ChromeDriver(Service);
-
+                Driver = new ChromeDriver(Service, Options);
                 result.ResultValue = true;
             }
             catch (Exception e)

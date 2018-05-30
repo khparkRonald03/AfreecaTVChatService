@@ -25,6 +25,9 @@ namespace avj.BizDac
                 // Bj 아이디
                 new MysqlParam("@BjID", MysqlDbType.VarChar, userModel.BjID),
 
+                // Bj 닉네임
+                new MysqlParam("@BjNic", MysqlDbType.VarChar, userModel.BjNic),
+
                 // 사용자 아이디 (사용자별 중복가능)
                 new MysqlParam("@UserID", MysqlDbType.VarChar, userModel.UserID),
 

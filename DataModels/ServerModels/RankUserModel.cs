@@ -11,6 +11,11 @@ namespace DataModels
         public string BjID { get; set; }
 
         /// <summary>
+        /// BJ 닉네임
+        /// </summary>
+        public string BjNic { get; set; }
+
+        /// <summary>
         /// 사용자 아이디 (사용자별 중복가능)
         /// </summary>
         public string UserID { get; set; }

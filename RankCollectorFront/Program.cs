@@ -77,6 +77,12 @@ namespace RankCollectorFront
             bizBjRank.SetInitBjValues();
             bizBjRank.SetBjModels(resultBjModels);
 
+            foreach (var userModel in resultUserModel)
+            {
+                var bjModel = resultBjModels.Find(b => b.BjID == userModel.BjID);
+                userModel.BjNic = bjModel.BjNick;
+            }
+
             var bizUserRank = new BizUserRank(Settings);
             bizUserRank.SetInitUserValues();
             bizUserRank.SetUserModels(resultUserModel);

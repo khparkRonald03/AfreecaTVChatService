@@ -18,6 +18,7 @@ namespace avj.BizDac
         public static string InsertAbjUserRank = @"
         INSERT INTO `abjchat`.`abj_UserRank`
         (`BjID`,
+        `BjNic`,
         `HistoryDepth`,
         `UserID`,
         `UserNick`,
@@ -26,6 +27,7 @@ namespace avj.BizDac
         `AddDate`)
         VALUES
         (@BjID,
+        @BjNic,
         @HistoryDepth,
         @UserID,
         @UserNick,
