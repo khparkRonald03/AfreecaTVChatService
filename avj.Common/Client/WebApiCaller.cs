@@ -14,7 +14,7 @@ namespace ChatClientViewer
     {
         HttpClient client = new HttpClient();
 
-        async Task<JsonModel> RunAsync(JsonModel jsonModel)
+        public async Task<JsonModel> RunAsync(JsonModel jsonModel)
         {
             // Update port # in the following line.
             client.BaseAddress = new Uri("http://localhost:11351/");

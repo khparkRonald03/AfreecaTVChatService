@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Timers;
+using System.Threading.Tasks;
 
 namespace ChatClientViewer
 {
@@ -18,7 +19,11 @@ namespace ChatClientViewer
     {
         Controller ChromeDriver;
         Thread BackGroundCrawlingThread;
-        System.Timers.Timer timer = new System.Timers.Timer();
+
+        System.Timers.Timer GetUserTimer = new System.Timers.Timer();
+        System.Timers.Timer DataDisplayTimer = new System.Timers.Timer();
+
+        WebApiCaller webApiCaller = new WebApiCaller();
 
         string LoginUserID { get; set; } = string.Empty;
         string LoginuserPW { get; set; } = string.Empty;
@@ -29,7 +34,10 @@ namespace ChatClientViewer
 
         List<UserModel> cUsers = new List<UserModel>();
         List<UserModel> nUsers = new List<UserModel>();
-        List<ChatModel> ChatQueue = new List<ChatModel>();
+        List<ChatModel> cChatQueue = new List<ChatModel>();
+        List<ChatModel> nChatQueue = new List<ChatModel>();
+
+        Queue<Task<JsonModel>> jsonModels = new Queue<Task<JsonModel>>();
 
         delegate void Control_Invoker();
         delegate void Control_Invoker_ParamStr(string s);
@@ -104,7 +112,7 @@ namespace ChatClientViewer
             int startInterval = 10;
             while (true)
             {
-                Thread.Sleep(7000);
+                Thread.Sleep(4000);
                 //광고스킵
                 if (!isStart)
                     ClickPromotionBtnSkip();
@@ -113,7 +121,6 @@ namespace ChatClientViewer
                 //var ttt0 = GetChatNodes("return document.getElementById('chat_memoyo').innerHTML", "//dl");
                 var pageSource = ChromeDriver.GetPageSource();
                 var ttt0 = GetChatNodes(pageSource.ResultValue, "//*[@id='chat_memoyo']/dl");
-
 
                 if (ttt0.Count <= 1)
                 {
@@ -140,16 +147,20 @@ namespace ChatClientViewer
                 if (!ShowSetboxViewer())
                     continue;
 
-                timer.Interval = 2000;
-                timer.Elapsed += new ElapsedEventHandler(Timer_Elapsed);
-                timer.Start();
+                GetUserTimer.Interval = 2000;
+                GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
+                GetUserTimer.Start();
+
+                DataDisplayTimer.Interval = 2000;
+                DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
+                DataDisplayTimer.Start();
 
                 break;
             }
         }
 
         // 접속 사용자 수집
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void GetUserTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             // 열혈팬 수집
             GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
@@ -163,8 +174,8 @@ namespace ChatClientViewer
             // 채팅 수집
             GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
 
-            // UI 디스플레이
-            BackGroundMatchingProc();
+            // 퇴장 사용자 제거 데이터 매칭 하고 받아오기
+            RemoveLeaveUserAndWebApiMatching();
         }
 
         /// <summary>
@@ -243,7 +254,6 @@ namespace ChatClientViewer
                     {
                         ID = bfs[0],
                         Nic = bfs[1],
-                        Type = UserType.King, // test########################
                     };
 
                     nUsers.Add(userModel);
@@ -261,7 +271,7 @@ namespace ChatClientViewer
                 var NicAndIdArray = NicAndId.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
                 if (NicAndIdArray != null && NicAndIdArray.Length == 3)
                 {
-                    ChatQueue.Add(new ChatModel()
+                    nChatQueue.Add(new ChatModel()
                     {
                         ID = NicAndIdArray[1],
                         Nic = NicAndIdArray[0],
@@ -386,22 +396,10 @@ namespace ChatClientViewer
 
         #region 데이터 매칭 처리
 
-        private void BackGroundMatchingProc()
-        {
-            // 퇴장 사용자 제거
-            RemoveLeaveUser();
-
-            // 데이터 매칭 하고 받아오고 접속 사용자 화면에 리프레쉬
-            UsersMatching();
-
-            // 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
-            ChatMatching();
-        }
-
         /// <summary>
-        /// 퇴장 사용자 제거
+        /// 퇴장 사용자 제거 및 서버에서 데이터 매칭해서 받아오기
         /// </summary>
-        private void RemoveLeaveUser()
+        private void RemoveLeaveUserAndWebApiMatching()
         {
             if (cUsers == null || cUsers.Count <= 0)
                 return;
@@ -423,47 +421,73 @@ namespace ChatClientViewer
                              where cUser is null
                              select nUser).ToList();
 
-            nUsers = tmpnUsers;
-        }
+            foreach(var tUser in tmpnUsers)
+                tUser.IsNew = true;
 
-        /// <summary>
-        /// 데이터 매칭하고 받아오고 접속 사용자 화면에 리프레쉬
-        /// </summary>
-        private void UsersMatching()
-        {
+            nUsers = tmpnUsers;
+
             // 기존 항목 모두 최신 추가 항목 지우기
             //foreach (var user in cUsers)
             //    user.IsNew = false;
 
-            // 매칭 서비스에서 데이터 받아오기 ##########
+            // web api 매칭 요청
+            jsonModels.Enqueue(webApiCaller.RunAsync(new JsonModel()
+            {
+                BjModel = Bj,
+                UserModels = tmpnUsers
+            }));
+        }
 
-            if (nUsers.Count <= 0)
-                return;
+        private void UIRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // web api에서 받아온 데이터 현재 사용자모델에 추가
+            ApiDataToUserModel();
 
-            // test ##########################
-            //foreach(var i in nUsers)
-            //{
-            //    i.Type = UserType.King;
-            //}
+            // 접속 사용자 화면에 리프레쉬
+            UsersRefresh();
 
-            cUsers.AddRange(nUsers);
-
-            // 사용자 리프레쉬 동작
-            SetUsers(); 
+            // 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
+            ChatRefresh();
         }
 
         /// <summary>
-        /// 사용자 리프레쉬 동작
+        /// web api에서 받아온 데이터 현재 사용자모델에 추가
         /// </summary>
-        private void SetUsers()
+        private void ApiDataToUserModel()
         {
-            if (WbChat.InvokeRequired)
+            while (jsonModels.Count > 0)
             {
-                var ci = new Control_Invoker(SetUsers);
+                var taskJsonModel = jsonModels.Dequeue();
+
+                var users = taskJsonModel?.Result?.UserModels ?? new List<UserModel>();
+                foreach (var user in users)
+                {
+                    cUsers.Add(user);
+                }
+            }
+
+            // 혹시모를 중복 제거
+            cUsers = cUsers.Distinct().ToList();
+        }
+
+        /// <summary>
+        /// 접속 사용자 화면에 리프레쉬
+        /// </summary>
+        private void UsersRefresh()
+        {
+            if (WbUser.InvokeRequired)
+            {
+                var ci = new Control_Invoker(UsersRefresh);
                 this.BeginInvoke(ci, null);
             }
             else
             {
+                // 우선은 nUsers로 추가 된 사용자가 있는지 판단
+                if (nUsers.Count <= 0)
+                    return;
+
+                nUsers.Clear();
+
                 string bjHtml = string.Empty;
                 string kingHtml = string.Empty;
                 string bigFanHtml = string.Empty;
@@ -509,7 +533,7 @@ namespace ChatClientViewer
                                     foreach (var bj in user.BJs)
                                         bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
                                 }
-                                
+
                                 bigFanHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, bingFanBjsHtml);
                             }
                             else
@@ -525,46 +549,50 @@ namespace ChatClientViewer
                     string bjCon = string.Format(HtmlFormat.UserTableHtml, bjHtml);
                     WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_BJ", bjCon });
                 }
-                
+
                 if (!string.IsNullOrEmpty(kingHtml))
                 {
                     string kingCon = string.Format(HtmlFormat.UserTableHtml, kingHtml);
                     WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_King", kingCon });
                 }
-                
+
                 if (!string.IsNullOrEmpty(bigFanHtml))
                 {
                     string bigFanCon = string.Format(HtmlFormat.UserTableHtml, bigFanHtml);
                     WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanCon });
                 }
-                
 
-                nUsers.Clear();
             }
-
         }
 
         /// <summary>
         /// 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
         /// </summary>
-        private void ChatMatching()
+        private void ChatRefresh()
         {
             // 하단에 추가
             string html = string.Empty;
-            int endIndx = ChatQueue.Count;
-            for (int idx = 0; idx < endIndx; idx++)
-            {
-                if (!ChatQueue[idx].IsNew)
-                    continue;
 
-                html = ChatQueue[idx].Html;
-                    
-                ChatQueue[idx].IsNew = false;
+            // 기존 사용자 데이터 매칭 사용자에서 제거
+            var tmpnChats = (from nChat in nChatQueue
+                             join cChat in cChatQueue on nChat.ID equals cChat.ID into chat
+                             from cChat in chat.DefaultIfEmpty()
+                             where cChat is null
+                             select nChat).ToList();
+
+            // 중복 제거
+            tmpnChats = tmpnChats?.Distinct()?.ToList() ?? new List<ChatModel>();
+
+            foreach (var chat in tmpnChats)
+            {
+                html += chat.Html;
+                cChatQueue.Add(chat);
             }
+
+            nChatQueue.Clear();
 
             html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-30px;'>");
             SetChat(html);
-
         }
 
         private void InitChat()
