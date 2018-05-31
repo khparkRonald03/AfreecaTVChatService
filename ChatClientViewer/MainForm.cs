@@ -92,7 +92,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "dooly0929";
+                LoginUserID = "gks2wl";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -675,12 +675,23 @@ namespace ChatClientViewer
         /// </summary>
         private void ChatRefresh()
         {
+            if (cUsers == null || cUsers.Count <= 0)
+                return;
+
+            if (nChatQueue == null || nChatQueue.Count <= 0)
+                return;
+
             // 하단에 추가
             string html = string.Empty;
 
+            // 접속 사용자 채팅만 가져오기
+            var userJoinChats = (from nChat in nChatQueue
+                                 join cUser in cUsers on nChat.ID equals cUser.ID
+                                 select nChat).ToList();
+
             // 기존 사용자 데이터 매칭 사용자에서 제거
-            var tmpnChats = (from nChat in nChatQueue
-                             join cChat in cChatQueue on nChat.ID equals cChat.ID into chat
+            var tmpnChats = (from nChat in userJoinChats
+                             join cChat in cChatQueue on nChat.ID equals cChat.ID  into chat
                              from cChat in chat.DefaultIfEmpty()
                              where cChat is null
                              select nChat).ToList();
