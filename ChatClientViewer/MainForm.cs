@@ -17,6 +17,8 @@ namespace ChatClientViewer
 {
     public partial class Main : Form
     {
+        #region Main 클래스 변수
+
         Controller ChromeDriver;
         Thread BackGroundCrawlingThread;
         Thread BackGround1;
@@ -31,6 +33,8 @@ namespace ChatClientViewer
         string LoginuserPW { get; set; } = string.Empty;
 
         BjModel Bj = new BjModel();
+
+        bool AddNewUserFlag = false;
 
         readonly object LockObject = new object();
 
@@ -72,6 +76,10 @@ namespace ChatClientViewer
         delegate void Control_Invoker_ParamStrs(string s1, string s2, string s3);
         delegate void Control_Invoker_ParamJsonModel(JsonModel jsonModel);
         delegate void Control_Invoker_ParamUserModles(List<UserModel> userModels);
+
+        #endregion
+
+        #region 생성자 / 이벤트
 
         public Main(string[] args)
         {
@@ -119,6 +127,15 @@ namespace ChatClientViewer
             };
             BackGroundCrawlingThread.Start();
         }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            BackGroundCrawlingThread?.Abort();
+            BackGround1?.Abort();
+            BackGround2?.Abort();
+        }
+
+        #endregion
 
         #region 방송 정보 수집 (채팅, 접속사용자)
 
@@ -445,9 +462,6 @@ namespace ChatClientViewer
             }
         }
 
-        #endregion
-
-        #region 데이터 매칭 처리
 
         /// <summary>
         /// 퇴장 사용자 제거 및 서버에서 데이터 매칭해서 받아오기
@@ -463,8 +477,8 @@ namespace ChatClientViewer
 
             // 퇴장 사용자 제거
             var tmpcUsers = (from cUser in cUsers
-                           join nUser in nUsers on cUser.ID equals nUser.ID
-                           select cUser).ToList();
+                             join nUser in nUsers on cUser.ID equals nUser.ID
+                             select cUser).ToList();
 
             cUsers = tmpcUsers;
 
@@ -486,8 +500,6 @@ namespace ChatClientViewer
                     user.IsNew = false;
             }
 
-            //nUsers = tmpnUsers;
-
             ;
             // web api 매칭 요청
             var returnJModel = Task.Run(() => CallWebApi(tmpnUsers)).Result;
@@ -497,7 +509,7 @@ namespace ChatClientViewer
                 var cloneModel = CloneModel(returnJModel);
                 jsonModels.Enqueue(cloneModel);
             }
-               
+
             ;
         }
 
@@ -512,22 +524,11 @@ namespace ChatClientViewer
             return returnJModels;
         }
 
-        private void AddJsonModels(JsonModel jModel)
-        {
-            if (WbUser.InvokeRequired)
-            {
-                var ci = new Control_Invoker_ParamJsonModel(AddJsonModels);
-                this.BeginInvoke(ci, jModel);
-            }
-            else
-            {
-                jsonModels.Enqueue(jModel);
-            }
+        #endregion
 
-        }
+        #region 데이터 매칭 처리
 
         private void UIRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
-        //private void UIRefreshTimer_Elapsed()
         {
             lock (LockObject)
             {
@@ -567,36 +568,9 @@ namespace ChatClientViewer
                 }
             }
 
-            tmpUsers = tmpUsers?.Distinct()?.ToList();
-
-            foreach (var apiUser in tmpUsers)
-            {
-                // 여기서 cUsers에 없음... 확인해보기 ######################################################
-                var user = cUsers.Find(c => c.ID == apiUser.ID);
-                if (user != null && string.IsNullOrEmpty(user.ID))
-                {
-                    user.Type = apiUser.Type;
-                    user.PictureUrl = apiUser.PictureUrl;
-                    user.IconUrl = apiUser.IconUrl;
-                }
-            }
-
-            // 혹시모를 중복 제거 // ############################### -> 이게
+            cUsers.AddRange(tmpUsers);
             cUsers = cUsers.Distinct().ToList();
-
-            //while (jsonModels.Count > 0)
-            //{
-            //    var taskJsonModel = jsonModels.Dequeue();
-
-            //    var users = taskJsonModel?.Result?.UserModels ?? new List<UserModel>();
-            //    foreach (var user in users)
-            //    {
-            //        cUsers.Add(user);
-            //    }
-            //}
-
-            //// 혹시모를 중복 제거
-            //cUsers = cUsers.Distinct().ToList();
+            AddNewUserFlag = true;
         }
 
         /// <summary>
@@ -604,10 +578,10 @@ namespace ChatClientViewer
         /// </summary>
         private void UsersRefresh()
         {
-            // 우선은 nUsers로 추가 된 사용자가 있는지 판단
-            if (nUsers.Count <= 0)
+            if (!AddNewUserFlag)
                 return;
 
+            AddNewUserFlag = false;
             string bjHtml = string.Empty;
             string kingHtml = string.Empty;
             string bigFanHtml = string.Empty;
@@ -779,12 +753,5 @@ namespace ChatClientViewer
             return (T)formatter.Deserialize(stream);
         }
         #endregion
-
-        private void Main_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            BackGroundCrawlingThread?.Abort();
-            BackGround1?.Abort();
-            BackGround2?.Abort();
-        }
     }
 }
