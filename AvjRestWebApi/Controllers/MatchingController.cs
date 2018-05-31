@@ -117,6 +117,28 @@ namespace AvjRestWebApi.Controllers
                     clientUsers[clientUserIdx].BJs = new List<BjModel>();
 
                 var matchingUser = serverUsers.FindAll(b => b.UserID == clientUsers[clientUserIdx].ID);
+                int mainBigFanRanking = matchingUser?.OrderBy(m => m.BigFanRanking)?.FirstOrDefault()?.BigFanRanking ?? -1;
+                if (mainBigFanRanking == 1)
+                {
+                    // 1등 회장
+                    clientUsers[clientUserIdx].Type = UserType.King;
+                }
+                else if (mainBigFanRanking >= 2 && mainBigFanRanking <= 5)
+                {
+                    // 2~5등
+                    clientUsers[clientUserIdx].Type = UserType.BigFan;
+                }
+                else if (mainBigFanRanking >= 6 && mainBigFanRanking <= 10)
+                {
+                    // 6~10등
+                    clientUsers[clientUserIdx].Type = UserType.BigFan;
+
+                }
+                else if (mainBigFanRanking >= 11 && mainBigFanRanking <= 20)
+                {
+                    // 11~20등
+                    clientUsers[clientUserIdx].Type = UserType.BigFan;
+                }
 
                 Parallel.For(0, matchingUser.Count, (matchingUserIdx) => {
 
@@ -130,26 +152,22 @@ namespace AvjRestWebApi.Controllers
                     if (bigFanRanking == 1)
                     {
                         // 1등 회장
-                        clientUsers[clientUserIdx].Type = UserType.King;
                         Addbj.IconUrl = IconUrl.BulKing;
                     }
                     else if (bigFanRanking >= 2 && bigFanRanking <= 5)
                     {
                         // 2~5등
-                        clientUsers[clientUserIdx].Type = UserType.BigFan;
                         Addbj.IconUrl = IconUrl.BulRedHeart;
                     }
                     else if (bigFanRanking >= 6 && bigFanRanking <= 10)
                     {
                         // 6~10등
-                        clientUsers[clientUserIdx].Type = UserType.BigFan;
                         Addbj.IconUrl = IconUrl.BulYellowHeart;
 
                     }
                     else if (bigFanRanking >= 11 && bigFanRanking <= 20)
                     {
                         // 11~20등
-                        clientUsers[clientUserIdx].Type = UserType.BigFan;
                         Addbj.IconUrl = IconUrl.BulGrayHeart;
                     }
 

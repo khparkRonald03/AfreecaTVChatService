@@ -21,8 +21,6 @@ namespace ChatClientViewer
 
         Controller ChromeDriver;
         Thread BackGroundCrawlingThread;
-        Thread BackGround1;
-        Thread BackGround2;
 
         System.Timers.Timer GetUserTimer = new System.Timers.Timer();
         System.Timers.Timer DataDisplayTimer = new System.Timers.Timer();
@@ -94,7 +92,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "yeseul0104";
+                LoginUserID = "dooly0929";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -131,8 +129,10 @@ namespace ChatClientViewer
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
             BackGroundCrawlingThread?.Abort();
-            BackGround1?.Abort();
-            BackGround2?.Abort();
+            GetUserTimer?.Stop();
+            GetUserTimer?.Close();
+            DataDisplayTimer?.Stop();
+            DataDisplayTimer.Close();
         }
 
         #endregion
