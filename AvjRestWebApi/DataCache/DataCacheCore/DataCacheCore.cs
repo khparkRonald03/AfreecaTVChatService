@@ -25,7 +25,7 @@ namespace AvjRestWebApi.DataCache
         /// <summary>
         /// Lock개체
         /// </summary>
-        private object SycRoot = new object();
+        private readonly object SycRoot = new object();
 
         /// <summary>
         /// 데이터 저장소
@@ -51,7 +51,7 @@ namespace AvjRestWebApi.DataCache
         /// 재 조회 주기 가져오기
         /// </summary>
         /// <returns></returns>
-        private int GetDuration()
+        protected virtual int GetDuration()
         {
             try
             {
@@ -96,7 +96,7 @@ namespace AvjRestWebApi.DataCache
             {
                 Value = act(),
                 CachedDate = DateTime.Now,
-                ExpireDate = DateTime.Now.AddDays(Duration),
+                ExpireDate = DateTime.Now.AddHours(Duration),
                 SetAction = act
             };
 

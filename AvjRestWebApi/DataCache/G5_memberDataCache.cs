@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace AvjRestWebApi.DataCache
 {
-    public class RankBjDataCache : DataCacheCore<List<RankBjModel>>
+    public class G5_memberDataCache : DataCacheCore<List<G5_memberModel>>
     {
-        private static RankBjDataCache instance = null;
+        private static G5_memberDataCache instance = null;
         private static readonly object SycStaticLock = new object();
         /// <summary>
         /// Singleton Instance
         /// </summary>
-        public static RankBjDataCache Instance
+        public static G5_memberDataCache Instance
         {
             get
             {
@@ -21,7 +21,7 @@ namespace AvjRestWebApi.DataCache
                     {
                         if (instance == null)
                         {
-                            instance = new RankBjDataCache();
+                            instance = new G5_memberDataCache();
                         }
                     }
                 }
@@ -30,22 +30,22 @@ namespace AvjRestWebApi.DataCache
         }
 
         // 0. 캐시 데이터 별 고유 키를 정의하여 줍니다.
-        private readonly string KeyOfGetRankBjModels = "KeyOfGetRankBjModels";
+        private readonly string KeyOfGetG5_memberModels = "KeyOfGetG5_memberModels";
 
-        public List<RankBjModel> GetRankBjModels
+        public List<G5_memberModel> GetG5MemberModels
         {
             get
             {
                 // 1. 캐시에 저장할 키는  하나로 공유하여 전체가 사용할 수 있도록 합니다.
-                string key = KeyOfGetRankBjModels;
+                string key = KeyOfGetG5_memberModels;
 
                 // 2. 캐시 된 데이터가 없는 경우 조회하여 캐시합니다.
                 if (!ContainsKey(key))
                 {
                     Set(key, () => {
 
-                        var biz = new BizBjRank();
-                        var result = biz.GetAllRankBjModels();
+                        var biz = new BizG5_member();
+                        var result = biz.GetAllG5_memberModels();
 
                         return result;
                     });
@@ -56,9 +56,9 @@ namespace AvjRestWebApi.DataCache
             }
         }
 
-        public void RefreshRankBjModels()
+        public void RefreshG5_memberModels()
         {
-            Refresh(KeyOfGetRankBjModels);
+            Refresh(KeyOfGetG5_memberModels);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace AvjRestWebApi.DataCache
         /// <returns></returns>
         protected override int GetDuration()
         {
-            return 24;
+            return 1;
         }
     }
 }

@@ -17,15 +17,27 @@ namespace AvjRestWebApi.Controllers
         [Route("Matching/UsersMatching")]
         public JsonModel UsersMatching (JsonModel jsonModel)
         {
+            var bj = jsonModel.BjModel;
+            var users = jsonModel.UserModels;
 
-            // bj 확인은 테스트 기간때 기능 추가하기 ### 
+            if (bj == null || string.IsNullOrEmpty(bj.ID))
+                return null;
+
+            if (users == null || users.Count <= 0)
+                return null;
+
+            // bj 확인 -> 테스트때는 
+            //var G5Member = G5_memberDataCache.Instance.GetG5MemberModels;
+
+            //if (!G5Member.Any(g => g.mb_id == bj.ID))
+            //    return null;
+
+
             var result = new JsonModel
             {
                 UserModels = new List<UserModel>()
             };
 
-            var bj = jsonModel.BjModel;
-            var users = jsonModel.UserModels;
 
             Parallel.For(0, 2, (i) =>
             {

@@ -60,5 +60,14 @@ namespace AvjRestWebApi.DataCache
         {
             Refresh(KeyOfGetRankUserModels);
         }
+
+        /// <summary>
+        /// 재 조회 주기 가져오기 (시간단위)
+        /// </summary>
+        /// <returns></returns>
+        protected override int GetDuration()
+        {
+            return 24;
+        }
     }
 }

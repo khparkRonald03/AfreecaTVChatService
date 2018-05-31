@@ -185,6 +185,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MatchingController.cs" />
+    <Compile Include="DataCache\G5_memberDataCache.cs" />
     <Compile Include="DataCache\RankBjDataCache.cs" />
     <Compile Include="DataCache\RankUserModelDataCache.cs" />
     <Compile Include="DataCache\DataCacheCore\DataCacheCore.cs" />
