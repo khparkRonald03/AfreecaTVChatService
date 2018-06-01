@@ -15,7 +15,7 @@ namespace RankCollectorFront
 
             //GoRankCollector();
 
-            return;
+            //return;
 
             var autoEvent = new AutoResetEvent(false);
 

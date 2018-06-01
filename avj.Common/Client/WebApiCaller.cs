@@ -17,7 +17,7 @@ namespace ChatClientViewer
         public WebApiCaller()
         {
             // Update port # in the following line.
-            client.BaseAddress = new Uri("http://localhost:11351/");
+            client.BaseAddress = new Uri("http://203.245.0.193/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
