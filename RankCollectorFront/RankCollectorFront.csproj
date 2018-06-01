@@ -60,6 +60,10 @@
       <Project>{c47b2f31-fea3-4cc3-967a-d7ae9f1bc891}</Project>
       <Name>avj.BizDac</Name>
     </ProjectReference>
+    <ProjectReference Include="..\avj.Common\avj.Common.csproj">
+      <Project>{89f4523f-a6fb-4eff-859e-c00667c96960}</Project>
+      <Name>avj.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataModels\DataModels.csproj">
       <Project>{cc7c0d11-9575-406b-b52a-a9a83ad63ac5}</Project>
       <Name>DataModels</Name>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using avj.BizDac;
 using DataModels;
 using RankCollector;
@@ -12,14 +13,64 @@ namespace RankCollectorFront
         static void Main(string[] args)
         {
 
+            //GoRankCollector();
+
+            return;
+
+            var autoEvent = new AutoResetEvent(false);
+
+            var GoRankTimer = new Timer(
+                CheckActionTime, 
+                autoEvent, 
+                TimeSpan.FromHours(1).Milliseconds, 
+                0 //TimeSpan.FromHours(1).Milliseconds
+            );
+
+            autoEvent.WaitOne();
+        }
+
+        private static void CheckActionTime(object state)
+        {
+            var biz = new BizRankCollectorSettings();
+            var setting = biz.GetSettings();
+
+            var actionWeek = setting.ActionWeek ?? string.Empty;
+            var actionTime = setting.ActionTime;
+            if (string.IsNullOrEmpty(actionTime))
+                return;
+
+            var Weeks = actionWeek.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            if (Weeks == null || Weeks.Count() <= 0)
+                return;
+
+            var nowWeek = DateTime.Now.ToString("ddd");
+            int fromHour = DateTime.Now.Hour;
+            int toHour = DateTime.Now.AddHours(1).Hour;
+            int actionHour = int.Parse(actionTime);
+
+            
+            foreach (var week in Weeks)
+            {
+                if (week == nowWeek)
+                {
+                    if (fromHour < actionHour && toHour > actionHour)
+                        GoRankCollector();
+                    break;
+                }
+            }
+        }
+
+       
+        private static void GoRankCollector()
+        {
             // 1. BJ 수집
             int endPage = 2;
             var categoryRankParser = new CategoryRankParser();
             var resultBjModels = new List<RankBjModel>();
-            
+
             foreach (RankingType rankingType in Enum.GetValues(typeof(RankingType)))
             {
-                for (int i =1; i <= endPage; i++)
+                for (int i = 1; i <= endPage; i++)
                 {
                     var bjModels = categoryRankParser.GetData(rankingType, i);
 
