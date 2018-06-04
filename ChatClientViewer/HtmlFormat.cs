@@ -11,8 +11,8 @@ namespace ChatClientViewer
         public static string UserContainerHtml = @"
         <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
         <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
-        <div>
-            <div class='fan_rank' style='height:33%; overflow:auto;'>
+        <div  style='height:100%;width:100%;overflow:auto;'>
+            <div class='fan_rank' style='height:33%;'>
                 <div class='tit_area' style='width:100%;'>
                     <div class='title' id='fan_txt'>BJ</div>
                 </div>
@@ -20,14 +20,14 @@ namespace ChatClientViewer
                 </div>
                 
             </div>
-            <div class='fan_rank' style='height:33%; overflow:auto;'>
+            <div class='fan_rank' style='height:33%;'>
                 <div class='tit_area' style='width:100%;'>
                     <div class='title' id='fan_txt'>회장</div>
                 </div>
                 <div id='sTopFanStarBalloon_King'>
                 </div>
             </div>
-            <div class='fan_rank' style='height:33%; overflow:auto;'>
+            <div class='fan_rank' style='height:33%;'>
                 <div class='tit_area' style='width:100%;'>
                     <div class='title' id='fan_txt'>열혈팬</div>
                 </div>
@@ -66,7 +66,7 @@ namespace ChatClientViewer
                     <tr>
                         <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
                         <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td>
-                        <td style='width:100px; color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
+                        <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
                             <img src='{2}' alt='' style='height:20px;' />
                         </td>
                     </tr>
@@ -82,8 +82,8 @@ namespace ChatClientViewer
         public static string KingHtmlChild = @"
                     <tr>
                         <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-                        <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td>
-                        <td style='width:100px; color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
+                        <td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
+                        <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>
                         {2}
                         </td>
                     </tr>
@@ -107,12 +107,13 @@ namespace ChatClientViewer
         public static string BigFanHtmlChild = @"
                 <tr>
                     <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-                    <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td>
-                    <td style='width:100px; color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
+                    <td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
+                    <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>
                         {2}
                     </td>
                 </tr>
         ";
+        // 
 
         /// <summary>
         /// - 닉네임, 하트 Url
@@ -127,53 +128,63 @@ namespace ChatClientViewer
         #region 채팅
 
         public static string ChatHtml = @"
-            <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
-            <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
-            <div class='fan_rank' style='height:100%;overflow:auto;'>
-                <div class='tit_area' style='width:100%; display:block;'>
-                    <div class='title' id='fan_txt'>채팅</div>
-                </div>
-                <div id='chat_area' class='chat_area' style=''>
-                    <div id='chat_memoyo' class='chat_memoyo'>
+        <html>
+            <head>
+                <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
+                <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
+            </head>
+            <body>
+                <div class='fan_rank' style='height:100%;overflow:auto;'>
+                    <div class='tit_area' style='width:100%; display:block;'>
+                        <div class='title' id='fan_txt'>채팅</div>
+                    </div>
+                    <div id='chat_area' class='chat_area' style=''>
+                        <div id='chat_memoyo' class='chat_memoyo'>
                     
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <script>
-                function AddChatHtml(html) {
-                    var currentScroll = GetScrollXY();
+                <script>
+                    function AddChatHtml(html) {
+                        var currentScroll = GetScrollXY();
 
-                    document.getElementById('chat_memoyo').insertAdjacentHTML('beforeend', html);
+                        document.getElementById('chat_memoyo').insertAdjacentHTML('beforeend', html);
 
-                    //var element = document.getElementById('fan_rank');
-                    //element.scrollTop = element.scrollHeight - element.clientHeight;
+                        //var element = document.getElementById('fan_rank');
+                        //element.scrollTop = element.scrollHeight - element.clientHeight;
 
-                    document.getElementById('fan_rank').scrollTop = document.getElementById('fan_rank').scrollHeight;
+                        //document.getElementById('fan_rank').scrollTop = document.getElementById('fan_rank').scrollHeight;
 
-                    // document.documentElement.scrollTop = currentScroll.x // X 좌표
-                    // document.documentElement.scrollLeft = currentScroll.y // Y 좌표
-                } 
+                        var objDiv = document.getElementById('fan_rank'); 
+                        objDiv.scrollTop = objDiv.scrollHeight;
 
-                function GetScrollXY() {
-                    var scrOfX = 0, scrOfY = 0;
-                    if( typeof( window.pageYOffset ) == 'number' ) {
-                        //Netscape compliant
-                        scrOfY = window.pageYOffset;
-                        scrOfX = window.pageXOffset;
-                    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-                        //DOM compliant
-                        scrOfY = document.body.scrollTop;
-                        scrOfX = document.body.scrollLeft;
-                    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-                        //IE6 standards compliant mode
-                        scrOfY = document.documentElement.scrollTop;
-                        scrOfX = document.documentElement.scrollLeft;
+                        // document.documentElement.scrollTop = currentScroll.x // X 좌표
+                        // document.documentElement.scrollLeft = currentScroll.y // Y 좌표
                     } 
 
-                    return { x:scrOfX, y:scrOfY };
-                }
-            </script>
+                    function GetScrollXY() {
+                        
+                        var scrOfX = 0, scrOfY = 0;
+                        if( typeof( window.pageYOffset ) == 'number' ) {
+                            //Netscape compliant
+                            scrOfY = window.pageYOffset;
+                            scrOfX = window.pageXOffset;
+                        } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
+                            //DOM compliant
+                            scrOfY = document.body.scrollTop;
+                            scrOfX = document.body.scrollLeft;
+                        } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
+                            //IE6 standards compliant mode
+                            scrOfY = document.documentElement.scrollTop;
+                            scrOfX = document.documentElement.scrollLeft;
+                        } 
+
+                        return { x:scrOfX, y:scrOfY };
+                    }
+                </script>
+            </body>
+        </html>
         ";
 
         /// <summary>

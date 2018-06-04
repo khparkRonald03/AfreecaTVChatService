@@ -92,11 +92,12 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "gks2wl";
+                LoginUserID = "sby1087";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
 #endif
+            Bj.ID = LoginUserID;
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -128,11 +129,14 @@ namespace ChatClientViewer
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
+            this.Opacity = 0;
             BackGroundCrawlingThread?.Abort();
             GetUserTimer?.Stop();
             GetUserTimer?.Close();
             DataDisplayTimer?.Stop();
             DataDisplayTimer.Close();
+            ChromeDriver?.CloseDriver();
+            ChromeDriver?.Close();
         }
 
         #endregion
@@ -231,8 +235,14 @@ namespace ChatClientViewer
                 // 열혈팬 수집
                 GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
 
+                // 매니저 수집
+                GetUser("return document.getElementById('lv_h3_manager').innerHTML", "//a");
+
                 // 팬 수집
                 GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//a");
+
+                // 구독자 수집
+                GetUser("return document.getElementById('lv_h3_gudok').innerHTML", "//a");
 
                 // 일반시청자
                 GetUser("return document.getElementById('lv_ul_user').innerHTML", "//a");
@@ -684,20 +694,23 @@ namespace ChatClientViewer
             // 하단에 추가
             string html = string.Empty;
 
-            // 접속 사용자 채팅만 가져오기
-            var userJoinChats = (from nChat in nChatQueue
-                                 join cUser in cUsers on nChat.ID equals cUser.ID
-                                 select nChat).ToList();
+            // test #####
+            //// 접속 사용자 채팅만 가져오기
+            //var userJoinChats = (from nChat in nChatQueue
+            //                     join cUser in cUsers on nChat.ID equals cUser.ID
+            //                     select nChat).ToList();
 
-            // 기존 사용자 데이터 매칭 사용자에서 제거
-            var tmpnChats = (from nChat in userJoinChats
-                             join cChat in cChatQueue on nChat.ID equals cChat.ID  into chat
-                             from cChat in chat.DefaultIfEmpty()
-                             where cChat is null
-                             select nChat).ToList();
+            //// 기존 사용자 데이터 매칭 사용자에서 제거
+            //var tmpnChats = (from nChat in userJoinChats
+            //                 join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
+            //                 from cChat in chat.DefaultIfEmpty()
+            //                 where cChat is null
+            //                 select nChat).ToList();
 
             // 중복 제거
-            tmpnChats = tmpnChats?.Distinct()?.ToList() ?? new List<ChatModel>();
+            //tmpnChats = tmpnChats?.Distinct()?.ToList() ?? new List<ChatModel>();
+
+            var tmpnChats = nChatQueue;
 
             foreach (var chat in tmpnChats)
             {
@@ -740,7 +753,7 @@ namespace ChatClientViewer
                     InitChat();
 
                 WbChat.Document.InvokeScript("AddChatHtml", new object[] { html });
-                WbChat.Document.Body.ScrollIntoView(false);
+                //WbChat.Document.Body.ScrollIntoView(false);
 
             }
 
