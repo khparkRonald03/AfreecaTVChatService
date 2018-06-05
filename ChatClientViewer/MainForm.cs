@@ -485,6 +485,13 @@ namespace ChatClientViewer
             if (nUsers == null || nUsers.Count <= 0)
                 return;
 
+            // 퇴장사용자 저장
+            var tmpnUsers = (from nUser in nUsers
+                             join cUser in cUsers on nUser.ID equals cUser.ID into users
+                             from cUser in users.DefaultIfEmpty()
+                             where cUser is null
+                             select nUser).ToList();
+
             // 퇴장 사용자 제거
             var tmpcUsers = (from cUser in cUsers
                              join nUser in nUsers on cUser.ID equals nUser.ID
@@ -494,12 +501,12 @@ namespace ChatClientViewer
 
             var cloneUsers = CloneList(nUsers);
 
-            // 기존 사용자 데이터 매칭 사용자에서 제거
-            var tmpnUsers = (from nUser in cloneUsers
-                             join cUser in cUsers on nUser.ID equals cUser.ID into users
-                             from cUser in users.DefaultIfEmpty()
-                             where cUser is null
-                             select nUser).ToList();
+            // 기존 사용자 데이터 매칭 사용자에서 제거 ################
+            //var tmpnUsers = (from nUser in cloneUsers
+            //                 join cUser in cUsers on nUser.ID equals cUser.ID into users
+            //                 from cUser in users.DefaultIfEmpty()
+            //                 where cUser is null
+            //                 select nUser).ToList();
 
             foreach (var tUser in tmpnUsers)
                 tUser.IsNew = true;
@@ -695,22 +702,23 @@ namespace ChatClientViewer
             string html = string.Empty;
 
             // test #####
-            //// 접속 사용자 채팅만 가져오기
-            //var userJoinChats = (from nChat in nChatQueue
-            //                     join cUser in cUsers on nChat.ID equals cUser.ID
-            //                     select nChat).ToList();
+            // 접속 사용자 채팅만 가져오기
+            var userJoinChats = (from nChat in nChatQueue
+                                 join cUser in cUsers on nChat.ID equals cUser.ID
+                                 select nChat).ToList();
 
-            //// 기존 사용자 데이터 매칭 사용자에서 제거
-            //var tmpnChats = (from nChat in userJoinChats
-            //                 join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
-            //                 from cChat in chat.DefaultIfEmpty()
-            //                 where cChat is null
-            //                 select nChat).ToList();
+            // 기존 채팅 데이터 새 채팅에서 제외
+            var tmpnChats = (from nChat in userJoinChats
+                             join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
+                             from cChat in chat.DefaultIfEmpty()
+                             where cChat is null
+                             select nChat).ToList();
 
             // 중복 제거
-            //tmpnChats = tmpnChats?.Distinct()?.ToList() ?? new List<ChatModel>();
+            tmpnChats = tmpnChats?.Distinct()?.ToList() ?? new List<ChatModel>();
 
-            var tmpnChats = nChatQueue;
+            // test
+            //var tmpnChats = nChatQueue;
 
             foreach (var chat in tmpnChats)
             {

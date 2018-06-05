@@ -203,6 +203,24 @@ namespace ChatClientViewer
                 </dl>
         ";
 
+        /// <summary>
+        /// 유저 입장
+        /// ex_ <p class='notice in fanclub'><a href='javascript:;' user_id='kfiop' user_nick='무쌍.'>팬클럽 무쌍.<em>(kfiop)</em></a>님이 대화방에 참여했습니다.</p>
+        /// 유저아이디, 닉네임
+        /// </summary>
+        public static string ChatHtmlInUser = @"
+            <p class='notice in fanclub'><a href='javascript:;' user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에 참여했습니다.</p>
+            ";
+
+        /// <summary>
+        /// 유저 퇴장
+        /// ex_ <p class='notice in fanclub'><a href='javascript:;' user_id='kfiop' user_nick='무쌍.'>팬클럽 무쌍.<em>(kfiop)</em></a>님이 대화방에서 나가셨습니다.</p>
+        /// 유저아이디, 닉네임
+        /// </summary>
+        public static string ChatHtmlOutUser = @"
+            <p class='notice in fanclub'><a href='javascript:;' user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에서 나가셨습니다.</p>
+            ";
+
         #endregion
     }
 }
