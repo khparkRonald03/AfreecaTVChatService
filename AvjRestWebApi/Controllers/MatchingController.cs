@@ -83,6 +83,7 @@ namespace AvjRestWebApi.Controllers
                 
             });
 
+            result.UserModels = result.UserModels?.Distinct()?.ToList();
             result.BjModel = bj;
             return result;
         }

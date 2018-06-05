@@ -12,6 +12,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Timers;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ChatClientViewer
 {
@@ -36,9 +37,13 @@ namespace ChatClientViewer
 
         List<UserModel> cUsers = new List<UserModel>();
 
-        Queue<List<UserModel>> dUsersQueue = new Queue<List<UserModel>>();
-        Queue<List<UserModel>> nUsersQueue = new Queue<List<UserModel>>();
-        
+        Queue<List<UserModel>> DelUsersQueue = new Queue<List<UserModel>>();
+        Queue<List<UserModel>> OutChatUsersQueue = new Queue<List<UserModel>>();
+
+        Queue<List<UserModel>> TmpNewUsersQueue = new Queue<List<UserModel>>();
+        Queue<List<UserModel>> InUsersQueue = new Queue<List<UserModel>>();
+        Queue<List<UserModel>> InChatUsersQueue = new Queue<List<UserModel>>();
+
 
         List<ChatModel> cChatQueue = new List<ChatModel>();
         List<ChatModel> nChatQueue = new List<ChatModel>();
@@ -68,7 +73,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "sby1087";
+                LoginUserID = "galsa";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -113,6 +118,10 @@ namespace ChatClientViewer
             DataDisplayTimer.Close();
             ChromeDriver?.CloseDriver();
             ChromeDriver?.Close();
+
+            var process = Process.GetProcessesByName("chromedriver.exe");
+            foreach (var p in process)
+                p.Kill();
         }
 
         #endregion
@@ -235,7 +244,7 @@ namespace ChatClientViewer
                 if (ulUsers != null && ulUsers.Count > 0)
                     userModels.AddRange(ulUsers);
 
-                nUsersQueue.Enqueue(userModels);
+                TmpNewUsersQueue.Enqueue(userModels);
 
                 // 채팅 수집
                 GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
@@ -475,28 +484,32 @@ namespace ChatClientViewer
             //if (cUsers == null || cUsers.Count <= 0)
             //    return;
 
-            if (nUsersQueue == null || nUsersQueue.Count <= 0)
+            if (TmpNewUsersQueue == null || TmpNewUsersQueue.Count <= 0)
                 return;
 
-            var nUsers = nUsersQueue.Dequeue();
+            var nUsers = TmpNewUsersQueue.Dequeue();
 
             // 입장 사용자 가져오기
             var tmpInUsers = (from nUser in nUsers
                              join cUser in cUsers on nUser.ID equals cUser.ID into users
                              from cUser in users.DefaultIfEmpty()
                              where cUser is null
-                             select nUser).ToList();
+                             select nUser)?.Distinct()?.ToList();
 
-            // 퇴장 사용자 가져오기
-            var tmpOutUsers = (from cUser in cUsers
-                              join nUser in nUsers on cUser.ID equals nUser.ID into users
-                              from nUser in users.DefaultIfEmpty()
-                              where nUser is null
-                              select cUser).ToList();
-
-            lock (LockObject)
+            if (cUsers != null && cUsers.Count > 0)
             {
-                dUsersQueue.Enqueue(tmpOutUsers);
+                // 퇴장 사용자 가져오기
+                var tmpOutUsers = (from cUser in cUsers
+                                   join nUser in nUsers on cUser.ID equals nUser.ID into users
+                                   from nUser in users.DefaultIfEmpty()
+                                   where nUser is null
+                                   select cUser).ToList();
+
+                lock (LockObject)
+                {
+                    DelUsersQueue.Enqueue(tmpOutUsers);
+                    OutChatUsersQueue.Enqueue(tmpOutUsers);
+                }
             }
 
             // 퇴장 사용자 제거
@@ -577,7 +590,8 @@ namespace ChatClientViewer
 
             lock (LockObject)
             {
-                nUsersQueue.Enqueue(tmpUsers);
+                InUsersQueue.Enqueue(tmpUsers);
+                InChatUsersQueue.Enqueue(tmpUsers);
                 cUsers.AddRange(tmpUsers);
                 cUsers = cUsers.Distinct().ToList();
             }
@@ -589,10 +603,10 @@ namespace ChatClientViewer
         /// </summary>
         private void UsersRefresh()
         {
-            if (nUsersQueue == null || nUsersQueue.Count <= 0)
+            if (InUsersQueue == null || InUsersQueue.Count <= 0)
                 return;
 
-            var inUsers = nUsersQueue.Dequeue();
+            var inUsers = InUsersQueue.Dequeue();
 
             string bjHtml = string.Empty;
             string kingHtml = string.Empty;
@@ -619,6 +633,7 @@ namespace ChatClientViewer
                             string popupContentsHtml = string.Empty;
                             if (user.BJs != null)
                             {
+                                user.BJs = user.BJs.OrderBy(bj => bj.Ranking)?.ToList();
                                 foreach (var bj in user.BJs)
                                 {
                                     kingBjsHtml += string.Format(HtmlFormat.KingHtmlBjChild, bj.Nic, bj.IconUrl);
@@ -640,19 +655,19 @@ namespace ChatClientViewer
                         if (string.IsNullOrEmpty(user.Html))
                         {
                             string bingFanBjsHtml = string.Empty;
-                            string popupChildHtml = string.Empty;
+                            string popupHtml = string.Empty;
                             if (user.BJs != null)
                             {
+                                user.BJs = user.BJs.OrderBy(bj => bj.Ranking)?.ToList();
                                 foreach (var bj in user.BJs)
                                 {
                                     bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
-                                    popupChildHtml += string.Format(HtmlFormat.BjPopUpContents, bj.Ranking, bj.Nic, bj.IconUrl);
+                                    popupHtml += string.Format(HtmlFormat.BjPopUpContents, bj.Ranking, bj.Nic, bj.IconUrl);
                                 }
                                     
                             }
 
-                            var popupHtml = string.Format(HtmlFormat.BjPopUpContents, popupChildHtml);
-                            bigFanHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, bingFanBjsHtml, popupHtml);
+                            bigFanHtml += string.Format(HtmlFormat.BigFanHtmlChild, user.ID, user.Nic, bingFanBjsHtml, popupHtml);
                         }
                         else
                         {
@@ -664,11 +679,11 @@ namespace ChatClientViewer
 
             AddUserTable(bjHtml, kingHtml, bigFanHtml);
 
-            if (dUsersQueue == null || dUsersQueue.Count <= 0)
+            if (DelUsersQueue == null || DelUsersQueue.Count <= 0)
                 return;
 
             var tempUsers = new List<string>();
-            var outUsers = dUsersQueue.Dequeue();
+            var outUsers = DelUsersQueue.Dequeue();
             foreach (var user in outUsers)
                 tempUsers.Add(user.ID);
 
@@ -749,17 +764,23 @@ namespace ChatClientViewer
             tmpnChats = tmpnChats?.Distinct()?.ToList() ?? new List<ChatModel>();
 
             // test
-            //var tmpnChats = nChatQueue;
-            var outUsers = dUsersQueue.Dequeue();
-            foreach (var outUser in outUsers)
+
+            if (InChatUsersQueue != null && InChatUsersQueue.Count > 0)
             {
-                html += string.Format(HtmlFormat.ChatHtmlOutUser, outUser.ID, outUser.Nic);
+                var inUsers = InChatUsersQueue.Dequeue();
+                foreach (var inUser in inUsers)
+                {
+                    html += string.Format(HtmlFormat.ChatHtmlInUser, inUser.ID, inUser.Nic);
+                }
             }
 
-            var inUsers = nUsersQueue.Dequeue();
-            foreach (var inUser in inUsers)
+            if (OutChatUsersQueue != null && OutChatUsersQueue.Count > 0)
             {
-                html += string.Format(HtmlFormat.ChatHtmlOutUser, inUser.ID, inUser.Nic);
+                var outUsers = OutChatUsersQueue.Dequeue();
+                foreach (var outUser in outUsers)
+                {
+                    html += string.Format(HtmlFormat.ChatHtmlOutUser, outUser.ID, outUser.Nic);
+                }
             }
 
             // 채팅 추가
@@ -770,6 +791,7 @@ namespace ChatClientViewer
             }
 
             nChatQueue.Clear();
+            cChatQueue = cChatQueue?.Distinct()?.ToList();
 
             html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-30px;'>");
             SetChat(html);
