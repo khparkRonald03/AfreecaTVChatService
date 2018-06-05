@@ -20,6 +20,12 @@ namespace DataModels
         public string Nic { get; set; }
 
         /// <summary>
+        /// BJ 빅팬 랭킹
+        /// </summary>
+        [DataMember(Name = "Ranking")]
+        public int Ranking { get; set; }
+
+        /// <summary>
         /// 사진url
         /// </summary>
         [DataMember(Name = "PictureUrl")]

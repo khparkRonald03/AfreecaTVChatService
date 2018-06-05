@@ -32,37 +32,13 @@ namespace ChatClientViewer
 
         BjModel Bj = new BjModel();
 
-        bool AddNewUserFlag = false;
-
         readonly object LockObject = new object();
 
         List<UserModel> cUsers = new List<UserModel>();
 
-        List<UserModel> N_Users;
-        List<UserModel> nUsers
-        {
-            get
-            {
-                if (N_Users == null)
-                {
-                    lock (LockObject)
-                    {
-                        if (N_Users == null)
-                            N_Users = new List<UserModel>();
-                    }
-                }
-
-                lock (LockObject)
-                {
-                    N_Users = N_Users.FindAll(n => n.IsNew);
-                    return N_Users;
-                }
-            }
-            set
-            {
-                N_Users = value;
-            }
-        }
+        Queue<List<UserModel>> dUsersQueue = new Queue<List<UserModel>>();
+        Queue<List<UserModel>> nUsersQueue = new Queue<List<UserModel>>();
+        
 
         List<ChatModel> cChatQueue = new List<ChatModel>();
         List<ChatModel> nChatQueue = new List<ChatModel>();
@@ -232,23 +208,38 @@ namespace ChatClientViewer
         {
             lock (LockObject)
             {
+                var userModels = new List<UserModel>();
+                
                 // 열혈팬 수집
-                GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
+                var bigFans = GetUser("return document.getElementById('lv_ul_topfan').innerHTML", "//a");
+                if (bigFans != null && bigFans.Count > 0)
+                    userModels.AddRange(bigFans);
 
                 // 매니저 수집
-                GetUser("return document.getElementById('lv_h3_manager').innerHTML", "//a");
+                var managers = GetUser("return document.getElementById('lv_h3_manager').innerHTML", "//a");
+                if (managers != null && managers.Count > 0)
+                    userModels.AddRange(managers);
 
                 // 팬 수집
-                GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//a");
+                var fans = GetUser("return document.getElementById('lv_ul_fan').innerHTML", "//a");
+                if (fans != null && fans.Count > 0)
+                    userModels.AddRange(fans);
 
                 // 구독자 수집
-                GetUser("return document.getElementById('lv_h3_gudok').innerHTML", "//a");
+                var gudoks = GetUser("return document.getElementById('lv_h3_gudok').innerHTML", "//a");
+                if (gudoks != null && gudoks.Count > 0)
+                    userModels.AddRange(gudoks);
 
                 // 일반시청자
-                GetUser("return document.getElementById('lv_ul_user').innerHTML", "//a");
+                var ulUsers = GetUser("return document.getElementById('lv_ul_user').innerHTML", "//a");
+                if (ulUsers != null && ulUsers.Count > 0)
+                    userModels.AddRange(ulUsers);
+
+                nUsersQueue.Enqueue(userModels);
 
                 // 채팅 수집
                 GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
+                
 
                 // 퇴장 사용자 제거 데이터 매칭 하고 받아오기
                 RemoveLeaveUserAndWebApiMatching();
@@ -318,9 +309,11 @@ namespace ChatClientViewer
         /// <summary>
         /// 열혈팬 수집
         /// </summary>
-        private void GetUser(string script, string xPath)
+        private List<UserModel> GetUser(string script, string xPath)
         {
             // ex -> <span>flowerfree1</span><em>난마도특^^</em>
+            var result = new List<UserModel>();
+
             var bigFanNodes = GetNodes(script, xPath);
 
             foreach (var bigFan in bigFanNodes)
@@ -336,10 +329,11 @@ namespace ChatClientViewer
                         IsNew = true,
                     };
 
-                    nUsers.Add(userModel);
+                    result.Add(userModel);
                 }
             }
 
+            return result;
         }
 
         private void GetChat(string script, string xPath)
@@ -472,7 +466,6 @@ namespace ChatClientViewer
             }
         }
 
-
         /// <summary>
         /// 퇴장 사용자 제거 및 서버에서 데이터 매칭해서 받아오기
         /// </summary>
@@ -482,49 +475,47 @@ namespace ChatClientViewer
             //if (cUsers == null || cUsers.Count <= 0)
             //    return;
 
-            if (nUsers == null || nUsers.Count <= 0)
+            if (nUsersQueue == null || nUsersQueue.Count <= 0)
                 return;
 
-            // 퇴장사용자 저장
-            var tmpnUsers = (from nUser in nUsers
+            var nUsers = nUsersQueue.Dequeue();
+
+            // 입장 사용자 가져오기
+            var tmpInUsers = (from nUser in nUsers
                              join cUser in cUsers on nUser.ID equals cUser.ID into users
                              from cUser in users.DefaultIfEmpty()
                              where cUser is null
                              select nUser).ToList();
+
+            // 퇴장 사용자 가져오기
+            var tmpOutUsers = (from cUser in cUsers
+                              join nUser in nUsers on cUser.ID equals nUser.ID into users
+                              from nUser in users.DefaultIfEmpty()
+                              where nUser is null
+                              select cUser).ToList();
+
+            lock (LockObject)
+            {
+                dUsersQueue.Enqueue(tmpOutUsers);
+            }
 
             // 퇴장 사용자 제거
             var tmpcUsers = (from cUser in cUsers
                              join nUser in nUsers on cUser.ID equals nUser.ID
                              select cUser).ToList();
 
-            cUsers = tmpcUsers;
-
-            var cloneUsers = CloneList(nUsers);
-
-            // 기존 사용자 데이터 매칭 사용자에서 제거 ################
-            //var tmpnUsers = (from nUser in cloneUsers
-            //                 join cUser in cUsers on nUser.ID equals cUser.ID into users
-            //                 from cUser in users.DefaultIfEmpty()
-            //                 where cUser is null
-            //                 select nUser).ToList();
-
-            foreach (var tUser in tmpnUsers)
-                tUser.IsNew = true;
-
-            foreach (var user in nUsers)
+            lock (LockObject)
             {
-                if (cloneUsers.Any(c => c.ID == user.ID))
-                    user.IsNew = false;
+                cUsers = tmpcUsers;
             }
 
             ;
             // web api 매칭 요청
-            var returnJModel = Task.Run(() => CallWebApi(tmpnUsers)).Result;
+            var returnJModel = Task.Run(() => CallWebApi(tmpInUsers)).Result;
 
             lock (LockObject)
             {
-                var cloneModel = CloneModel(returnJModel);
-                jsonModels.Enqueue(cloneModel);
+                jsonModels.Enqueue(returnJModel);
             }
 
             ;
@@ -570,24 +561,27 @@ namespace ChatClientViewer
             {
                 try
                 {
-                    var jModel = jsonModels.First();
+                    var jModel = jsonModels.Dequeue();
                     var apiUsers = jModel?.UserModels;
                     if (apiUsers != null)
                     {
                         tmpUsers.AddRange(apiUsers);
-                        jsonModels.Dequeue();
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     string log = e.Message;
                     return;
                 }
             }
 
-            cUsers.AddRange(tmpUsers);
-            cUsers = cUsers.Distinct().ToList();
-            AddNewUserFlag = true;
+            lock (LockObject)
+            {
+                nUsersQueue.Enqueue(tmpUsers);
+                cUsers.AddRange(tmpUsers);
+                cUsers = cUsers.Distinct().ToList();
+            }
+            
         }
 
         /// <summary>
@@ -595,16 +589,17 @@ namespace ChatClientViewer
         /// </summary>
         private void UsersRefresh()
         {
-            if (!AddNewUserFlag)
+            if (nUsersQueue == null || nUsersQueue.Count <= 0)
                 return;
 
-            AddNewUserFlag = false;
+            var inUsers = nUsersQueue.Dequeue();
+
             string bjHtml = string.Empty;
             string kingHtml = string.Empty;
             string bigFanHtml = string.Empty;
 
-            // 사용자 리프레쉬 동작
-            foreach (var user in cUsers)
+            // 입장 사용자 추가 동작
+            foreach (var user in inUsers)
             {
                 switch (user.Type)
                 {
@@ -621,12 +616,18 @@ namespace ChatClientViewer
                         if (string.IsNullOrEmpty(user.Html))
                         {
                             string kingBjsHtml = string.Empty;
+                            string popupContentsHtml = string.Empty;
                             if (user.BJs != null)
                             {
                                 foreach (var bj in user.BJs)
+                                {
                                     kingBjsHtml += string.Format(HtmlFormat.KingHtmlBjChild, bj.Nic, bj.IconUrl);
+                                    popupContentsHtml += string.Format(HtmlFormat.BjPopUpContents, bj.Ranking, bj.Nic, bj.IconUrl);
+                                }
+                                    
                             }
-                            kingHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, kingBjsHtml);
+
+                            kingHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, kingBjsHtml, popupContentsHtml);
                         }
                         else
                         {
@@ -639,13 +640,19 @@ namespace ChatClientViewer
                         if (string.IsNullOrEmpty(user.Html))
                         {
                             string bingFanBjsHtml = string.Empty;
+                            string popupChildHtml = string.Empty;
                             if (user.BJs != null)
                             {
                                 foreach (var bj in user.BJs)
+                                {
                                     bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
+                                    popupChildHtml += string.Format(HtmlFormat.BjPopUpContents, bj.Ranking, bj.Nic, bj.IconUrl);
+                                }
+                                    
                             }
 
-                            bigFanHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, bingFanBjsHtml);
+                            var popupHtml = string.Format(HtmlFormat.BjPopUpContents, popupChildHtml);
+                            bigFanHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, bingFanBjsHtml, popupHtml);
                         }
                         else
                         {
@@ -655,34 +662,58 @@ namespace ChatClientViewer
                 }
             }
 
-            SetUserHtml(bjHtml, kingHtml, bigFanHtml);
+            AddUserTable(bjHtml, kingHtml, bigFanHtml);
+
+            if (dUsersQueue == null || dUsersQueue.Count <= 0)
+                return;
+
+            var tempUsers = new List<string>();
+            var outUsers = dUsersQueue.Dequeue();
+            foreach (var user in outUsers)
+                tempUsers.Add(user.ID);
+
+            var hideUsers = string.Join("|", tempUsers.ToArray());
+            DellUserTable(hideUsers);
         }
 
-        private void SetUserHtml(string bjHtml, string kingHtml, string bigFanHtml)
+        private void AddUserTable(string bjHtml, string kingHtml, string bigFanHtml)
         {
             if (WbUser.InvokeRequired)
             {
-                var ci = new Control_Invoker_ParamStrs(SetUserHtml);
+                var ci = new Control_Invoker_ParamStrs(AddUserTable);
                 this.BeginInvoke(ci, bjHtml, kingHtml, bigFanHtml);
             }
             else
             {
                 if (!string.IsNullOrEmpty(bjHtml))
                 {
-                    string bjCon = string.Format(HtmlFormat.UserTableHtml, bjHtml);
-                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_BJ", bjCon });
+                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "bjTable", bjHtml });
                 }
 
                 if (!string.IsNullOrEmpty(kingHtml))
                 {
-                    string kingCon = string.Format(HtmlFormat.UserTableHtml, kingHtml);
-                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_King", kingCon });
+                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "kingTable", kingHtml });
                 }
 
                 if (!string.IsNullOrEmpty(bigFanHtml))
                 {
-                    string bigFanCon = string.Format(HtmlFormat.UserTableHtml, bigFanHtml);
-                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanCon });
+                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "bigFanTable", bigFanHtml });
+                }
+            }
+        }
+
+        private void DellUserTable(string delHtml)
+        {
+            if (WbUser.InvokeRequired)
+            {
+                var ci = new Control_Invoker_ParamStr(DellUserTable);
+                this.BeginInvoke(ci, delHtml);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(delHtml))
+                {
+                    WbUser.Document.InvokeScript("DelUserHtml", new object[] { delHtml });
                 }
             }
         }
@@ -719,7 +750,19 @@ namespace ChatClientViewer
 
             // test
             //var tmpnChats = nChatQueue;
+            var outUsers = dUsersQueue.Dequeue();
+            foreach (var outUser in outUsers)
+            {
+                html += string.Format(HtmlFormat.ChatHtmlOutUser, outUser.ID, outUser.Nic);
+            }
 
+            var inUsers = nUsersQueue.Dequeue();
+            foreach (var inUser in inUsers)
+            {
+                html += string.Format(HtmlFormat.ChatHtmlOutUser, inUser.ID, inUser.Nic);
+            }
+
+            // 채팅 추가
             foreach (var chat in tmpnChats)
             {
                 html += chat.Html;

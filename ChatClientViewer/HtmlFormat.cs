@@ -9,6 +9,7 @@ namespace ChatClientViewer
     public static class HtmlFormat
     {
         public static string UserContainerHtml = @"
+        <script src='http://code.jquery.com/jquery-latest.min.js'></script>
         <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
         <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
         <div  style='height:100%;width:100%;overflow:auto;'>
@@ -38,32 +39,163 @@ namespace ChatClientViewer
 
         <script>
                 function AddUserHtml(id, html) {
-                    // DelUserHtml(id);
-                    document.getElementById(id).innerHTML = html;
+                    
+                    $('#' + id + ' > tbody:last').append(html);
                 }
 
-                function DelUserHtml(id) {
-                    var lo_table = document.getElementById(id);
+                function DelUserHtml(idStr) {
 
-                    for (var i=0; i < lo_table.rows.length; i++) {
-                        lo_table.deleteRow(i);
+                    var ids = idStr.split('|');
+                    for (var i = 0; i < ids.length; i++) {
+                        $('#' + ids[i]).attr('id', 'del_' + $('#' + ids[i]).attr('id'));
+                        $('#' + ids[i]).css('display', 'none');
                     }
+
                 }
         </script>
+        <style>
+            * {
+              margin: 0;
+              padding: 0;
+            }
+
+            body {
+              margin: 100px;
+            }
+
+            .pop-layer .pop-container {
+              padding: 20px 25px;
+            }
+
+            .pop-layer p.ctxt {
+              color: #666;
+              line-height: 25px;
+            }
+
+            .pop-layer .btn-r {
+              width: 100%;
+              margin: 10px 0 20px;
+              padding-top: 10px;
+              border-top: 1px solid #DDD;
+              text-align: right;
+            }
+
+            .pop-layer {
+              display: none;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              width: 60%;
+              height: auto;
+              background-color: #fff;
+              border: 5px solid #3571B5;
+              z-index: 10;
+            }
+
+            .dim-layer {
+              display: none;
+              position: fixed;
+              _position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 100;
+            }
+
+            .dim-layer .dimBg {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: #000;
+              opacity: .5;
+              filter: alpha(opacity=50);
+            }
+
+            .dim-layer .pop-layer {
+              display: block;
+            }
+
+            a.btn-layerClose {
+              display: inline-block;
+              height: 25px;
+              padding: 0 14px 0;
+              border: 1px solid #304a8a;
+              background-color: #3f5a9d;
+              font-size: 13px;
+              color: #fff;
+              line-height: 25px;
+            }
+
+            a.btn-layerClose:hover {
+              border: 1px solid #091940;
+              background-color: #1f326a;
+              color: #fff;
+            }
+        </style>
+        <script>
+            $('.btn-example').mouseover(function () {
+                var $id = $(this).attr('id');
+                layer_popup($id);
+            });
+
+            function layer_popup(el){
+
+                var $el = $(el);                            // 레이어의 id를 $el 변수에 저장
+                var isDim = $el.prev().hasClass('dimBg');   // dimmed 레이어를 감지하기 위한 boolean 변수
+
+                isDim ? $('.dim-layer').fadeIn() : $el.fadeIn();
+
+                var $elWidth = ~~($el.outerWidth()),
+                    $elHeight = ~~($el.outerHeight()),
+                    docWidth = $(document).width(),
+                    docHeight = $(document).height();
+
+                // 화면의 중앙에 레이어를 띄운다.
+                if ($elHeight < docHeight || $elWidth < docWidth) {
+                    $el.css({
+                        marginTop: -$elHeight /2,
+                        marginLeft: -$elWidth/2
+                    })
+                } else {
+                    $el.css({top: 0, left: 0});
+                }
+
+                $el.find('a.btn-layerClose').click(function(){
+                    isDim ? $('.dim-layer').fadeOut() : $el.fadeOut(); // 닫기 버튼을 클릭하면 레이어가 닫힌다.
+                    return false;
+                });
+
+                $('.layer .dimBg').click(function(){
+                    $('.dim-layer').fadeOut();
+                    return false;
+                });
+
+                $('body').click(function () {
+
+                    isDim ? $('.dim-layer').fadeOut() : $el.fadeOut(); // 닫기 버튼을 클릭하면 레이어가 닫힌다.
+                    return false;
+                });
+
+            }
+        </script>
+
         ";
 
         public static string UserTableHtml = @"
-                    <table>
-                        {0}
+                    <table id='{0}'>
+                        {1}
                     </table>";
 
         #region BJ
 
         /// <summary>
-        /// 하위요소 [파라미터 - 아이디, 닉네임, 사진url]
+        /// 하위요소 [파라미터 - 아이디, 닉네임, 사진url, 팝업 display html]
         /// </summary>
         public static string BjHtmlChild = @"
-                    <tr>
+                    <tr id='{0}'>
                         <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
                         <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td>
                         <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
@@ -77,15 +209,30 @@ namespace ChatClientViewer
         #region 회장
 
         /// <summary>
-        /// 하위요소 [파라미터 - 아이디, 닉네임, 포함된 bj정보]
+        /// 하위요소 [파라미터 - 아이디, 닉네임, 포함된 bj정보, BJ 랭킹 팝업 콘텐츠]
         /// </summary>
         public static string KingHtmlChild = @"
-                    <tr>
+                    <tr id='{0}'>
                         <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
                         <td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
                         <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>
-                        {2}
+                            <div id='#{0}_layer' class='btn-example'>
+                                {2}
+                            </div>
                         </td>
+                        <div id='{0}_layer' class='pop-layer'>
+                            <div class='pop-container'>
+                                <div class='pop-conts'>
+                                    <!--content //-->
+                                    {3}
+                                    <div class='btn-r'>
+                                        <a href = '#' class='btn-layerClose'>닫기</a>
+                                    </div>
+                                    <!--// content-->
+                                </div>
+                            </div>
+    
+                        </div>
                     </tr>
         ";
 
@@ -97,20 +244,44 @@ namespace ChatClientViewer
                         <img src='{1}' alt='' />
         ";
 
+        /// <summary>
+        /// Bj 하위요소 [파라미터 - 순위, 닉네임, 회장 아이콘Url]
+        /// </summary>
+        public static string BjPopUpContents = @"
+                        <span>{0}위</span>
+                        <span>{1}</span>
+                        <img src='{2}' alt='' /><br/>
+        ";
+
         #endregion
 
         #region 열혈팬
 
         /// <summary>
-        ///  - 아이디, 닉네임, BJ정보
+        ///  - 아이디, 닉네임, BJ정보, BJ 랭킹 팝업 콘텐츠
         /// </summary>
         public static string BigFanHtmlChild = @"
-                <tr>
+                <tr id='{0}'>
                     <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
                     <td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
                     <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>
-                        {2}
+                        <div id='#{0}_layer' class='btn-example'>
+                            {2}
+                        </div>
                     </td>
+                    <div id='{0}_layer' class='pop-layer'>
+                        <div class='pop-container'>
+                            <div class='pop-conts'>
+                                <!--content //-->
+                                {3}
+                                <div class='btn-r'>
+                                    <a href = '#' class='btn-layerClose'>닫기</a>
+                                </div>
+                                <!--// content-->
+                            </div>
+                        </div>
+    
+                    </div>
                 </tr>
         ";
         // 
@@ -130,6 +301,7 @@ namespace ChatClientViewer
         public static string ChatHtml = @"
         <html>
             <head>
+                <script src='http://code.jquery.com/jquery-latest.min.js'></script>
                 <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
                 <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
             </head>
@@ -156,8 +328,9 @@ namespace ChatClientViewer
 
                         //document.getElementById('fan_rank').scrollTop = document.getElementById('fan_rank').scrollHeight;
 
-                        var objDiv = document.getElementById('fan_rank'); 
-                        objDiv.scrollTop = objDiv.scrollHeight;
+                        $('body').scrollTop($(document).height());
+                        //var objDiv = document.getElementById('fan_rank'); 
+                        //objDiv.scrollTop = objDiv.scrollHeight;
 
                         // document.documentElement.scrollTop = currentScroll.x // X 좌표
                         // document.documentElement.scrollLeft = currentScroll.y // Y 좌표

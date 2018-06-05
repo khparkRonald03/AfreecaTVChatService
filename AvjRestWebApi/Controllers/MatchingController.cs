@@ -130,6 +130,7 @@ namespace AvjRestWebApi.Controllers
 
                 var matchingUser = serverUsers.FindAll(b => b.UserID == clientUsers[clientUserIdx].ID);
                 int mainBigFanRanking = matchingUser?.OrderBy(m => m.BigFanRanking)?.FirstOrDefault()?.BigFanRanking ?? -1;
+
                 if (mainBigFanRanking == 1)
                 {
                     // 1등 회장
@@ -183,6 +184,7 @@ namespace AvjRestWebApi.Controllers
                         Addbj.IconUrl = IconUrl.BulGrayHeart;
                     }
 
+                    Addbj.Ranking = bigFanRanking;
                     clientUsers[clientUserIdx].BJs.Add(Addbj);
                 });
             });
