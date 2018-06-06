@@ -14,6 +14,8 @@ using System.Timers;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Microsoft.Win32;
+using CefSharp;
+using CefSharp.WinForms;
 
 namespace ChatClientViewer
 {
@@ -31,6 +33,8 @@ namespace ChatClientViewer
 
         string LoginUserID { get; set; } = string.Empty;
         string LoginuserPW { get; set; } = string.Empty;
+        public ChromiumWebBrowser UserBrowser { get; private set; }
+        public ChromiumWebBrowser ChatBrowser { get; private set; }
 
         BjModel Bj = new BjModel();
 
@@ -64,6 +68,9 @@ namespace ChatClientViewer
         public Main(string[] args)
         {
             InitializeComponent();
+            Cef.Initialize(new CefSettings());
+            InitUserBrowser();
+            InitChatBrowser();
 
             if (args != null && args.Length == 2)
             {
@@ -74,7 +81,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "9rumee";
+                LoginUserID = "gkswjdyoon";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -102,9 +109,6 @@ namespace ChatClientViewer
             //SetIE8KeyforWebBrowserControl(appName);
             //WebBrowserHelper.FixBrowserVersion(appName, 11);
 
-            WbUser.DocumentText = HtmlFormat.UserContainerHtml;
-            WbChat.DocumentText = HtmlFormat.ChatHtml;
-
             var ts1 = new ThreadStart(BackGroundCrawling);
             BackGroundCrawlingThread = new Thread(ts1)
             {
@@ -128,6 +132,39 @@ namespace ChatClientViewer
             foreach (var p in process)
                 p.Kill();
         }
+
+
+        #region Web Browser Load
+
+        public void InitUserBrowser()
+        {
+            UserBrowser = new ChromiumWebBrowser("")
+            {
+                Name = "UserBrowser"
+            };
+            UserBrowser.LoadHtml(HtmlFormat.UserContainerHtml);
+
+            //browser.ExecuteScriptAsync()
+
+            splitContainer1.Panel1.Controls.Add(UserBrowser);
+            UserBrowser.Dock = DockStyle.Fill;
+        }
+
+        public void InitChatBrowser()
+        {
+            ChatBrowser = new ChromiumWebBrowser("")
+            {
+                Name = "ChatBrowser"
+            };
+            ChatBrowser.LoadHtml(HtmlFormat.ChatHtml);
+
+            //browser.ExecuteScriptAsync()
+
+            splitContainer1.Panel2.Controls.Add(ChatBrowser);
+            ChatBrowser.Dock = DockStyle.Fill;
+        }
+
+        #endregion
 
         private void SetIE8KeyforWebBrowserControl(string appName)
         {
@@ -582,6 +619,10 @@ namespace ChatClientViewer
             }
 
             ;
+
+            // test #####
+            tmpInUsers = nUsers;
+
             // web api 매칭 요청
             var returnJModel = Task.Run(() => CallWebApi(tmpInUsers)).Result;
 
@@ -752,7 +793,7 @@ namespace ChatClientViewer
 
         private void AddUserTable(string bjHtml, string kingHtml, string bigFanHtml)
         {
-            if (WbUser.InvokeRequired)
+            if (UserBrowser.InvokeRequired)
             {
                 var ci = new Control_Invoker_ParamStrs(AddUserTable);
                 this.BeginInvoke(ci, bjHtml, kingHtml, bigFanHtml);
@@ -761,24 +802,24 @@ namespace ChatClientViewer
             {
                 if (!string.IsNullOrEmpty(bjHtml))
                 {
-                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "bjTable", bjHtml });
+                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BJ", bjHtml });
                 }
 
                 if (!string.IsNullOrEmpty(kingHtml))
                 {
-                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "kingTable", kingHtml });
+                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_King", kingHtml });
                 }
 
                 if (!string.IsNullOrEmpty(bigFanHtml))
                 {
-                    WbUser.Document.InvokeScript("AddUserHtml", new object[] { "bigFanTable", bigFanHtml });
+                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanHtml });
                 }
             }
         }
 
         private void DellUserTable(string delHtml)
         {
-            if (WbUser.InvokeRequired)
+            if (UserBrowser.InvokeRequired)
             {
                 var ci = new Control_Invoker_ParamStr(DellUserTable);
                 this.BeginInvoke(ci, delHtml);
@@ -787,7 +828,7 @@ namespace ChatClientViewer
             {
                 if (!string.IsNullOrEmpty(delHtml))
                 {
-                    WbUser.Document.InvokeScript("DelUserHtml", new object[] { delHtml });
+                    UserBrowser.ExecuteScriptAsync("DelUserHtml", new object[] { delHtml });
                 }
             }
         }
@@ -852,41 +893,20 @@ namespace ChatClientViewer
             nChatQueue.Clear();
             cChatQueue = cChatQueue?.Distinct()?.ToList();
 
-            html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-30px;'>");
+            //html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-30px;'>"); // test ####################
             SetChat(html);
-        }
-
-        private void InitChat()
-        {
-            if (WbChat.InvokeRequired)
-            {
-                var ci = new Control_Invoker(InitChat);
-                this.BeginInvoke(ci, null);
-            }
-            else
-            {
-                string paramHtml = HtmlFormat.ChatHtml;
-                WbChat.DocumentText = paramHtml;
-            }
-
         }
 
         private void SetChat(string html)
         {
-            if (WbChat.InvokeRequired)
+            if (ChatBrowser.InvokeRequired)
             {
                 var ci = new Control_Invoker_ParamStr(SetChat);
                 this.BeginInvoke(ci, html);
             }
             else
             {
-                // 처음이면 폼 모두 생성
-                if (string.IsNullOrEmpty(WbChat.DocumentText))
-                    InitChat();
-
-                WbChat.Document.InvokeScript("AddChatHtml", new object[] { html });
-                //WbChat.Document.Body.ScrollIntoView(false);
-
+                ChatBrowser.ExecuteScriptAsync("AddChatHtml", new object[] { html });
             }
 
         }

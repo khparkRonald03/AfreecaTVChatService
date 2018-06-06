@@ -9,14 +9,45 @@ namespace ChatClientViewer
     public static class HtmlFormat
     {
         public static string UserContainerHtml = @"
+        <!doctype html>
         <html>
         <head>
-        <meta http-equiv='X-UA-Compatible' content='IE=11'>
-        <script src='http://code.jquery.com/jquery-latest.min.js'></script>
+            <meta charset='utf-8'>
+            <script src='http://code.jquery.com/jquery-latest.min.js'></script>
 
-        <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
-        <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
-        <style>
+            <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
+            <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
+        </head>
+        <body>
+            <div  style='height:100%;width:100%;overflow:auto;'>
+                <div class='fan_rank' style='height:33%;'>
+                    <div class='tit_area' style='width:100%;'>
+                        <div class='title' id='fan_txt'>BJ</div>
+                    </div>
+                    <div id='sTopFanStarBalloon_BJ'>
+
+                    </div>
+                
+                </div>
+                <div class='fan_rank' style='height:33%;'>
+                    <div class='tit_area' style='width:100%;'>
+                        <div class='title' id='fan_txt'>회장</div>
+                    </div>
+                    <div id='sTopFanStarBalloon_King'>
+
+                    </div>
+                </div>
+                <div class='fan_rank' style='height:33%;'>
+                    <div class='tit_area' style='width:100%;'>
+                        <div class='title' id='fan_txt'>열혈팬</div>
+                    </div>
+                    <div id='sTopFanStarBalloon_BigFan'>
+
+                    </div>
+                </div>
+            </div>
+
+            <style>
                 * {
                   margin: 0;
                   padding: 0;
@@ -98,48 +129,18 @@ namespace ChatClientViewer
                   color: #fff;
                 }
             </style>
-            
-        </head>
-        <body>
-            <div  style='height:100%;width:100%;overflow:auto;'>
-                <div class='fan_rank' style='height:33%;'>
-                    <div class='tit_area' style='width:100%;'>
-                        <div class='title' id='fan_txt'>BJ</div>
-                    </div>
-                    <div id='sTopFanStarBalloon_BJ'>
-                        <table id='bjTable'>
-                            <tr></tr>
-                        </table>
-                    </div>
-                
-                </div>
-                <div class='fan_rank' style='height:33%;'>
-                    <div class='tit_area' style='width:100%;'>
-                        <div class='title' id='fan_txt'>회장</div>
-                    </div>
-                    <div id='sTopFanStarBalloon_King'>
-                        <table id='kingTable'>
-                            <tr></tr>
-                        </table>
-                    </div>
-                </div>
-                <div class='fan_rank' style='height:33%;'>
-                    <div class='tit_area' style='width:100%;'>
-                        <div class='title' id='fan_txt'>열혈팬</div>
-                    </div>
-                    <div id='sTopFanStarBalloon_BigFan'>
-                        <table id='bigFanTable'>
-                            <tr></tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
             <script>
 
                 function AddUserHtml(id, html) {
-                    
+
+                    document.getElementById(id).insertAdjacentHTML('beforeend', html);                    
+                    return;
+
+                    alert('test1');
                     $('#' + id + ' tr:last').after(html);
+
+                    // $('#myTable > tbody:last').append('<tr>...</tr><tr>...</tr>');
+                    alert('test2');
                 }
 
                 function DelUserHtml(idStr) {
@@ -211,13 +212,13 @@ namespace ChatClientViewer
         /// 하위요소 [파라미터 - 아이디, 닉네임, 사진url, 팝업 display html]
         /// </summary>
         public static string BjHtmlChild = @"
-                    <tr id='{0}'>
-                        <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-                        <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td>
-                        <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
+                    <div id='{0}'>
+                        <div style='display:inline; width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</div>
+                        <div style='display:inline; width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</div>
+                        <div style='display:inline; color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
                             <img src='{2}' alt='' style='height:20px;' />
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
         ";
 
         #endregion
@@ -228,10 +229,10 @@ namespace ChatClientViewer
         /// 하위요소 [파라미터 - 아이디, 닉네임, 포함된 bj정보, BJ 랭킹 팝업 콘텐츠]
         /// </summary>
         public static string KingHtmlChild = @"
-                    <tr id='{0}' onclick='javascript:showPopup('{0}')'>
-                        <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-                        <td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
-                        <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>
+                    <div id='{0}' onclick='javascript:showPopup('{0}')'>
+                        <div style='display:inline; width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</div>
+                        <div style='display:inline; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</div>
+                        <div style='display:inline; color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>
                             {2}
                             <div id='{0}_layer' class='pop-layer'>
                                 <div class='pop-container'>
@@ -246,8 +247,8 @@ namespace ChatClientViewer
                                 </div>
                             </div>
 
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
         ";
 
         /// <summary>
@@ -310,9 +311,10 @@ namespace ChatClientViewer
         #region 채팅
 
         public static string ChatHtml = @"
+        <!doctype html>
         <html>
             <head>
-                <meta http-equiv='X-UA-Compatible' content='IE=11'>
+                <meta charset='utf-8'>
                 <script src='http://code.jquery.com/jquery-latest.min.js'></script>
                 <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
                 <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />

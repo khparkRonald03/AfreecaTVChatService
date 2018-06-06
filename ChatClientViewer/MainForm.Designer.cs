@@ -33,13 +33,10 @@
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.ITContainer = new iTalk.iTalk_ThemeContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.WbUser = new System.Windows.Forms.WebBrowser();
-            this.WbChat = new System.Windows.Forms.WebBrowser();
             this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
+            this.BtnReStart = new iTalk.iTalk_Button_1();
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,6 +54,7 @@
             // 
             this.ITContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(246)))), ((int)(((byte)(246)))));
             this.ITContainer.Controls.Add(this.splitContainer1);
+            this.ITContainer.Controls.Add(this.BtnReStart);
             this.ITContainer.Controls.Add(this.iTalk_ControlBox1);
             this.ITContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ITContainer.Font = new System.Drawing.Font("Segoe UI", 8F);
@@ -78,35 +76,12 @@
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.AccessibleRole = System.Windows.Forms.AccessibleRole.ScrollBar;
-            this.splitContainer1.Panel1.Controls.Add(this.WbUser);
-            // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
-            this.splitContainer1.Panel2.Controls.Add(this.WbChat);
-            this.splitContainer1.Size = new System.Drawing.Size(334, 821);
-            this.splitContainer1.SplitterDistance = 311;
+            this.splitContainer1.Size = new System.Drawing.Size(334, 790);
+            this.splitContainer1.SplitterDistance = 361;
             this.splitContainer1.TabIndex = 6;
-            // 
-            // WbUser
-            // 
-            this.WbUser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WbUser.Location = new System.Drawing.Point(0, 0);
-            this.WbUser.Name = "WbUser";
-            this.WbUser.Size = new System.Drawing.Size(334, 311);
-            this.WbUser.TabIndex = 0;
-            // 
-            // WbChat
-            // 
-            this.WbChat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WbChat.Location = new System.Drawing.Point(0, 0);
-            this.WbChat.Name = "WbChat";
-            this.WbChat.ScriptErrorsSuppressed = true;
-            this.WbChat.Size = new System.Drawing.Size(334, 506);
-            this.WbChat.TabIndex = 5;
             // 
             // iTalk_ControlBox1
             // 
@@ -117,6 +92,20 @@
             this.iTalk_ControlBox1.Size = new System.Drawing.Size(77, 19);
             this.iTalk_ControlBox1.TabIndex = 0;
             this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
+            // 
+            // BtnReStart
+            // 
+            this.BtnReStart.BackColor = System.Drawing.Color.Transparent;
+            this.BtnReStart.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.BtnReStart.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.BtnReStart.Image = null;
+            this.BtnReStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.BtnReStart.Location = new System.Drawing.Point(3, 818);
+            this.BtnReStart.Name = "BtnReStart";
+            this.BtnReStart.Size = new System.Drawing.Size(334, 31);
+            this.BtnReStart.TabIndex = 7;
+            this.BtnReStart.Text = "재시작";
+            this.BtnReStart.TextAlignment = System.Drawing.StringAlignment.Center;
             // 
             // Main
             // 
@@ -134,8 +123,6 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.Load += new System.EventHandler(this.Main_Load);
             this.ITContainer.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -147,9 +134,8 @@
         private iTalk.iTalk_ThemeContainer ITContainer;
         private System.Windows.Forms.ImageList imageList;
         private iTalk.iTalk_ControlBox iTalk_ControlBox1;
-        private System.Windows.Forms.WebBrowser WbUser;
-        private System.Windows.Forms.WebBrowser WbChat;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private iTalk.iTalk_Button_1 BtnReStart;
     }
 }
 
