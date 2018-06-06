@@ -105,10 +105,6 @@ namespace ChatClientViewer
 
             (new ShowHelper()).ShowDialog();
 
-            //var appName = Process.GetCurrentProcess().ProcessName + ".exe";
-            //SetIE8KeyforWebBrowserControl(appName);
-            //WebBrowserHelper.FixBrowserVersion(appName, 11);
-
             var ts1 = new ThreadStart(BackGroundCrawling);
             BackGroundCrawlingThread = new Thread(ts1)
             {
@@ -157,8 +153,6 @@ namespace ChatClientViewer
                 Name = "ChatBrowser"
             };
             ChatBrowser.LoadHtml(HtmlFormat.ChatHtml);
-
-            //browser.ExecuteScriptAsync()
 
             splitContainer1.Panel2.Controls.Add(ChatBrowser);
             ChatBrowser.Dock = DockStyle.Fill;
