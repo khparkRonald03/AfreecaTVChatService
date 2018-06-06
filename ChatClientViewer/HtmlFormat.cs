@@ -157,19 +157,18 @@ namespace ChatClientViewer
                         <div style='display:inline; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</div>
                         <div style='display:inline; color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>
                             {2}
-                            <div id='{0}_layer' class='pop-layer'>
-                                <div class='pop-container'>
-                                    <div class='pop-conts'>
-                                        <!--content //-->
-                                        {3}
-                                        <div class='btn-r'>
-                                            <a href = '#' class='btn-layerClose'>닫기</a>
-                                        </div>
-                                        <!--// content-->
+                        </div>
+                        <div id='{0}_layer' class='pop-layer'>
+                            <div class='pop-container'>
+                                <div class='pop-conts'>
+                                    <!--content //-->
+                                    {3}
+                                    <div class='btn-r'>
+                                        <a href = '#' class='btn-layerClose'>닫기</a>
                                     </div>
+                                    <!--// content-->
                                 </div>
                             </div>
-
                         </div>
                     </div>
         ";
@@ -199,27 +198,27 @@ namespace ChatClientViewer
         ///  - 아이디, 닉네임, BJ정보, BJ 랭킹 팝업 콘텐츠
         /// </summary>
         public static string BigFanHtmlChild = @"
-                <tr id='{0}' onclick='javascript:showPopup('{0}');'>
-                    <td style='width:100px; color: #FF0000 !important;font-weight: bold;'><a href='javascript:showPopup(this);'>{0}</a></td>
-                    <td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
-                    <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>
+                <div id='{0}' onclick='javascript:showPopup('{0}');'>
+                    <div style='display:inline; width:100px; color: #FF0000 !important;font-weight: bold;'><a href='javascript:showPopup(this);'>{0}</a></div>
+                    <div style='display:inline; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</div>
+                    <div style='display:inline; color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>
                         {2}
-                        <div id='{0}_layer' class='pop-layer'>
-                            <div class='pop-container'>
-                                <div class='pop-conts'>
-                                    <!--content //-->
-                                    {3}
-                                    <div class='btn-r'>
-                                        <a href = '#' class='btn-layerClose'>닫기</a>
-                                    </div>
-                                    <!--// content-->
+                    </div>
+                    <div id='{0}_layer' class='pop-layer'>
+                        <div class='pop-container'>
+                            <div class='pop-conts'>
+                                <!--content //-->
+                                {3}
+                                <div class='btn-r'>
+                                    <a href = '#' class='btn-layerClose'>닫기</a>
                                 </div>
+                                <!--// content-->
                             </div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </div>
         ";
-        // 
+
 
         /// <summary>
         /// - 닉네임, 하트 Url
@@ -319,7 +318,13 @@ namespace ChatClientViewer
         /// 유저아이디, 닉네임
         /// </summary>
         public static string ChatHtmlInUser = @"
-            <p class='notice in fanclub'><a user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에 참여했습니다.</p>
+                <dl class=''>
+                    <dt>
+                    </dt>
+                    <dd>
+                        <p class='notice in fanclub'><a user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에 참여했습니다.</p>
+                    </dd>
+                </dl>
             ";
 
         /// <summary>
@@ -328,7 +333,13 @@ namespace ChatClientViewer
         /// 유저아이디, 닉네임
         /// </summary>
         public static string ChatHtmlOutUser = @"
-            <p class='notice in fanclub'><a user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에서 나가셨습니다.</p>
+                <dl class=''>
+                    <dt>
+                    </dt>
+                    <dd>
+                        <p class='notice in fanclub'><a user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에서 나가셨습니다.</p>
+                    </dd>
+                </dl>
             ";
 
         #endregion

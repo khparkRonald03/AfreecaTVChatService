@@ -16,6 +16,7 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using CefSharp;
 using CefSharp.WinForms;
+using System.Net;
 
 namespace ChatClientViewer
 {
@@ -81,7 +82,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "gkswjdyoon";
+                LoginUserID = "jsc823";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -160,67 +161,14 @@ namespace ChatClientViewer
 
         #endregion
 
-        private void SetIE8KeyforWebBrowserControl(string appName)
-        {
-            RegistryKey Regkey = null;
-            try
-            {
-                // For 64 bit machine
-                if (Environment.Is64BitOperatingSystem)
-                    Regkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\\Wow6432Node\\Microsoft\\Internet Explorer\\MAIN\\FeatureControl\\FEATURE_BROWSER_EMULATION", true);
-                else  //For 32 bit machine
-                    Regkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\\Microsoft\\Internet Explorer\\Main\\FeatureControl\\FEATURE_BROWSER_EMULATION", true);
-
-                // If the path is not correct or
-                // if the user haven't priviledges to access the registry
-                if (Regkey == null)
-                {
-                    //MessageBox.Show("Application Settings Failed - Address Not found");
-                    return;
-                }
-
-                string FindAppkey = Convert.ToString(Regkey.GetValue(appName));
-
-                // Check if key is already present
-                if (FindAppkey == "8000")
-                {
-                    //MessageBox.Show("Required Application Settings Present");
-                    Regkey.Close();
-                    return;
-                }
-
-                // If a key is not present add the key, Key value 8000 (decimal)
-                if (string.IsNullOrEmpty(FindAppkey))
-                    Regkey.SetValue(appName, unchecked((int)0x1F40), RegistryValueKind.DWord);
-
-                // Check for the key after adding
-                FindAppkey = Convert.ToString(Regkey.GetValue(appName));
-
-                //if (FindAppkey == "8000")
-                //    MessageBox.Show("Application Settings Applied Successfully");
-                //else
-                //    MessageBox.Show("Application Settings Failed, Ref: " + FindAppkey);
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show("Application Settings Failed");
-                //MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                // Close the Registry
-                if (Regkey != null)
-                    Regkey.Close();
-            }
-        }
-
         #endregion
 
         #region 방송 정보 수집 (채팅, 접속사용자)
 
         private void BackGroundCrawling()
         {
-            ChromeDriver = new Controller(false);
+            // test ###########
+            ChromeDriver = new Controller(true);
 
             // 먹통 됐을때 다시 시작
             reStart:
@@ -615,7 +563,7 @@ namespace ChatClientViewer
             ;
 
             // test #####
-            tmpInUsers = nUsers;
+            //tmpInUsers = nUsers;
 
             // web api 매칭 요청
             var returnJModel = Task.Run(() => CallWebApi(tmpInUsers)).Result;
@@ -796,18 +744,20 @@ namespace ChatClientViewer
             {
                 if (!string.IsNullOrEmpty(bjHtml))
                 {
-                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BJ", bjHtml });
+                    UserBrowser.ExecuteScriptAsync("AddBjUserHtml", new object[] { bjHtml });
                 }
 
                 if (!string.IsNullOrEmpty(kingHtml))
                 {
-                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_King", kingHtml });
+                    UserBrowser.ExecuteScriptAsync("AddKingUserHtml", new object[] { kingHtml });
                 }
 
                 if (!string.IsNullOrEmpty(bigFanHtml))
                 {
-                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanHtml });
+                    UserBrowser.ExecuteScriptAsync("AddBigFanUserHtml", new object[] { bigFanHtml });
                 }
+
+                string d = @"test = """" ";
             }
         }
 
@@ -858,6 +808,7 @@ namespace ChatClientViewer
             tmpnChats = tmpnChats?.Distinct()?.ToList() ?? new List<ChatModel>();
 
             // test
+            tmpnChats = nChatQueue; // ###########################
 
             if (InChatUsersQueue != null && InChatUsersQueue.Count > 0)
             {
