@@ -31,7 +31,7 @@ namespace ChatClientViewer
         </head>
         <body>
             <div style='height:100%;width:100%;overflow:auto;'>
-                <div class='fan_rank' style='height:auto;display:inline-block;'>
+                <div class='fan_rank' style='height:auto;'>
                     <div class='tit_area' style='width:100%;'>
                         <div class='title' id='fan_txt'>BJ</div>
                     </div>
@@ -42,7 +42,7 @@ namespace ChatClientViewer
                     </div>
 
                 </div>
-                <div class='fan_rank' style='height:auto;display:inline-block;'>
+                <div class='fan_rank' style='height:auto;'>
                     <div class='tit_area' style='width:100%;'>
                         <div class='title' id='fan_txt'>회장</div>
                     </div>
@@ -52,7 +52,7 @@ namespace ChatClientViewer
                         </table>
                     </div>
                 </div>
-                <div class='fan_rank' style='height:auto;display:inline-block;'>
+                <div class='fan_rank' style='height:auto;'>
                     <div class='tit_area' style='width:100%;'>
                         <div class='title' id='fan_txt'>열혈팬</div>
                     </div>

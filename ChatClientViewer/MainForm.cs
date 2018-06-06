@@ -82,7 +82,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "jsc823";
+                LoginUserID = "dbdms139";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -166,7 +166,7 @@ namespace ChatClientViewer
         private void BackGroundCrawling()
         {
             // test ###########
-            ChromeDriver = new Controller(true);
+            ChromeDriver = new Controller(false);
 
             // 먹통 됐을때 다시 시작
             reStart:
@@ -789,22 +789,39 @@ namespace ChatClientViewer
 
             // test #####
             // 접속 사용자 채팅만 가져오기
-            var userJoinChats = (from nChat in nChatQueue
-                                 join cUser in cUsers on nChat.ID equals cUser.ID
-                                 select nChat).ToList();
+            //var userJoinChats = (from nChat in nChatQueue
+            //                     join cUser in cUsers on nChat.ID equals cUser.ID
+            //                     select nChat).ToList();
 
-            // 기존 채팅 데이터 새 채팅에서 제외
-            var tmpnChats = (from nChat in userJoinChats
+            //// 기존 채팅 데이터 새 채팅에서 제외
+            //var tmpnChats = (from nChat in userJoinChats
+            //                 join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
+            //                 from cChat in chat.DefaultIfEmpty()
+            //                 where cChat is null
+            //                 select nChat).ToList();
+
+
+            // test
+            // 기존 채팅 데이터 새 채팅에서 제외 후 중복 제거
+            var tmpnChats = (from nChat in nChatQueue
                              join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
                              from cChat in chat.DefaultIfEmpty()
                              where cChat is null
-                             select nChat).ToList();
+                             select nChat)?.Distinct()?.ToList();
 
-            // 중복 제거
-            tmpnChats = tmpnChats?.Distinct()?.ToList() ?? new List<ChatModel>();
 
-            // test
-            tmpnChats = nChatQueue; // ###########################
+            // 하... 중복제거 린큐로 하는거 실패해서 이걸로 다시 체크..
+            var check = new List<ChatModel>();
+            foreach (var tt in tmpnChats)
+            {
+                if (check.Any(t => t.ID == tt.ID && t.Html == tt.Html))
+                {
+                    ;
+                    continue;
+                }
+
+                check.Add(tt);
+            }
 
             if (InChatUsersQueue != null && InChatUsersQueue.Count > 0)
             {
@@ -825,7 +842,8 @@ namespace ChatClientViewer
             }
 
             // 채팅 추가
-            foreach (var chat in tmpnChats)
+            //foreach (var chat in tmpnChats)
+            foreach (var chat in check)
             {
                 html += chat.Html;
                 cChatQueue.Add(chat);
