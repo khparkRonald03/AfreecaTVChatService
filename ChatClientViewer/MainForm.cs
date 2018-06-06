@@ -141,8 +141,6 @@ namespace ChatClientViewer
             };
             UserBrowser.LoadHtml(HtmlFormat.UserContainerHtml);
 
-            //browser.ExecuteScriptAsync()
-
             splitContainer1.Panel1.Controls.Add(UserBrowser);
             UserBrowser.Dock = DockStyle.Fill;
         }
@@ -735,7 +733,7 @@ namespace ChatClientViewer
 
         private void AddUserTable(string bjHtml, string kingHtml, string bigFanHtml)
         {
-            if (UserBrowser.InvokeRequired)
+            if (ChatBrowser.InvokeRequired)
             {
                 var ci = new Control_Invoker_ParamStrs(AddUserTable);
                 this.BeginInvoke(ci, bjHtml, kingHtml, bigFanHtml);
@@ -744,20 +742,18 @@ namespace ChatClientViewer
             {
                 if (!string.IsNullOrEmpty(bjHtml))
                 {
-                    UserBrowser.ExecuteScriptAsync("AddBjUserHtml", new object[] { bjHtml });
+                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BJ", bjHtml });
                 }
 
                 if (!string.IsNullOrEmpty(kingHtml))
                 {
-                    UserBrowser.ExecuteScriptAsync("AddKingUserHtml", new object[] { kingHtml });
+                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_King", kingHtml });
                 }
 
                 if (!string.IsNullOrEmpty(bigFanHtml))
                 {
-                    UserBrowser.ExecuteScriptAsync("AddBigFanUserHtml", new object[] { bigFanHtml });
+                    UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanHtml });
                 }
-
-                string d = @"test = """" ";
             }
         }
 
@@ -852,6 +848,7 @@ namespace ChatClientViewer
             else
             {
                 ChatBrowser.ExecuteScriptAsync("AddChatHtml", new object[] { html });
+                //UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { HtmlFormat.test }); // test ######
             }
 
         }
