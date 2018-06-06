@@ -388,9 +388,13 @@ namespace WebController
             var result = new ResultModel<bool>();
             if (Driver != null)
             {
-                Driver.Close();
-                Driver.Dispose();
-                Driver = null;
+                try
+                {
+                    Driver.Close();
+                    Driver.Dispose();
+                    Driver = null;
+                }
+                catch { }
             }
 
             return new ResultModel<bool>()

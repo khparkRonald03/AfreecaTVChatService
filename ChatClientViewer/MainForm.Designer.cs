@@ -96,7 +96,6 @@
             this.WbUser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.WbUser.Location = new System.Drawing.Point(0, 0);
             this.WbUser.Name = "WbUser";
-            this.WbUser.ScriptErrorsSuppressed = true;
             this.WbUser.Size = new System.Drawing.Size(334, 311);
             this.WbUser.TabIndex = 0;
             // 
