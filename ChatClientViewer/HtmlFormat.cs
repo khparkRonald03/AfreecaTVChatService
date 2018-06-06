@@ -21,7 +21,7 @@ namespace ChatClientViewer
                 .pop-layer .pop-container { padding: 20px 25px; }
                 .pop-layer p.ctxt { color: #666;line-height: 25px; }
                 .pop-layer .btn-r { width: 100%; margin: 10px 0 20px; padding-top: 10px; border-top: 1px solid #DDD; text-align: right; }
-                .pop-layer { display: none; position: absolute; top: inherit; left: 10px; width: 300px; height: auto; background-color: #fff; border: 5px solid #3571B5; z-index: 10; }
+                .pop-layer { display: none; position: absolute; top: inherit; left: 10px; width: 220px; height: auto; background-color: #fff; border: 5px solid #3571B5; z-index: 10; }
                 .dim-layer { display: none;position: fixed;_position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 100; }
                 .dim-layer .dimBg { position: absolute;top: 0;left: 0;width: 100%;height: 100%;background: #000;opacity: .5;filter: alpha(opacity=50); }
                 .dim-layer .pop-layer { display: block; }
@@ -308,7 +308,7 @@ namespace ChatClientViewer
         /// ex_ <p class='notice in fanclub'><a href='javascript:;' user_id='kfiop' user_nick='무쌍.'>팬클럽 무쌍.<em>(kfiop)</em></a>님이 대화방에서 나가셨습니다.</p>
         /// 유저아이디, 닉네임
         ///</summary>
-        public static string ChatHtmlOutUser = "<p class='notice in fanclub'><a user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에서 나가셨습니다.</p>";
+        public static string ChatHtmlOutUser = "<p class='notice out fanclub' style='color:red !important'><a style='color:red !important' user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에서 나가셨습니다.</p>";
 
         #endregion
     }

@@ -789,25 +789,25 @@ namespace ChatClientViewer
 
             // test #####
             // 접속 사용자 채팅만 가져오기
-            //var userJoinChats = (from nChat in nChatQueue
-            //                     join cUser in cUsers on nChat.ID equals cUser.ID
-            //                     select nChat).ToList();
+            var userJoinChats = (from nChat in nChatQueue
+                                 join cUser in cUsers on nChat.ID equals cUser.ID
+                                 select nChat).ToList();
 
-            //// 기존 채팅 데이터 새 채팅에서 제외
-            //var tmpnChats = (from nChat in userJoinChats
-            //                 join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
-            //                 from cChat in chat.DefaultIfEmpty()
-            //                 where cChat is null
-            //                 select nChat).ToList();
-
-
-            // test
             // 기존 채팅 데이터 새 채팅에서 제외 후 중복 제거
-            var tmpnChats = (from nChat in nChatQueue
+            var tmpnChats = (from nChat in userJoinChats
                              join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
                              from cChat in chat.DefaultIfEmpty()
                              where cChat is null
                              select nChat)?.Distinct()?.ToList();
+
+
+            // test
+            // 기존 채팅 데이터 새 채팅에서 제외 후 중복 제거
+            //var tmpnChats = (from nChat in nChatQueue
+            //                 join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
+            //                 from cChat in chat.DefaultIfEmpty()
+            //                 where cChat is null
+            //                 select nChat)?.Distinct()?.ToList();
 
 
             // 하... 중복제거 린큐로 하는거 실패해서 이걸로 다시 체크..
@@ -852,7 +852,6 @@ namespace ChatClientViewer
             nChatQueue.Clear();
             cChatQueue = cChatQueue?.Distinct()?.ToList();
 
-            //html = html.Replace("<em class=\"pc\">", "<em class='pc' style='margin-left:-30px;'>"); // test ####################
             SetChat(html);
         }
 
@@ -866,7 +865,6 @@ namespace ChatClientViewer
             else
             {
                 ChatBrowser.ExecuteScriptAsync("AddChatHtml", new object[] { html });
-                //UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { HtmlFormat.test }); // test ######
             }
 
         }
