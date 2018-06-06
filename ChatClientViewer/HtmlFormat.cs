@@ -137,7 +137,7 @@ namespace ChatClientViewer
         private static readonly string KingHtmlChild_Test = @"
         <tr id='{0}' onclick='javascript:showPopup(this)'>
             <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-            <td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
+            <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
             <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>
                 {2}
                 <div id='{0}_layer' class='pop-layer'>
@@ -162,7 +162,7 @@ namespace ChatClientViewer
         /// <summary>
         /// 하위요소 [파라미터 - 아이디, 닉네임, 포함된 bj정보, BJ 랭킹 팝업 콘텐츠]
         ///</summary>
-        public static string KingHtmlChild = "<tr id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{2}<div id='{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><table>{3}</table><div class='btn-r'><a href='#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
+        public static string KingHtmlChild = "<tr id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{2}<div id='{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><table>{3}</table><div class='btn-r'><a href='#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
 
         /// <summary>
         /// Bj 하위요소 [파라미터 - 닉네임, 회장 아이콘Url]
@@ -181,7 +181,7 @@ namespace ChatClientViewer
         private static readonly string BigFanHtmlChild_Test = @"
         <tr id='{0}' onclick='javascript:showPopup(this);'>
             <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-            <td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
+            <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
             <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>
                 {2}
                 <div id='{0}_layer' class='pop-layer'>
@@ -205,7 +205,7 @@ namespace ChatClientViewer
         /// <summary>
         ///  - 아이디, 닉네임, BJ정보, BJ 랭킹 팝업 콘텐츠
         ///</summary>
-        public static string BigFanHtmlChild = "<tr id='{0}' onclick='javascript:showPopup(this);'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style='color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>{2}<div id='{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><table>{3}</table><div class='btn-r'><a href='#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
+        public static string BigFanHtmlChild = "<tr id='{0}' onclick='javascript:showPopup(this);'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>{2}<div id='{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><table>{3}</table><div class='btn-r'><a href='#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
 
         /// <summary>
         /// - 닉네임, 하트 Url

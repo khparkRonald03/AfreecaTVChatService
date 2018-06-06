@@ -610,15 +610,27 @@ namespace ChatClientViewer
         private void ApiDataToUserModel()
         {
             var tmpUsers = new List<UserModel>();
+            var check = new List<UserModel>();
             while (jsonModels.Count > 0)
             {
                 try
                 {
                     var jModel = jsonModels.Dequeue();
                     var apiUsers = jModel?.UserModels;
+                    
                     if (apiUsers != null)
                     {
                         tmpUsers.AddRange(apiUsers);
+                        
+                        foreach (var tu in tmpUsers)
+                        {
+                            if (check.Any(c => c.ID == tu.ID))
+                            {
+                                continue;
+                            }
+
+                            check.Add(tu);
+                        }
                     }
                 }
                 catch (Exception e)
@@ -630,10 +642,21 @@ namespace ChatClientViewer
 
             lock (LockObject)
             {
-                InUsersQueue.Enqueue(tmpUsers);
-                InChatUsersQueue.Enqueue(tmpUsers);
-                cUsers.AddRange(tmpUsers);
-                cUsers = cUsers.Distinct().ToList();
+                InUsersQueue.Enqueue(check);
+                InChatUsersQueue.Enqueue(check);
+                cUsers.AddRange(check);
+                //cUsers = cUsers.Distinct().ToList();
+                var cUsercheck = new List<UserModel>();
+                foreach (var tu in cUsers)
+                {
+                    if (cUsercheck.Any(c => c.ID == tu.ID))
+                    {
+                        continue;
+                    }
+
+                    cUsercheck.Add(tu);
+                }
+                cUsers = cUsercheck;
             }
             
         }
@@ -659,16 +682,16 @@ namespace ChatClientViewer
                 {
                     case UserType.BJ:
 
-                        if (string.IsNullOrEmpty(user.Html))
+                        //if (string.IsNullOrEmpty(user.Html))
                             bjHtml += string.Format(HtmlFormat.BjHtmlChild, user.ID, user.Nic, user.PictureUrl);
-                        else
-                            bjHtml += user.Html;
+                        //else
+                        //    bjHtml += user.Html;
                         break;
 
                     case UserType.King:
 
-                        if (string.IsNullOrEmpty(user.Html))
-                        {
+                        //if (string.IsNullOrEmpty(user.Html))
+                        //{
                             string kingBjsHtml = string.Empty;
                             string popupContentsHtml = string.Empty;
                             if (user.BJs != null)
@@ -683,17 +706,17 @@ namespace ChatClientViewer
                             }
 
                             kingHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, kingBjsHtml, popupContentsHtml);
-                        }
-                        else
-                        {
-                            kingHtml += user.Html;
-                        }
+                        //}
+                        //else
+                        //{
+                        //    kingHtml += user.Html;
+                        //}
                         break;
 
                     case UserType.BigFan:
 
-                        if (string.IsNullOrEmpty(user.Html))
-                        {
+                        //if (string.IsNullOrEmpty(user.Html))
+                        //{
                             string bingFanBjsHtml = string.Empty;
                             string popupHtml = string.Empty;
                             if (user.BJs != null)
@@ -708,11 +731,11 @@ namespace ChatClientViewer
                             }
 
                             bigFanHtml += string.Format(HtmlFormat.BigFanHtmlChild, user.ID, user.Nic, bingFanBjsHtml, popupHtml);
-                        }
-                        else
-                        {
-                            bigFanHtml += user.Html;
-                        }
+                        //}
+                        //else
+                        //{
+                        //    bigFanHtml += user.Html;
+                        //}
                         break;
                 }
             }
