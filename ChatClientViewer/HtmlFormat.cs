@@ -172,7 +172,7 @@ namespace ChatClientViewer
         /// <summary>
         /// 팝업 - Bj 하위요소 [파라미터 - 순위, 닉네임, 회장 아이콘Url]
         ///</summary>
-        public static string BjPopUpContents = "<tr><td>{0}위</td><td>{1}</td><td><img src='{2}' alt='' /></td></tr>";
+        public static string BjPopUpContents = "<tr><td width='40px'>{0}위</td><td>{1}</td><td><img src='{2}' alt='' /></td></tr>";
 
         #endregion
 
