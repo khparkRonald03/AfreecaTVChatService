@@ -82,7 +82,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "";
+                LoginUserID = "gkswjdyoon";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -261,7 +261,7 @@ namespace ChatClientViewer
                     userModels.AddRange(bigFans);
 
                 // 매니저 수집
-                var managers = GetUser("return document.getElementById('lv_h3_manager').innerHTML", "//a");
+                var managers = GetUser("return document.getElementById('lv_ul_manager').innerHTML", "//a");
                 if (managers != null && managers.Count > 0)
                     userModels.AddRange(managers);
 
@@ -271,7 +271,7 @@ namespace ChatClientViewer
                     userModels.AddRange(fans);
 
                 // 구독자 수집
-                var gudoks = GetUser("return document.getElementById('lv_h3_gudok').innerHTML", "//a");
+                var gudoks = GetUser("return document.getElementById('lv_ul_gudok').innerHTML", "//a");
                 if (gudoks != null && gudoks.Count > 0)
                     userModels.AddRange(gudoks);
 

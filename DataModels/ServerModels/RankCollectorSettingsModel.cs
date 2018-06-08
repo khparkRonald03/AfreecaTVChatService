@@ -13,6 +13,8 @@ namespace DataModels
 
         public string ActionTime { get; set; } // 11:00
 
+        public int EndPageNum { get; set; }
+
         public DateTime? LastActionDate { get; set; }
     }
 }

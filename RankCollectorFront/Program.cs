@@ -12,7 +12,6 @@ namespace RankCollectorFront
     {
         static void Main(string[] args)
         {
-
             //GoRankCollector();
 
             //return;
@@ -54,17 +53,17 @@ namespace RankCollectorFront
                 if (week == nowWeek)
                 {
                     if (fromHour < actionHour && toHour > actionHour)
-                        GoRankCollector();
+                        GoRankCollector(setting.EndPageNum);
                     break;
                 }
             }
         }
 
        
-        private static void GoRankCollector()
+        private static void GoRankCollector(int pEndPage)
         {
             // 1. BJ 수집
-            int endPage = 2;
+            int endPage = pEndPage;
             var categoryRankParser = new CategoryRankParser();
             var resultBjModels = new List<RankBjModel>();
 
