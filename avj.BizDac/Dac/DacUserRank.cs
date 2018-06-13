@@ -28,11 +28,11 @@ namespace avj.BizDac
                 // 
                 new MysqlParam("@Name", MysqlDbType.VarChar, bjinfoModel.Name),
 
-                // 빅팬 순위
-                new MysqlParam("@Html", MysqlDbType.Int16, bjinfoModel.Text),
+                // 
+                new MysqlParam("@Html", MysqlDbType.VarChar, bjinfoModel.Text),
 
-                // 서포터 순위
-                new MysqlParam("@Text", MysqlDbType.Int16, bjinfoModel.Text),
+                // 
+                new MysqlParam("@Text", MysqlDbType.VarChar, bjinfoModel.Text),
 
                 //
                 new MysqlParam("@HistoryDepth", MysqlDbType.Int16, bjinfoModel.HistoryDepth),

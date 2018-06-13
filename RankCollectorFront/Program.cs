@@ -146,6 +146,7 @@ namespace RankCollectorFront
             var bizUserRank = new BizUserRank(Settings);
             bizUserRank.SetInitUserValues();
             bizUserRank.SetUserModels(resultUserModel);
+            bizUserRank.SetInitBjInfoValues();
             bizUserRank.SetBjInfoModels(resultBjInfo);
 
             bizSettings.SetAferSettings();

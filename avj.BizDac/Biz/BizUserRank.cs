@@ -45,6 +45,13 @@ namespace avj.BizDac
                 
         }
 
+        public void SetInitBjInfoValues()
+        {
+            string query = BjInfoQuery.UpdateInitBjInfoValues;
+
+            Dac.SetInitUserValues(query);
+        }
+
         public void SetBjInfoModels(List<BjInfoModel> bjinfoModels)
         {
             var insertAbjBjInfo = BjInfoQuery.InsertAbjBjInfo;
