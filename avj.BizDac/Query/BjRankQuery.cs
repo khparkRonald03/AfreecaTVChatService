@@ -73,5 +73,11 @@
               FROM abjchat.abj_BjRank
               WHERE Valid = 'Y';
         ";
+
+        public static string SelectAllValidYBjInfo = @"
+            SELECT * 
+              FROM abjchat.abj_BjInfo
+              WHERE Valid = 'Y';
+        ";
     }
 }

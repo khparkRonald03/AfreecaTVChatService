@@ -105,10 +105,11 @@ namespace AvjRestWebApi.Controllers
 
                 user.Type = UserType.BJ;
                 user.PictureUrl = resultBj.BjImgUrl;
+                user.BjInfo = resultBj.Bjinfo;
 
                 return user;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 string log = e.Message;
                 return null;

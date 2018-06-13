@@ -48,9 +48,18 @@ namespace avj.BizDac
 
         public List<RankBjModel> GetAllRankBjModels()
         {
-            string query = BjRankQuery.SelectAllValidYBjRank;
+            string query1 = BjRankQuery.SelectAllValidYBjRank;
+            var result = Dac.GetAllRankBjModels(query1);
 
-            var result = Dac.GetAllRankBjModels(query);
+            string query2 = BjRankQuery.SelectAllValidYBjInfo;
+            var bjInfoModels = Dac.GetAllBjInfoModels(query2);
+            foreach (var rankBjModel in result)
+            {
+                var findBjInfo = bjInfoModels.FindAll(b => b.BjID == rankBjModel.BjID);
+                if (findBjInfo != null)
+                    rankBjModel.Bjinfo = findBjInfo;
+            }
+
             return result;
         }
     }

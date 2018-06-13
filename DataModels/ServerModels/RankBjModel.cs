@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace DataModels
@@ -167,5 +168,11 @@ namespace DataModels
         /// </summary>
         [DisplayName("")]
         public DateTime? AddDate { get; set; }
+
+        /// <summary>
+        /// Bj 정보
+        /// </summary>
+        [DisplayName("")]
+        public List<BjInfoModel> Bjinfo { get; set; }
     }
 }

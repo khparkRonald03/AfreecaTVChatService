@@ -114,5 +114,11 @@ namespace avj.BizDac
             return result;
         }
 
+        public List<BjInfoModel> GetAllBjInfoModels(string query)
+        {
+            var result = GetDataModel<List<BjInfoModel>>(query);
+            return result;
+        }
+
     }
 }
