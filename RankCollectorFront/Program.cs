@@ -12,6 +12,8 @@ namespace RankCollectorFront
     {
         static void Main(string[] args)
         {
+            var bjPagePaser = new BjPagePaser();
+            bjPagePaser.GetBjInfo("lolbjmatch");
             //GoRankCollector();
 
             //return;
@@ -105,10 +107,15 @@ namespace RankCollectorFront
             // 2. 사용자 수집
             var bjPagePaser = new BjPagePaser();
             var resultUserModel = new List<RankUserModel>();
+            var resultBjInfo = new List<BjInfoModel>();
 
             // BJ 수집 리스트 루프 돌기
             foreach (var BjModel in resultBjModels)
             {
+                // BJ 정보
+                var BjInfo = bjPagePaser.GetBjInfo(BjModel.BjID);
+                resultBjInfo.AddRange(BjInfo);
+
                 // 열혈팬 Top20
                 var bigFans = bjPagePaser.GetBigFans(BjModel.BjID);
                 resultUserModel.AddRange(bigFans);
@@ -136,6 +143,7 @@ namespace RankCollectorFront
             var bizUserRank = new BizUserRank(Settings);
             bizUserRank.SetInitUserValues();
             bizUserRank.SetUserModels(resultUserModel);
+            bizUserRank.SetBjInfoModels(resultBjInfo);
 
             bizSettings.SetAferSettings();
             ;

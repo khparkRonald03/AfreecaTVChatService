@@ -86,6 +86,7 @@
     <Compile Include="ClientModels\BjModel.cs" />
     <Compile Include="ClientModels\ChatModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerModels\BjInfoModel.cs" />
     <Compile Include="ServerModels\CategoryRank.cs" />
     <Compile Include="ServerModels\G5_memberModel.cs" />
     <Compile Include="ServerModels\RankBigFan.cs" />

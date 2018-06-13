@@ -45,6 +45,17 @@ namespace avj.BizDac
                 
         }
 
+        public void SetBjInfoModels(List<BjInfoModel> bjinfoModels)
+        {
+            var insertAbjBjInfo = BjInfoQuery.InsertAbjBjInfo;
+
+            foreach (var bjinfoModel in bjinfoModels)
+            {
+                bjinfoModel.HistoryDepth = rankCollectorSettingsModel.LastHistoryDepth;
+                Dac.SetBjInfoModel(insertAbjBjInfo, bjinfoModel);
+            }
+        }
+
         #endregion
 
         public List<RankUserModel> GetAllRankUserModels()

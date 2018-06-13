@@ -15,6 +15,32 @@ namespace avj.BizDac
             ExecuteNonQuery(query);
         }
 
+        public void SetBjInfoModel(string query, BjInfoModel bjinfoModel)
+        {
+            var mysqlParams = new List<MysqlParam>
+            {
+                // 동작 구분
+                //new MysqlParam("@WorkingTag", MysqlDbType.VarChar, "AP"),
+
+                // Bj 아이디
+                new MysqlParam("@BjID", MysqlDbType.VarChar, bjinfoModel.BjID),
+
+                // 
+                new MysqlParam("@Name", MysqlDbType.VarChar, bjinfoModel.Name),
+
+                // 빅팬 순위
+                new MysqlParam("@Html", MysqlDbType.Int16, bjinfoModel.Text),
+
+                // 서포터 순위
+                new MysqlParam("@Text", MysqlDbType.Int16, bjinfoModel.Text),
+
+                //
+                new MysqlParam("@HistoryDepth", MysqlDbType.Int16, bjinfoModel.HistoryDepth),
+            };
+
+            ExecuteNonQuery(query, mysqlParams, System.Data.CommandType.Text);
+        }
+
         public void SetUserModel(string query,  RankUserModel userModel)
         {
             var mysqlParams = new List<MysqlParam>

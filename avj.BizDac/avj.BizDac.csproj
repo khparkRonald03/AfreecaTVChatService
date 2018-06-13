@@ -85,6 +85,7 @@
     <Compile Include="Dac\DacRankCollectorSettings.cs" />
     <Compile Include="Dac\DacUserRank.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\BjInfoQuery.cs" />
     <Compile Include="Query\BjRankQuery.cs" />
     <Compile Include="Query\G5_memberQuery.cs" />
     <Compile Include="Query\RankCollectorSettingsQuery.cs" />

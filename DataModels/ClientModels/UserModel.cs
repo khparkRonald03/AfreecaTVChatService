@@ -55,6 +55,18 @@ namespace DataModels
         /// </summary>
         [DataMember(Name = "Html")]
         public string Html { get; set; }
+
+        /// <summary>
+        /// BJ랭킹 정보 (BJ일 경우)
+        /// </summary>
+        [DataMember(Name = "RankingInfo")]
+        public RankBjModel RankingInfo { get; set; }
+
+        /// <summary>
+        /// BJ정보 (BJ일 경우)
+        /// </summary>
+        [DataMember(Name = "BjInfo")]
+        public List<BjInfoModel> BjInfo { get; set; }
     }
 
     public enum UserType

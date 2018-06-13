@@ -39,7 +39,7 @@ namespace RankCollector
             return categoryRank;
         }
 
-        protected string GetUserRank(string bjID, string url, bool isUTF8 = true, string cookie = "")
+        protected string GetUserRankHtml(string bjID, string url, bool isUTF8 = true, string cookie = "")
         {
             //3번시도
             WebClient client = new WebClient();
@@ -74,6 +74,32 @@ namespace RankCollector
             while (result == string.Empty && tryCount < 3);
 
             return result;
+        }
+
+        protected string GetHtml(string url)
+        {
+            try
+            {
+                string html = string.Empty;
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+                request.Method = "GET";
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    Stream dataStream = response.GetResponseStream();
+                    StreamReader reader = new StreamReader(dataStream);
+                    html = reader.ReadToEnd();
+                    reader.Close();
+                    dataStream.Close();
+                }
+
+                return html;
+            }
+            catch (Exception e)
+            {
+                var log = e.Message;
+                return string.Empty;
+            }
         }
     }
 }

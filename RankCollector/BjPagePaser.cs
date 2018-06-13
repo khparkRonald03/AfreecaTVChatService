@@ -1,4 +1,5 @@
-﻿using DataModels;
+﻿using BeautifulWeb;
+using DataModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,46 @@ namespace RankCollector
 {
     public class BjPagePaser : CommonWeb
     {
+        public List<BjInfoModel> GetBjInfo(string bjID)
+        {
+            var result = new List<BjInfoModel>();
+
+            var url = $"http://live.afreecatv.com:8079/app/index.cgi?szBjId={bjID}";
+            var html = GetUserRankHtml(bjID, url);
+            var page = new BeautifulPage(html);
+            var xPath = "/html/body/div[5]/div[4]/div[1]/div[2]/div[4]/ul/li";
+            var nodes = page.SelectNodes(xPath);
+
+            for (int Idx = 0; Idx < nodes.Count(); Idx++)
+            {
+                var node = nodes?.ToList()?[Idx];
+                var name = node.Text?.Split(':')?[0] ?? string.Empty;
+                if (string.IsNullOrEmpty(name))
+                    continue;
+
+                if (node != null)
+                {
+                    result.Add(new BjInfoModel()
+                    {
+                        BjID = bjID,
+                        Name = name,
+                        Html = node.Html,
+                        Text = node.Text
+                    });
+                    
+                }
+            }
+
+            return result;
+        }
+
         public List<RankUserModel> GetBigFans(string bjID)
         {
             var result = new List<RankUserModel>();
 
             var url = $"http://live.afreecatv.com:8057/api/best_bj_action.php?szAction=GetBestBJDetail&szType=json&uid={bjID}&szBeforeCallBack=_bigfan&callback=_bigfan";
 
-            var bigFanString = GetUserRank(bjID, url);
+            var bigFanString = GetUserRankHtml(bjID, url);
 
             bigFanString = bigFanString?.Replace("_bigfan(", "")?.Replace(")", "") ?? string.Empty;
 
@@ -78,7 +112,7 @@ namespace RankCollector
 
             var url = $"http://live.afreecatv.com:8057/api/best_bj_action.php?szAction=GetSupporter&szType=json&uid={bjID}&szBeforeCallBack=_supporter&callback=_supporter";  // bj아이디 들어감
 
-            var supporter = GetUserRank(bjID, url, false);
+            var supporter = GetUserRankHtml(bjID, url, false);
             supporter = supporter?.Replace("_supporter(", "")?.Replace(");", "") ?? string.Empty;
 
             if (string.IsNullOrEmpty(supporter))
