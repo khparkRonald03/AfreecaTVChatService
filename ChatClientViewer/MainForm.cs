@@ -682,60 +682,49 @@ namespace ChatClientViewer
                 {
                     case UserType.BJ:
 
-                        //if (string.IsNullOrEmpty(user.Html))
-                            bjHtml += string.Format(HtmlFormat.BjHtmlChild, user.ID, user.Nic, user.PictureUrl);
-                        //else
-                        //    bjHtml += user.Html;
+                        var bjInfoHtml = string.Empty;
+                        if (user.BjInfo != null)
+                        {
+                            foreach (var bjInfo in user.BjInfo)
+                                bjInfoHtml += string.Format(HtmlFormat.BjInfoBjPopUpContents, bjInfo.Html);
+                        }
+                        bjHtml += string.Format(HtmlFormat.BjHtmlChild, user.ID, user.Nic, user.PictureUrl, bjInfoHtml);
                         break;
 
                     case UserType.King:
 
-                        //if (string.IsNullOrEmpty(user.Html))
-                        //{
-                            string kingBjsHtml = string.Empty;
-                            string popupContentsHtml = string.Empty;
-                            if (user.BJs != null)
+                        string kingBjsHtml = string.Empty;
+                        string popupContentsHtml = string.Empty;
+                        if (user.BJs != null)
+                        {
+                            user.BJs = user.BJs.OrderBy(bj => bj.Ranking)?.ToList();
+                            foreach (var bj in user.BJs)
                             {
-                                user.BJs = user.BJs.OrderBy(bj => bj.Ranking)?.ToList();
-                                foreach (var bj in user.BJs)
-                                {
-                                    kingBjsHtml += string.Format(HtmlFormat.KingHtmlBjChild, bj.Nic, bj.IconUrl);
-                                    popupContentsHtml += string.Format(HtmlFormat.BjPopUpContents, bj.Ranking, bj.Nic, bj.IconUrl);
-                                }
-                                    
+                                kingBjsHtml += string.Format(HtmlFormat.KingHtmlBjChild, bj.Nic, bj.IconUrl);
+                                popupContentsHtml += string.Format(HtmlFormat.UserBjPopUpContents, bj.Ranking, bj.Nic, bj.IconUrl);
                             }
+                                    
+                        }
 
-                            kingHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, kingBjsHtml, popupContentsHtml);
-                        //}
-                        //else
-                        //{
-                        //    kingHtml += user.Html;
-                        //}
+                        kingHtml += string.Format(HtmlFormat.KingHtmlChild, user.ID, user.Nic, kingBjsHtml, popupContentsHtml);
                         break;
 
                     case UserType.BigFan:
 
-                        //if (string.IsNullOrEmpty(user.Html))
-                        //{
-                            string bingFanBjsHtml = string.Empty;
-                            string popupHtml = string.Empty;
-                            if (user.BJs != null)
+                        string bingFanBjsHtml = string.Empty;
+                        string popupHtml = string.Empty;
+                        if (user.BJs != null)
+                        {
+                            user.BJs = user.BJs.OrderBy(bj => bj.Ranking)?.ToList();
+                            foreach (var bj in user.BJs)
                             {
-                                user.BJs = user.BJs.OrderBy(bj => bj.Ranking)?.ToList();
-                                foreach (var bj in user.BJs)
-                                {
-                                    bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
-                                    popupHtml += string.Format(HtmlFormat.BjPopUpContents, bj.Ranking, bj.Nic, bj.IconUrl);
-                                }
-                                    
+                                bingFanBjsHtml += string.Format(HtmlFormat.BigFanHtmlBjChild, bj.Nic, bj.IconUrl);
+                                popupHtml += string.Format(HtmlFormat.UserBjPopUpContents, bj.Ranking, bj.Nic, bj.IconUrl);
                             }
+                                    
+                        }
 
-                            bigFanHtml += string.Format(HtmlFormat.BigFanHtmlChild, user.ID, user.Nic, bingFanBjsHtml, popupHtml);
-                        //}
-                        //else
-                        //{
-                        //    bigFanHtml += user.Html;
-                        //}
+                        bigFanHtml += string.Format(HtmlFormat.BigFanHtmlChild, user.ID, user.Nic, bingFanBjsHtml, popupHtml);
                         break;
                 }
             }

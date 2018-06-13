@@ -12,11 +12,14 @@ namespace RankCollectorFront
     {
         static void Main(string[] args)
         {
-            var bjPagePaser = new BjPagePaser();
-            bjPagePaser.GetBjInfo("lolbjmatch");
-            //GoRankCollector();
+            // test
+            //var bjPagePaser = new BjPagePaser();
+            //bjPagePaser.GetBjInfo("lolbjmatch");
 
-            //return;
+            // test
+            GoRankCollector(20);
+
+            return;
 
             var autoEvent = new AutoResetEvent(false);
 
@@ -113,7 +116,7 @@ namespace RankCollectorFront
             foreach (var BjModel in resultBjModels)
             {
                 // BJ 정보
-                var BjInfo = bjPagePaser.GetBjInfo(BjModel.BjID);
+                var BjInfo = bjPagePaser.GetBjInfo(BjModel);
                 resultBjInfo.AddRange(BjInfo);
 
                 // 열혈팬 Top20

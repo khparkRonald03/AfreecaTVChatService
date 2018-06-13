@@ -11,12 +11,12 @@ namespace RankCollector
 {
     public class BjPagePaser : CommonWeb
     {
-        public List<BjInfoModel> GetBjInfo(string bjID)
+        public List<BjInfoModel> GetBjInfo(RankBjModel rankBjModel)
         {
             var result = new List<BjInfoModel>();
 
-            var url = $"http://live.afreecatv.com:8079/app/index.cgi?szBjId={bjID}";
-            var html = GetUserRankHtml(bjID, url);
+            var url = $"http://live.afreecatv.com:8079/app/index.cgi?szBjId={rankBjModel.BjID}";
+            var html = GetUserRankHtml(rankBjModel.BjID, url);
             var page = new BeautifulPage(html);
             var xPath = "/html/body/div[5]/div[4]/div[1]/div[2]/div[4]/ul/li";
             var nodes = page.SelectNodes(xPath);
@@ -32,10 +32,11 @@ namespace RankCollector
                 {
                     result.Add(new BjInfoModel()
                     {
-                        BjID = bjID,
+                        BjID = rankBjModel.BjID,
                         Name = name,
                         Html = node.Html,
-                        Text = node.Text
+                        Text = node.Text,
+                        HistoryDepth = rankBjModel.HistoryDepth,
                     });
                     
                 }

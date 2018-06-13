@@ -116,11 +116,25 @@ namespace ChatClientViewer
         #region BJ
 
         private static readonly string BjHtmlChild_Test = @"
-        <tr height='20' id='{0}'>
+        <tr height='20' id='{0}' onclick='javascript:showPopup(this)'>
             <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
             <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td>
             <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
                 <img src='{2}' alt='' style='height:20px;' />
+                <div id='{0}_layer' class='pop-layer'>
+                    <div class='pop-container'>
+                        <div class='pop-conts'>
+                            <!--content //-->
+                            <ul style='' class='vlist'>
+                                {3}
+                            </ul>
+                            <div class='btn-r'>
+                                <a href='#' class='btn-layerClose'>닫기</a>
+                            </div>
+                            <!--// content-->
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
         ";
@@ -128,7 +142,13 @@ namespace ChatClientViewer
         /// <summary>
         /// 하위요소 [파라미터 - 아이디, 닉네임, 사진url, 팝업 display html]
         ///</summary>
-        public static string BjHtmlChild = "<tr height='20' id='{0}'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'><img src='{2}' alt='' style='height:20px;' /></td></tr>";
+        public static string BjHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style = 'width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td><td style = 'color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;' ><img src='{2}' alt='' style='height:20px;' /><div id = '{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}</ul><div class='btn-r'><a href = '#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
+
+
+        /// <summary>
+        /// BJ 정보 팝업 하위요소
+        /// </summary>
+        public static string BjInfoBjPopUpContents = "<li>{0}</li>";
 
         #endregion
 
@@ -169,15 +189,15 @@ namespace ChatClientViewer
         ///</summary>
         public static string KingHtmlBjChild = "<span>{0}</span><img src='{1}' alt='' />";
 
+        #endregion
+
+        #region 열혈팬
+
         /// <summary>
         /// 팝업 - Bj 하위요소 [파라미터 - 순위, 닉네임, 회장 아이콘Url]
         ///</summary>
         //public static string BjPopUpContents = "<tr><td width='40px'>{0}위</td><td>{1}</td><td><img src='{2}' alt='' /></td></tr>";
-        public static string BjPopUpContents = "<li><span width='40px'>{0}위 </span><span>{1}</span><em><img src='{2}' alt='' /></em></li>";
-
-        #endregion
-
-        #region 열혈팬
+        public static string UserBjPopUpContents = "<li><span width='40px'>{0}위 </span><span>{1}</span><em><img src='{2}' alt='' /></em></li>";
 
         private static readonly string BigFanHtmlChild_Test = @"
         <tr height='20' id='{0}' onclick='javascript:showPopup(this);'>
