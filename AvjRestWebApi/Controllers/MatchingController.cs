@@ -105,6 +105,7 @@ namespace AvjRestWebApi.Controllers
 
                 user.Type = UserType.BJ;
                 user.PictureUrl = resultBj.BjImgUrl;
+                user.RankingInfo = resultBj;
                 user.BjInfo = resultBj.Bjinfo;
 
                 return user;
