@@ -25,10 +25,10 @@ namespace avj.BizDac
                 new MysqlParam("@Name", MysqlDbType.VarChar, bjinfoModel.Name),
 
                 // 
-                new MysqlParam("@Html", MysqlDbType.VarChar, bjinfoModel.Html),
+                new MysqlParam("@Count", MysqlDbType.VarChar, bjinfoModel.Count),
 
                 // 
-                new MysqlParam("@Text", MysqlDbType.VarChar, bjinfoModel.Text),
+                new MysqlParam("@Unit", MysqlDbType.VarChar, bjinfoModel.Unit),
 
                 //
                 new MysqlParam("@HistoryDepth", MysqlDbType.Int16, bjinfoModel.HistoryDepth),

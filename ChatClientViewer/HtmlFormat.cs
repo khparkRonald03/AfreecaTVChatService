@@ -159,7 +159,7 @@ namespace ChatClientViewer
         /// <summary>
         /// BJ 정보 팝업 하위요소 2
         /// </summary>
-        public static string BjInfoBjPopUpContents2 = "<li>{0}</li>";
+        public static string BjInfoBjPopUpContents2 = "<li>{0}<span>{1}</spann>{2}</li>";
 
         #endregion
 

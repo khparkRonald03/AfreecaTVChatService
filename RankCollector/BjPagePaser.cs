@@ -24,11 +24,15 @@ namespace RankCollector
             for (int Idx = 0; Idx < nodes.Count(); Idx++)
             {
                 var node = nodes?.ToList()?[Idx];
-                var name = node.Text?.Split(':')?[0] ?? string.Empty;
+                var name = node.Text?.Split(':')?[0].Trim() ?? string.Empty;
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                //Console.WriteLine(rankBjModel.BjID + " nmae : " + name + "html : " + node.Html + "text : " + node.Text);
+                var pHtmlArray = node.Html?.Trim().Replace(" ", "").Split(new string[] { "<span>", "</span>" }, StringSplitOptions.RemoveEmptyEntries);
+                var pCount = pHtmlArray[1];
+                var pUint = name == "방송시간" ? "시간" : "명";
+
+                //Console.WriteLine(rankBjModel.BjID + " nmae : " + name + "html : " + pHtml + "text : " + pText);
 
                 if (node != null)
                 {
@@ -36,8 +40,8 @@ namespace RankCollector
                     {
                         BjID = rankBjModel.BjID,
                         Name = name,
-                        Html = node.Html?.Trim().Replace(" ", "") ?? string.Empty,
-                        Text = node.Text?.Trim().Replace(" ", "") ?? string.Empty,
+                        Count = pCount,
+                        Unit = pUint,
                         HistoryDepth = rankBjModel.HistoryDepth,
                     });
                     

@@ -703,7 +703,7 @@ namespace ChatClientViewer
                         if (user.BjInfo != null)
                         {
                             foreach (var bjInfo in user.BjInfo)
-                                bjInfoHtml += string.Format(HtmlFormat.BjInfoBjPopUpContents2, bjInfo.Html);
+                                bjInfoHtml += string.Format(HtmlFormat.BjInfoBjPopUpContents2, bjInfo.Name, bjInfo.Count, bjInfo.Unit);
                         }
                         bjHtml += string.Format(HtmlFormat.BjHtmlChild, user.ID, user.Nic, user.PictureUrl, RankingInfoHtml, bjInfoHtml);
                         break;

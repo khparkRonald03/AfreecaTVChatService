@@ -12,7 +12,7 @@ namespace RankCollectorFront
     {
         static void Main(string[] args)
         {
-            //// test
+            // test
             //var bjPagePaser = new BjPagePaser();
             //RankBjModel test = new RankBjModel()
             //{

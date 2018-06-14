@@ -6,9 +6,9 @@
 
         public string Name { get; set; }
 
-        public string Html { get; set; }
+        public string Count { get; set; }
 
-        public string Text { get; set; }
+        public string Unit { get; set; }
 
         public int? HistoryDepth { get; set; }
     }

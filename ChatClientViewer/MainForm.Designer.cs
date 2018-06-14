@@ -30,14 +30,20 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            iTalk.ControlRenderer controlRenderer1 = new iTalk.ControlRenderer();
+            iTalk.MSColorTable msColorTable1 = new iTalk.MSColorTable();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.ITContainer = new iTalk.iTalk_ThemeContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
             this.BtnReStart = new iTalk.iTalk_Button_1();
+            this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
+            this.iTalk_ContextMenuStrip1 = new iTalk.iTalk_ContextMenuStrip();
+            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripComboBox2 = new System.Windows.Forms.ToolStripComboBox();
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.SuspendLayout();
+            this.iTalk_ContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageList
@@ -83,16 +89,6 @@
             this.splitContainer1.SplitterDistance = 361;
             this.splitContainer1.TabIndex = 6;
             // 
-            // iTalk_ControlBox1
-            // 
-            this.iTalk_ControlBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.iTalk_ControlBox1.BackColor = System.Drawing.Color.Transparent;
-            this.iTalk_ControlBox1.Location = new System.Drawing.Point(259, -1);
-            this.iTalk_ControlBox1.Name = "iTalk_ControlBox1";
-            this.iTalk_ControlBox1.Size = new System.Drawing.Size(77, 19);
-            this.iTalk_ControlBox1.TabIndex = 0;
-            this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
-            // 
             // BtnReStart
             // 
             this.BtnReStart.BackColor = System.Drawing.Color.Transparent;
@@ -106,6 +102,39 @@
             this.BtnReStart.TabIndex = 7;
             this.BtnReStart.Text = "재시작";
             this.BtnReStart.TextAlignment = System.Drawing.StringAlignment.Center;
+            // 
+            // iTalk_ControlBox1
+            // 
+            this.iTalk_ControlBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.iTalk_ControlBox1.BackColor = System.Drawing.Color.Transparent;
+            this.iTalk_ControlBox1.Location = new System.Drawing.Point(259, -1);
+            this.iTalk_ControlBox1.Name = "iTalk_ControlBox1";
+            this.iTalk_ControlBox1.Size = new System.Drawing.Size(77, 19);
+            this.iTalk_ControlBox1.TabIndex = 0;
+            this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
+            // 
+            // iTalk_ContextMenuStrip1
+            // 
+            this.iTalk_ContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripComboBox1,
+            this.toolStripComboBox2});
+            this.iTalk_ContextMenuStrip1.Name = "iTalk_ContextMenuStrip1";
+            controlRenderer1.ColorTable = msColorTable1;
+            controlRenderer1.RoundedEdges = true;
+            this.iTalk_ContextMenuStrip1.Renderer = controlRenderer1;
+            this.iTalk_ContextMenuStrip1.Size = new System.Drawing.Size(182, 58);
+            // 
+            // toolStripComboBox1
+            // 
+            this.toolStripComboBox1.Name = "toolStripComboBox1";
+            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
+            this.toolStripComboBox1.Text = "항상위";
+            // 
+            // toolStripComboBox2
+            // 
+            this.toolStripComboBox2.Name = "toolStripComboBox2";
+            this.toolStripComboBox2.Size = new System.Drawing.Size(121, 23);
+            this.toolStripComboBox2.Text = "채팅창 입장/퇴장 표시";
             // 
             // Main
             // 
@@ -125,6 +154,7 @@
             this.ITContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.iTalk_ContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -136,6 +166,9 @@
         private iTalk.iTalk_ControlBox iTalk_ControlBox1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private iTalk.iTalk_Button_1 BtnReStart;
+        private iTalk.iTalk_ContextMenuStrip iTalk_ContextMenuStrip1;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBox2;
     }
 }
 
