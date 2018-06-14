@@ -11,15 +11,15 @@
             INSERT INTO `abjchat`.`abj_BjInfo`
             (`BjID`,
             `Name`,
-            `Html`,
-            `Text`,
+            `Count`,
+            `Uint`,
             `HistoryDepth`,
             `AddDate`)
             VALUES
             (@BjID,
             @Name,
-            @Html,
-            @Text,
+            @Count,
+            @Unit,
             @HistoryDepth,
             now());
             ";
