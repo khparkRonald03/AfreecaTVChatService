@@ -18,6 +18,7 @@ using CefSharp;
 using CefSharp.WinForms;
 using System.Net;
 using System.ComponentModel;
+using System.Configuration;
 
 namespace ChatClientViewer
 {
@@ -106,6 +107,12 @@ namespace ChatClientViewer
             }
 
             (new ShowHelper()).ShowDialog();
+
+            if (GetConfigData(AppConfigKeys.DisplayInOut.ToString()) == true.ToString())
+                ChkDisplayInOut.Checked = true;
+
+            if (GetConfigData(AppConfigKeys.IsTop.ToString()) == true.ToString())
+                ChkIsTop.Checked = true;
 
             var ts1 = new ThreadStart(BackGroundCrawling);
             BackGroundCrawlingThread = new Thread(ts1)
@@ -855,7 +862,7 @@ namespace ChatClientViewer
                 check.Add(tt);
             }
 
-            if (InChatUsersQueue != null && InChatUsersQueue.Count > 0)
+            if (ChkDisplayInOut.Checked && InChatUsersQueue != null && InChatUsersQueue.Count > 0)
             {
                 var inUsers = InChatUsersQueue.Dequeue();
                 foreach (var inUser in inUsers)
@@ -864,7 +871,7 @@ namespace ChatClientViewer
                 }
             }
 
-            if (OutChatUsersQueue != null && OutChatUsersQueue.Count > 0)
+            if (ChkDisplayInOut.Checked && OutChatUsersQueue != null && OutChatUsersQueue.Count > 0)
             {
                 var outUsers = OutChatUsersQueue.Dequeue();
                 foreach (var outUser in outUsers)
@@ -918,6 +925,85 @@ namespace ChatClientViewer
             stream.Position = 0;
             return (T)formatter.Deserialize(stream);
         }
+        #endregion
+
+        private void BtnSetting_Click(object sender, EventArgs e)
+        {
+            PlSetting.Visible = !PlSetting.Visible;
+        }
+
+        private void ChkDisplayInOut_CheckedChanged(object sender)
+        {
+            SetConfigData(AppConfigKeys.DisplayInOut.ToString(), ChkDisplayInOut.Checked.ToString());
+        }
+
+        private void ChkIsTop_CheckedChanged(object sender)
+        {
+            this.TopMost = ChkIsTop.Checked;
+            SetConfigData(AppConfigKeys.IsTop.ToString(), ChkIsTop.Checked.ToString());
+        }
+
+        #region App.config 수정 / 가져오기
+
+        /// <summary>
+        /// App.config 파일 설정 데이터 가져오기
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private string GetConfigData(string key)
+        {
+            try
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+                string value = ConfigurationManager.AppSettings[key];
+                return value;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// App.config 파일 설정 데이터 수정
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private bool SetConfigData(string key, string value)
+        {
+            try
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+                config.AppSettings.Settings[key].Value = value;
+
+                config.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection(key);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public enum AppConfigKeys
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            DisplayInOut,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            IsTop
+        }
+
         #endregion
     }
 }

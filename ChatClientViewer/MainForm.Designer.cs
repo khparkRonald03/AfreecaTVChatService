@@ -30,20 +30,22 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            iTalk.ControlRenderer controlRenderer1 = new iTalk.ControlRenderer();
-            iTalk.MSColorTable msColorTable1 = new iTalk.MSColorTable();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.ITContainer = new iTalk.iTalk_ThemeContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.PlSetting = new iTalk.iTalk_Panel();
+            this.ChkDisplayInOut = new iTalk.iTalk_CheckBox();
+            this.ChkIsTop = new iTalk.iTalk_CheckBox();
             this.BtnReStart = new iTalk.iTalk_Button_1();
             this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
-            this.iTalk_ContextMenuStrip1 = new iTalk.iTalk_ContextMenuStrip();
-            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripComboBox2 = new System.Windows.Forms.ToolStripComboBox();
+            this.iTalk_Panel2 = new iTalk.iTalk_Panel();
+            this.BtnSetting = new System.Windows.Forms.Button();
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.iTalk_ContextMenuStrip1.SuspendLayout();
+            this.PlSetting.SuspendLayout();
+            this.iTalk_Panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageList
@@ -62,6 +64,7 @@
             this.ITContainer.Controls.Add(this.splitContainer1);
             this.ITContainer.Controls.Add(this.BtnReStart);
             this.ITContainer.Controls.Add(this.iTalk_ControlBox1);
+            this.ITContainer.Controls.Add(this.iTalk_Panel2);
             this.ITContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ITContainer.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.ITContainer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(142)))), ((int)(((byte)(142)))));
@@ -78,16 +81,58 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 28);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 61);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.BackColor = System.Drawing.Color.Transparent;
+            this.splitContainer1.Panel1.Controls.Add(this.PlSetting);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
-            this.splitContainer1.Size = new System.Drawing.Size(334, 790);
-            this.splitContainer1.SplitterDistance = 361;
+            this.splitContainer1.Size = new System.Drawing.Size(334, 757);
+            this.splitContainer1.SplitterDistance = 345;
             this.splitContainer1.TabIndex = 6;
+            // 
+            // PlSetting
+            // 
+            this.PlSetting.BackColor = System.Drawing.Color.White;
+            this.PlSetting.Controls.Add(this.ChkDisplayInOut);
+            this.PlSetting.Controls.Add(this.ChkIsTop);
+            this.PlSetting.Location = new System.Drawing.Point(158, 0);
+            this.PlSetting.Name = "PlSetting";
+            this.PlSetting.Padding = new System.Windows.Forms.Padding(5);
+            this.PlSetting.Size = new System.Drawing.Size(173, 89);
+            this.PlSetting.TabIndex = 0;
+            this.PlSetting.Text = "iTalk_Panel1";
+            this.PlSetting.Visible = false;
+            // 
+            // ChkDisplayInOut
+            // 
+            this.ChkDisplayInOut.BackColor = System.Drawing.Color.White;
+            this.ChkDisplayInOut.Checked = false;
+            this.ChkDisplayInOut.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.ChkDisplayInOut.Location = new System.Drawing.Point(21, 41);
+            this.ChkDisplayInOut.Name = "ChkDisplayInOut";
+            this.ChkDisplayInOut.Size = new System.Drawing.Size(120, 15);
+            this.ChkDisplayInOut.TabIndex = 1;
+            this.ChkDisplayInOut.Text = "입장/퇴장 표시";
+            this.ChkDisplayInOut.CheckedChanged += new iTalk.iTalk_CheckBox.CheckedChangedEventHandler(this.ChkDisplayInOut_CheckedChanged);
+            // 
+            // ChkIsTop
+            // 
+            this.ChkIsTop.BackColor = System.Drawing.Color.White;
+            this.ChkIsTop.Checked = false;
+            this.ChkIsTop.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.ChkIsTop.Location = new System.Drawing.Point(21, 20);
+            this.ChkIsTop.Name = "ChkIsTop";
+            this.ChkIsTop.Size = new System.Drawing.Size(120, 15);
+            this.ChkIsTop.TabIndex = 1;
+            this.ChkIsTop.Text = "항상위";
+            this.ChkIsTop.CheckedChanged += new iTalk.iTalk_CheckBox.CheckedChangedEventHandler(this.ChkIsTop_CheckedChanged);
             // 
             // BtnReStart
             // 
@@ -113,28 +158,28 @@
             this.iTalk_ControlBox1.TabIndex = 0;
             this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
             // 
-            // iTalk_ContextMenuStrip1
+            // iTalk_Panel2
             // 
-            this.iTalk_ContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripComboBox1,
-            this.toolStripComboBox2});
-            this.iTalk_ContextMenuStrip1.Name = "iTalk_ContextMenuStrip1";
-            controlRenderer1.ColorTable = msColorTable1;
-            controlRenderer1.RoundedEdges = true;
-            this.iTalk_ContextMenuStrip1.Renderer = controlRenderer1;
-            this.iTalk_ContextMenuStrip1.Size = new System.Drawing.Size(182, 58);
+            this.iTalk_Panel2.BackColor = System.Drawing.Color.Transparent;
+            this.iTalk_Panel2.Controls.Add(this.BtnSetting);
+            this.iTalk_Panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.iTalk_Panel2.Location = new System.Drawing.Point(3, 28);
+            this.iTalk_Panel2.Name = "iTalk_Panel2";
+            this.iTalk_Panel2.Padding = new System.Windows.Forms.Padding(5);
+            this.iTalk_Panel2.Size = new System.Drawing.Size(334, 33);
+            this.iTalk_Panel2.TabIndex = 1;
+            this.iTalk_Panel2.Text = "iTalk_Panel2";
             // 
-            // toolStripComboBox1
+            // BtnSetting
             // 
-            this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 23);
-            this.toolStripComboBox1.Text = "항상위";
-            // 
-            // toolStripComboBox2
-            // 
-            this.toolStripComboBox2.Name = "toolStripComboBox2";
-            this.toolStripComboBox2.Size = new System.Drawing.Size(121, 23);
-            this.toolStripComboBox2.Text = "채팅창 입장/퇴장 표시";
+            this.BtnSetting.Dock = System.Windows.Forms.DockStyle.Right;
+            this.BtnSetting.Location = new System.Drawing.Point(290, 5);
+            this.BtnSetting.Name = "BtnSetting";
+            this.BtnSetting.Size = new System.Drawing.Size(39, 23);
+            this.BtnSetting.TabIndex = 0;
+            this.BtnSetting.Text = "설정";
+            this.BtnSetting.UseVisualStyleBackColor = true;
+            this.BtnSetting.Click += new System.EventHandler(this.BtnSetting_Click);
             // 
             // Main
             // 
@@ -152,9 +197,11 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.Load += new System.EventHandler(this.Main_Load);
             this.ITContainer.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.iTalk_ContextMenuStrip1.ResumeLayout(false);
+            this.PlSetting.ResumeLayout(false);
+            this.iTalk_Panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -166,9 +213,11 @@
         private iTalk.iTalk_ControlBox iTalk_ControlBox1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private iTalk.iTalk_Button_1 BtnReStart;
-        private iTalk.iTalk_ContextMenuStrip iTalk_ContextMenuStrip1;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBox2;
+        private iTalk.iTalk_Panel PlSetting;
+        private iTalk.iTalk_Panel iTalk_Panel2;
+        private System.Windows.Forms.Button BtnSetting;
+        private iTalk.iTalk_CheckBox ChkDisplayInOut;
+        private iTalk.iTalk_CheckBox ChkIsTop;
     }
 }
 
