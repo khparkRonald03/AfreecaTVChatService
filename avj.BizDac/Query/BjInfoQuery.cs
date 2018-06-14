@@ -12,7 +12,7 @@
             (`BjID`,
             `Name`,
             `Count`,
-            `Uint`,
+            `Unit`,
             `HistoryDepth`,
             `AddDate`)
             VALUES
