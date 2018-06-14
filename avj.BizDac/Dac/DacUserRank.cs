@@ -1,10 +1,6 @@
 ﻿using avj.Common;
 using DataModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace avj.BizDac
 {
@@ -29,7 +25,7 @@ namespace avj.BizDac
                 new MysqlParam("@Name", MysqlDbType.VarChar, bjinfoModel.Name),
 
                 // 
-                new MysqlParam("@Html", MysqlDbType.VarChar, bjinfoModel.Text),
+                new MysqlParam("@Html", MysqlDbType.VarChar, bjinfoModel.Html),
 
                 // 
                 new MysqlParam("@Text", MysqlDbType.VarChar, bjinfoModel.Text),

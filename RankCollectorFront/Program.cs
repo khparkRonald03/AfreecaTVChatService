@@ -13,9 +13,13 @@ namespace RankCollectorFront
         static void Main(string[] args)
         {
             // test
-            //var bjPagePaser = new BjPagePaser();
-            //bjPagePaser.GetBjInfo("lolbjmatch");
-
+            var bjPagePaser = new BjPagePaser();
+            RankBjModel test = new RankBjModel()
+            {
+                BjID = "lolbjmatch"
+            };
+            bjPagePaser.GetBjInfo(test);
+            return;
             // test
             GoRankCollector(20);
 
