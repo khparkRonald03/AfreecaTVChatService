@@ -12,7 +12,7 @@ namespace RankCollectorFront
     {
         static void Main(string[] args)
         {
-            // test
+            //// test
             //var bjPagePaser = new BjPagePaser();
             //RankBjModel test = new RankBjModel()
             //{
@@ -20,9 +20,10 @@ namespace RankCollectorFront
             //};
             //bjPagePaser.GetBjInfo(test);
             //return;
-            // test
+            //test
             GoRankCollector(20);
 
+            //Thread.Sleep(5000 * 60 * 60 * 60);
             return;
 
             var autoEvent = new AutoResetEvent(false);

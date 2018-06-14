@@ -28,14 +28,16 @@ namespace RankCollector
                 if (string.IsNullOrEmpty(name))
                     continue;
 
+                //Console.WriteLine(rankBjModel.BjID + " nmae : " + name + "html : " + node.Html + "text : " + node.Text);
+
                 if (node != null)
                 {
                     result.Add(new BjInfoModel()
                     {
                         BjID = rankBjModel.BjID,
                         Name = name,
-                        Html = node.Html,
-                        Text = node.Text,
+                        Html = node.Html?.Trim().Replace(" ", "") ?? string.Empty,
+                        Text = node.Text?.Trim().Replace(" ", "") ?? string.Empty,
                         HistoryDepth = rankBjModel.HistoryDepth,
                     });
                     
