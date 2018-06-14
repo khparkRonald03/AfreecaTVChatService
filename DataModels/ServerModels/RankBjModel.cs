@@ -34,13 +34,13 @@ namespace DataModels
         /// <summary>
         /// 아프리카 신입bj 랭킹
         /// </summary>
-        [DisplayName("아프리카 신입bj 랭킹")]
+        [DisplayName("신입bj 랭킹")]
         public int RookieRanking { get; set; }
 
         /// <summary>
         /// 최고시청자 평균
         /// </summary>
-        [DisplayName("최고시청자 평균")]
+        [DisplayName("")]
         public int ViewerRanking { get; set; }
 
         /// <summary>
@@ -58,31 +58,31 @@ namespace DataModels
         /// <summary>
         /// 모바일
         /// </summary>
-        [DisplayName("모바일")]
+        [DisplayName("")]
         public int MobileRanking { get; set; }
 
         /// <summary>
         /// 게임
         /// </summary>
-        [DisplayName("게임")]
+        [DisplayName("")]
         public int GameRanking { get; set; }
 
         /// <summary>
         /// 모바일게임
         /// </summary>
-        [DisplayName("모바일게임")]
+        [DisplayName("")]
         public int MobilegameRanking { get; set; }
 
         /// <summary>
         /// 스포츠중계
         /// </summary>
-        [DisplayName("스포츠중계")]
+        [DisplayName("")]
         public int SportsBroadcastRanking { get; set; }
 
         /// <summary>
         /// 스포츠일반
         /// </summary>
-        [DisplayName("스포츠일반")]
+        [DisplayName("")]
         public int SportsGeneralRanking { get; set; }
 
         /// <summary>
@@ -100,61 +100,61 @@ namespace DataModels
         /// <summary>
         /// 음악
         /// </summary>
-        [DisplayName("음악")]
+        [DisplayName("")]
         public int MusicRanking { get; set; }
 
         /// <summary>
         /// 펫방
         /// </summary>
-        [DisplayName("펫방")]
+        [DisplayName("")]
         public int PetRanking { get; set; }
 
         /// <summary>
         /// 취미
         /// </summary>
-        [DisplayName("취미")]
+        [DisplayName("")]
         public int HobbyRanking { get; set; }
 
         /// <summary>
         /// 학습
         /// </summary>
-        [DisplayName("학습")]
+        [DisplayName("")]
         public int StudyRanking { get; set; }
 
         /// <summary>
         /// 더빙/라디오
         /// </summary>
-        [DisplayName("더빙/라디오")]
+        [DisplayName("")]
         public int DubradioRanking { get; set; }
 
         /// <summary>
         /// 주식/금융
         /// </summary>
-        [DisplayName("주식/금융")]
+        [DisplayName("")]
         public int StockRanking { get; set; }
 
         /// <summary>
         /// 엔터테인먼트
         /// </summary>
-        [DisplayName("엔터테인먼트")]
+        [DisplayName("")]
         public int EnterRanking { get; set; }
 
         /// <summary>
         /// 동영상
         /// </summary>
-        [DisplayName("동영상")]
+        [DisplayName("")]
         public int VideosRanking { get; set; }
 
         /// <summary>
         /// 누적 애청자 수
         /// </summary>
-        [DisplayName("누적 애청자 수")]
+        [DisplayName("")]
         public int FavoriteRanking { get; set; }
 
         /// <summary>
         /// 누적 팬클럽 수
         /// </summary>
-        [DisplayName("누적 팬클럽 수")]
+        [DisplayName("")]
         public int FanclubRanking { get; set; }
 
         /// <summary>
