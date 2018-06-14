@@ -17,6 +17,7 @@ using Microsoft.Win32;
 using CefSharp;
 using CefSharp.WinForms;
 using System.Net;
+using System.ComponentModel;
 
 namespace ChatClientViewer
 {
@@ -682,13 +683,29 @@ namespace ChatClientViewer
                 {
                     case UserType.BJ:
 
+                        var RankingInfoHtml = string.Empty;
+                        if (user.RankingInfo != null)
+                        {
+                            var tt = user.RankingInfo.GetType().GetProperties();
+
+                            foreach (var t in tt)
+                            {
+                                var ddd = t.GetValue(user.RankingInfo, null);
+                                var zzz = t.GetCustomAttributes(false).GetValue(0);
+                                var zzzdname = ((DisplayNameAttribute)zzz).DisplayName;
+                                var rnaking = string.Empty;
+                                if (!string.IsNullOrEmpty(zzzdname))
+                                    RankingInfoHtml += string.Format(HtmlFormat.BjInfoBjPopUpContents1, zzzdname, ddd);
+                            }
+                                
+                        }
                         var bjInfoHtml = string.Empty;
                         if (user.BjInfo != null)
                         {
                             foreach (var bjInfo in user.BjInfo)
-                                bjInfoHtml += string.Format(HtmlFormat.BjInfoBjPopUpContents, bjInfo.Html);
+                                bjInfoHtml += string.Format(HtmlFormat.BjInfoBjPopUpContents2, bjInfo.Html);
                         }
-                        bjHtml += string.Format(HtmlFormat.BjHtmlChild, user.ID, user.Nic, user.PictureUrl, bjInfoHtml);
+                        bjHtml += string.Format(HtmlFormat.BjHtmlChild, user.ID, user.Nic, user.PictureUrl, RankingInfoHtml, bjInfoHtml);
                         break;
 
                     case UserType.King:

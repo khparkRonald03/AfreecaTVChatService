@@ -8,6 +8,9 @@ namespace ChatClientViewer
 {
     public static class HtmlFormat
     {
+
+        #region 시청자리스트 컨테이너
+
         public static string UserContainerHtml = @"
         <!doctype html>
         <html>
@@ -113,6 +116,8 @@ namespace ChatClientViewer
         </html>
         ";
 
+        #endregion
+
         #region BJ
 
         private static readonly string BjHtmlChild_Test = @"
@@ -127,6 +132,8 @@ namespace ChatClientViewer
                             <!--content //-->
                             <ul style='' class='vlist'>
                                 {3}
+                                <hr>
+                                {4}
                             </ul>
                             <div class='btn-r'>
                                 <a href='#' class='btn-layerClose'>닫기</a>
@@ -142,13 +149,17 @@ namespace ChatClientViewer
         /// <summary>
         /// 하위요소 [파라미터 - 아이디, 닉네임, 사진url, 팝업 display html]
         ///</summary>
-        public static string BjHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style = 'width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td><td style = 'color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;' ><img src='{2}' alt='' style='height:20px;' /><div id = '{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}</ul><div class='btn-r'><a href = '#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
-
+        public static string BjHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style = 'width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td><td style = 'color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;' ><img src='{2}' alt='' style='height:20px;' /><div id = '{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}<hr>{4}</ul><div class='btn-r'><a href = '#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
 
         /// <summary>
-        /// BJ 정보 팝업 하위요소
+        /// BJ 정보 팝업 하위요소 1
         /// </summary>
-        public static string BjInfoBjPopUpContents = "<li>{0}</li>";
+        public static string BjInfoBjPopUpContents1 = "<li><span>{0}</spann>{1}</li>";
+
+        /// <summary>
+        /// BJ 정보 팝업 하위요소 2
+        /// </summary>
+        public static string BjInfoBjPopUpContents2 = "<li>{0}</li>";
 
         #endregion
 
