@@ -30,8 +30,8 @@ namespace WebController
         /// 생성자 : 크롬 브라우저 보이지 않게 초기화
         /// </summary>
         /// <param name="isSilentMode"></param>
-        public Controller(bool isSilentMode)
-            : base(isSilentMode)
+        public Controller(bool isSilentMode, string startupPath)
+            : base(isSilentMode, startupPath)
         {
             IsSilentMode = isSilentMode;
         }

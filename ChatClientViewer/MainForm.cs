@@ -34,10 +34,11 @@ namespace ChatClientViewer
 
         WebApiCaller webApiCaller = new WebApiCaller();
 
+        string StartupPath { get; set; } = string.Empty;
         string LoginUserID { get; set; } = string.Empty;
         string LoginuserPW { get; set; } = string.Empty;
-        public ChromiumWebBrowser UserBrowser { get; private set; }
-        public ChromiumWebBrowser ChatBrowser { get; private set; }
+        ChromiumWebBrowser UserBrowser { get; set; }
+        ChromiumWebBrowser ChatBrowser { get; set; }
 
         BjModel Bj = new BjModel();
 
@@ -84,7 +85,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "jrosa88";
+                LoginUserID = "sdf";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -107,6 +108,8 @@ namespace ChatClientViewer
             }
 
             (new ShowHelper()).ShowDialog();
+
+            StartupPath = Application.StartupPath;
 
             if (GetConfigData(AppConfigKeys.DisplayInOut.ToString()) == true.ToString())
                 ChkDisplayInOut.Checked = true;
@@ -174,7 +177,7 @@ namespace ChatClientViewer
         private void BackGroundCrawling()
         {
             // test ###########
-            ChromeDriver = new Controller(false);
+            ChromeDriver = new Controller(false, StartupPath);
 
             // 먹통 됐을때 다시 시작
             reStart:

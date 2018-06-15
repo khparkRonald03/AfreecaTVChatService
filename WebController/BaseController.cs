@@ -1,12 +1,9 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace WebController
 {
@@ -33,7 +30,7 @@ namespace WebController
         /// 생성자 : 크롬 브라우저 보이기/안보이기 설정 후 초기화
         /// </summary>
         /// <param name="isSilentMode"></param>
-        public BaseController(bool isSilentMode)
+        public BaseController(bool isSilentMode, string startupPath)
         {
             IsSilentMode = isSilentMode;
             if (isSilentMode)
@@ -42,6 +39,20 @@ namespace WebController
                 Options.AddArgument("headless");
                 Options.AddArgument("mute-audio");
                 Options.AddArgument("--start-maximized");
+                Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
+
+                string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
+                string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";
+                string[] extentionparams = new string[2];
+
+                if (File.Exists(adlockPath))
+                    extentionparams[0] = adlockPath;
+
+                if (File.Exists(vpnPath))
+                    extentionparams[1] = vpnPath;
+
+                if (extentionparams.Length > 0)
+                    Options.AddExtensions(extentionparams);
 
                 Service = ChromeDriverService.CreateDefaultService();
                 Service.HideCommandPromptWindow = true;
@@ -51,6 +62,20 @@ namespace WebController
                 Options = new ChromeOptions();
                 Options.AddArgument("mute-audio");
                 Options.AddArgument("--start-maximized");
+                Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
+
+                string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
+                string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";
+                string[] extentionparams = new string[2];
+
+                if (File.Exists(adlockPath))
+                    extentionparams[0] = adlockPath;
+
+                if (File.Exists(vpnPath))
+                    extentionparams[1] = vpnPath;
+
+                if (extentionparams.Length > 0)
+                    Options.AddExtensions(extentionparams);
 
                 Service = ChromeDriverService.CreateDefaultService();
                 Service.HideCommandPromptWindow = true;
