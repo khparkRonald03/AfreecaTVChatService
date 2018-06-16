@@ -266,7 +266,7 @@ namespace ChatClientViewer
                 <div class='tit_area' style='width:100%; display:block;'>
                     <div class='title' id='fan_txt'>채팅</div>
                 </div>
-                <div id='chat_area' class='chat_area' style=''>
+                <div id='chat_area' class='chat_area' style='margin-top:90px'>
                     <div id='chat_memoyo' class='chat_memoyo'>
 
                     </div>
