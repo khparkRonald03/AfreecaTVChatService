@@ -148,6 +148,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ShowHelper.resx">
       <DependentUpon>ShowHelper.cs</DependentUpon>
@@ -168,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="abj-logo2.ico" />
+    <None Include="Resources\settings.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\avj.Common\avj.Common.csproj">

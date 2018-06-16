@@ -46,6 +46,9 @@ namespace WebController
             var result = new ResultModel<bool>();
             try
             {
+                // 여기서 첫번째 탭으로 이동 하거나 나머지탭 닫기 #######################
+                Driver.SwitchTo().Window(Driver.WindowHandles.First());
+
                 Url = url;
                 Driver.Url = Url;
 

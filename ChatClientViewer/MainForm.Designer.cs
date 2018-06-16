@@ -36,10 +36,10 @@
             this.PlSetting = new iTalk.iTalk_Panel();
             this.ChkDisplayInOut = new iTalk.iTalk_CheckBox();
             this.ChkIsTop = new iTalk.iTalk_CheckBox();
-            this.BtnReStart = new iTalk.iTalk_Button_1();
             this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
             this.iTalk_Panel2 = new iTalk.iTalk_Panel();
             this.BtnSetting = new System.Windows.Forms.Button();
+            this.BtnReStart = new System.Windows.Forms.Button();
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -57,12 +57,15 @@
             this.imageList.Images.SetKeyName(2, "bul_yellow_heart.gif");
             this.imageList.Images.SetKeyName(3, "bul_gray_heart.gif");
             this.imageList.Images.SetKeyName(4, "bul_s_on.gif");
+            this.imageList.Images.SetKeyName(5, "settings.png");
+            this.imageList.Images.SetKeyName(6, "refresh-page-option.png");
+            this.imageList.Images.SetKeyName(7, "settings (1).png");
+            this.imageList.Images.SetKeyName(8, "refresh-page-option (1).png");
             // 
             // ITContainer
             // 
             this.ITContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(246)))), ((int)(((byte)(246)))));
             this.ITContainer.Controls.Add(this.splitContainer1);
-            this.ITContainer.Controls.Add(this.BtnReStart);
             this.ITContainer.Controls.Add(this.iTalk_ControlBox1);
             this.ITContainer.Controls.Add(this.iTalk_Panel2);
             this.ITContainer.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -93,8 +96,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
-            this.splitContainer1.Size = new System.Drawing.Size(334, 757);
-            this.splitContainer1.SplitterDistance = 345;
+            this.splitContainer1.Size = new System.Drawing.Size(334, 788);
+            this.splitContainer1.SplitterDistance = 359;
             this.splitContainer1.TabIndex = 6;
             // 
             // PlSetting
@@ -134,20 +137,6 @@
             this.ChkIsTop.Text = "항상위";
             this.ChkIsTop.CheckedChanged += new iTalk.iTalk_CheckBox.CheckedChangedEventHandler(this.ChkIsTop_CheckedChanged);
             // 
-            // BtnReStart
-            // 
-            this.BtnReStart.BackColor = System.Drawing.Color.Transparent;
-            this.BtnReStart.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.BtnReStart.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.BtnReStart.Image = null;
-            this.BtnReStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BtnReStart.Location = new System.Drawing.Point(3, 818);
-            this.BtnReStart.Name = "BtnReStart";
-            this.BtnReStart.Size = new System.Drawing.Size(334, 31);
-            this.BtnReStart.TabIndex = 7;
-            this.BtnReStart.Text = "재시작";
-            this.BtnReStart.TextAlignment = System.Drawing.StringAlignment.Center;
-            // 
             // iTalk_ControlBox1
             // 
             this.iTalk_ControlBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -161,6 +150,7 @@
             // iTalk_Panel2
             // 
             this.iTalk_Panel2.BackColor = System.Drawing.Color.Transparent;
+            this.iTalk_Panel2.Controls.Add(this.BtnReStart);
             this.iTalk_Panel2.Controls.Add(this.BtnSetting);
             this.iTalk_Panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.iTalk_Panel2.Location = new System.Drawing.Point(3, 28);
@@ -172,14 +162,32 @@
             // 
             // BtnSetting
             // 
+            this.BtnSetting.BackgroundImage = global::ChatClientViewer.Properties.Resources.settings;
             this.BtnSetting.Dock = System.Windows.Forms.DockStyle.Right;
-            this.BtnSetting.Location = new System.Drawing.Point(290, 5);
+            this.BtnSetting.ImageIndex = 5;
+            this.BtnSetting.ImageList = this.imageList;
+            this.BtnSetting.Location = new System.Drawing.Point(301, 5);
             this.BtnSetting.Name = "BtnSetting";
-            this.BtnSetting.Size = new System.Drawing.Size(39, 23);
+            this.BtnSetting.Size = new System.Drawing.Size(28, 23);
             this.BtnSetting.TabIndex = 0;
-            this.BtnSetting.Text = "설정";
             this.BtnSetting.UseVisualStyleBackColor = true;
             this.BtnSetting.Click += new System.EventHandler(this.BtnSetting_Click);
+            this.BtnSetting.MouseLeave += new System.EventHandler(this.BtnSetting_MouseLeave);
+            this.BtnSetting.MouseHover += new System.EventHandler(this.BtnSetting_MouseHover);
+            // 
+            // BtnReStart
+            // 
+            this.BtnReStart.BackgroundImage = global::ChatClientViewer.Properties.Resources.settings;
+            this.BtnReStart.Dock = System.Windows.Forms.DockStyle.Right;
+            this.BtnReStart.ImageIndex = 6;
+            this.BtnReStart.ImageList = this.imageList;
+            this.BtnReStart.Location = new System.Drawing.Point(273, 5);
+            this.BtnReStart.Name = "BtnReStart";
+            this.BtnReStart.Size = new System.Drawing.Size(28, 23);
+            this.BtnReStart.TabIndex = 1;
+            this.BtnReStart.UseVisualStyleBackColor = true;
+            this.BtnReStart.MouseLeave += new System.EventHandler(this.BtnReStart_MouseLeave);
+            this.BtnReStart.MouseHover += new System.EventHandler(this.BtnReStart_MouseHover);
             // 
             // Main
             // 
@@ -212,12 +220,12 @@
         private System.Windows.Forms.ImageList imageList;
         private iTalk.iTalk_ControlBox iTalk_ControlBox1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private iTalk.iTalk_Button_1 BtnReStart;
         private iTalk.iTalk_Panel PlSetting;
         private iTalk.iTalk_Panel iTalk_Panel2;
         private System.Windows.Forms.Button BtnSetting;
         private iTalk.iTalk_CheckBox ChkDisplayInOut;
         private iTalk.iTalk_CheckBox ChkIsTop;
+        private System.Windows.Forms.Button BtnReStart;
     }
 }
 

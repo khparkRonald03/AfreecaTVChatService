@@ -85,7 +85,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "sdf";
+                LoginUserID = "hur1168";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -1008,5 +1008,25 @@ namespace ChatClientViewer
         }
 
         #endregion
+
+        private void BtnSetting_MouseHover(object sender, EventArgs e)
+        {
+            BtnSetting.ImageIndex = 7;
+        }
+
+        private void BtnSetting_MouseLeave(object sender, EventArgs e)
+        {
+            BtnSetting.ImageIndex = 5;
+        }
+
+        private void BtnReStart_MouseHover(object sender, EventArgs e)
+        {
+            BtnReStart.ImageIndex = 8;
+        }
+
+        private void BtnReStart_MouseLeave(object sender, EventArgs e)
+        {
+            BtnReStart.ImageIndex = 6;
+        }
     }
 }
