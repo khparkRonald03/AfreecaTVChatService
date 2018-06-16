@@ -85,7 +85,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "hur1168";
+                LoginUserID = "";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -714,7 +714,7 @@ namespace ChatClientViewer
                         {
                             foreach (var bjInfo in user.BjInfo)
                             {
-                                if (!string.IsNullOrEmpty(bjInfo.Count))
+                                if (!string.IsNullOrEmpty(bjInfo.Count) && bjInfo.Count != "0")
                                     bjInfoHtml += string.Format(HtmlFormat.BjInfoBjPopUpContents2, bjInfo.Name, bjInfo.Count, bjInfo.Unit);
                             }
                         }
