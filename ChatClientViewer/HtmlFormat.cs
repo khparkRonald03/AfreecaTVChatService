@@ -17,6 +17,7 @@ namespace ChatClientViewer
         <head>
             <meta charset='utf-8'>
             <script src='http://code.jquery.com/jquery-latest.min.js'></script>
+            <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
             <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
             <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
             <style>
@@ -33,7 +34,7 @@ namespace ChatClientViewer
             </style>
         </head>
         <body>
-            <div style='height:100%;width:100%;overflow:auto;'>
+            <div style='height:100%;width:100%;overflow-y:auto;'>
                 <div class='fan_rank' style='height:auto; border:0px;'>
                     <div class='tit_area' style='width:100%;'>
                         <div class='title' id='fan_txt'>BJ</div>
@@ -256,11 +257,12 @@ namespace ChatClientViewer
         <head>
             <meta charset='utf-8'>
             <script src='http://code.jquery.com/jquery-latest.min.js'></script>
+            <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
             <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
             <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
         </head>
         <body>
-            <div class='fan_rank' style='height:100%;overflow:auto; margin-top:5px;'>
+                <div id='fan_rank' class='fan_rank' style='height:100%;overflow:auto; margin-top:15px;'>
                 <div class='tit_area' style='width:100%; display:block;'>
                     <div class='title' id='fan_txt'>채팅</div>
                 </div>
@@ -270,45 +272,40 @@ namespace ChatClientViewer
                     </div>
                 </div>
             </div>
+            <div id='chat_scroll_down' class='chat_scroll_down on' style='float:none' onclick='ClickChatScrollDown()'>
+                <button type='button'>채팅 아래로 스크롤</button>
+            </div>
 
             <script>
+                $(function () {
+                    $('#fan_rank').bind('scroll', UserMoveScroll);
+                    $('#chat_scroll_down').hide();
+                });
+
+                function UserMoveScroll() {
+                    if ($('#chat_scroll_down').css('display') == 'none')
+                        $('#chat_scroll_down').show();
+                }
+
+                function ClickChatScrollDown() {
+                    
+                    document.getElementById('chat_area').scrollIntoView(false);
+                    setTimeout(function () { $('#chat_scroll_down').hide(); }, 200);
+                }
+
                 function AddChatHtml(html) {
-                    var currentScroll = GetScrollXY();
 
                     document.getElementById('chat_memoyo').insertAdjacentHTML('beforeend', html);
 
-                    //var element = document.getElementById('fan_rank');
-                    //element.scrollTop = element.scrollHeight - element.clientHeight;
+                    if ($('#chat_scroll_down').css('display') != 'block') {
 
-                    //document.getElementById('fan_rank').scrollTop = document.getElementById('fan_rank').scrollHeight;
-
-                    $('body').scrollTop($(document).height());
-                    //var objDiv = document.getElementById('fan_rank');
-                    //objDiv.scrollTop = objDiv.scrollHeight;
-
-                    // document.documentElement.scrollTop = currentScroll.x // X 좌표
-                    // document.documentElement.scrollLeft = currentScroll.y // Y 좌표
-                }
-
-                function GetScrollXY() {
-
-                    var scrOfX = 0, scrOfY = 0;
-                    if (typeof (window.pageYOffset) == 'number') {
-                        //Netscape compliant
-                        scrOfY = window.pageYOffset;
-                        scrOfX = window.pageXOffset;
-                    } else if (document.body && (document.body.scrollLeft || document.body.scrollTop)) {
-                        //DOM compliant
-                        scrOfY = document.body.scrollTop;
-                        scrOfX = document.body.scrollLeft;
-                    } else if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
-                        //IE6 standards compliant mode
-                        scrOfY = document.documentElement.scrollTop;
-                        scrOfX = document.documentElement.scrollLeft;
+                        $('#fan_rank').unbind('scroll');
+                        document.getElementById('chat_area').scrollIntoView(false);
+                        setTimeout(function () { $('#fan_rank').bind('scroll', UserMoveScroll); }, 1000);
                     }
-
-                    return { x: scrOfX, y: scrOfY };
+                    
                 }
+
             </script>
         </body>
         </html>

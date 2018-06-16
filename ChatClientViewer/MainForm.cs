@@ -85,7 +85,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "";
+                LoginUserID = "whddnr2813";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";

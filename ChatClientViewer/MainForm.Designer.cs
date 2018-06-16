@@ -38,8 +38,8 @@
             this.ChkIsTop = new iTalk.iTalk_CheckBox();
             this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
             this.iTalk_Panel2 = new iTalk.iTalk_Panel();
-            this.BtnSetting = new System.Windows.Forms.Button();
             this.BtnReStart = new System.Windows.Forms.Button();
+            this.BtnSetting = new System.Windows.Forms.Button();
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -79,7 +79,6 @@
             this.ITContainer.SmartBounds = false;
             this.ITContainer.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultLocation;
             this.ITContainer.TabIndex = 0;
-            this.ITContainer.Text = "ABJ v1.1";
             // 
             // splitContainer1
             // 
@@ -92,6 +91,7 @@
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.Color.Transparent;
             this.splitContainer1.Panel1.Controls.Add(this.PlSetting);
+            this.splitContainer1.Panel1.ForeColor = System.Drawing.Color.Transparent;
             // 
             // splitContainer1.Panel2
             // 
@@ -115,7 +115,7 @@
             // 
             // ChkDisplayInOut
             // 
-            this.ChkDisplayInOut.BackColor = System.Drawing.Color.White;
+            this.ChkDisplayInOut.BackColor = System.Drawing.Color.Transparent;
             this.ChkDisplayInOut.Checked = false;
             this.ChkDisplayInOut.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.ChkDisplayInOut.Location = new System.Drawing.Point(21, 41);
@@ -127,9 +127,10 @@
             // 
             // ChkIsTop
             // 
-            this.ChkIsTop.BackColor = System.Drawing.Color.White;
+            this.ChkIsTop.BackColor = System.Drawing.Color.Transparent;
             this.ChkIsTop.Checked = false;
             this.ChkIsTop.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.ChkIsTop.ForeColor = System.Drawing.Color.Transparent;
             this.ChkIsTop.Location = new System.Drawing.Point(21, 20);
             this.ChkIsTop.Name = "ChkIsTop";
             this.ChkIsTop.Size = new System.Drawing.Size(120, 15);
@@ -153,6 +154,7 @@
             this.iTalk_Panel2.Controls.Add(this.BtnReStart);
             this.iTalk_Panel2.Controls.Add(this.BtnSetting);
             this.iTalk_Panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.iTalk_Panel2.ForeColor = System.Drawing.Color.Transparent;
             this.iTalk_Panel2.Location = new System.Drawing.Point(3, 28);
             this.iTalk_Panel2.Name = "iTalk_Panel2";
             this.iTalk_Panel2.Padding = new System.Windows.Forms.Padding(5);
@@ -160,10 +162,32 @@
             this.iTalk_Panel2.TabIndex = 1;
             this.iTalk_Panel2.Text = "iTalk_Panel2";
             // 
+            // BtnReStart
+            // 
+            this.BtnReStart.BackgroundImage = global::ChatClientViewer.Properties.Resources.settings;
+            this.BtnReStart.Dock = System.Windows.Forms.DockStyle.Right;
+            this.BtnReStart.FlatAppearance.BorderSize = 0;
+            this.BtnReStart.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
+            this.BtnReStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnReStart.ForeColor = System.Drawing.Color.Transparent;
+            this.BtnReStart.ImageIndex = 6;
+            this.BtnReStart.ImageList = this.imageList;
+            this.BtnReStart.Location = new System.Drawing.Point(273, 5);
+            this.BtnReStart.Name = "BtnReStart";
+            this.BtnReStart.Size = new System.Drawing.Size(28, 23);
+            this.BtnReStart.TabIndex = 1;
+            this.BtnReStart.UseVisualStyleBackColor = true;
+            this.BtnReStart.MouseLeave += new System.EventHandler(this.BtnReStart_MouseLeave);
+            this.BtnReStart.MouseHover += new System.EventHandler(this.BtnReStart_MouseHover);
+            // 
             // BtnSetting
             // 
             this.BtnSetting.BackgroundImage = global::ChatClientViewer.Properties.Resources.settings;
             this.BtnSetting.Dock = System.Windows.Forms.DockStyle.Right;
+            this.BtnSetting.FlatAppearance.BorderSize = 0;
+            this.BtnSetting.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
+            this.BtnSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BtnSetting.ForeColor = System.Drawing.Color.Transparent;
             this.BtnSetting.ImageIndex = 5;
             this.BtnSetting.ImageList = this.imageList;
             this.BtnSetting.Location = new System.Drawing.Point(301, 5);
@@ -174,20 +198,6 @@
             this.BtnSetting.Click += new System.EventHandler(this.BtnSetting_Click);
             this.BtnSetting.MouseLeave += new System.EventHandler(this.BtnSetting_MouseLeave);
             this.BtnSetting.MouseHover += new System.EventHandler(this.BtnSetting_MouseHover);
-            // 
-            // BtnReStart
-            // 
-            this.BtnReStart.BackgroundImage = global::ChatClientViewer.Properties.Resources.settings;
-            this.BtnReStart.Dock = System.Windows.Forms.DockStyle.Right;
-            this.BtnReStart.ImageIndex = 6;
-            this.BtnReStart.ImageList = this.imageList;
-            this.BtnReStart.Location = new System.Drawing.Point(273, 5);
-            this.BtnReStart.Name = "BtnReStart";
-            this.BtnReStart.Size = new System.Drawing.Size(28, 23);
-            this.BtnReStart.TabIndex = 1;
-            this.BtnReStart.UseVisualStyleBackColor = true;
-            this.BtnReStart.MouseLeave += new System.EventHandler(this.BtnReStart_MouseLeave);
-            this.BtnReStart.MouseHover += new System.EventHandler(this.BtnReStart_MouseHover);
             // 
             // Main
             // 
@@ -200,7 +210,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(126, 39);
             this.Name = "Main";
-            this.Text = "ABJ v1.1";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.Load += new System.EventHandler(this.Main_Load);
