@@ -50,16 +50,22 @@ namespace AvjRestWebApi.Controllers
 
                         var clientBjs = (from sBj in RankBjDataCache.Instance.GetRankBjModels
                                         join cBj in users on sBj.BjID equals cBj.ID
-                                        select cBj)?.Distinct();
+                                        select cBj)?.Distinct().ToList();
 
                         if (serverBjs != null && serverBjs.Count > 0)
                         {
-                            foreach (var user in clientBjs)
+                            Parallel.For(0, clientBjs.Count, (Idx) =>
                             {
-                                var tmp = BjUserMatching(bj, user, serverBjs);
+                                var tmp = BjUserMatching(bj, clientBjs[Idx], serverBjs);
                                 if (tmp != null)
                                     result.UserModels.Add(tmp);
-                            }
+                            });
+                            //for (int Idx = 0; Idx < clientBjs.Count; Idx++)
+                            //{
+                            //    var tmp = BjUserMatching(bj, clientBjs[Idx], serverBjs);
+                            //    if (tmp != null)
+                            //        result.UserModels.Add(tmp);
+                            //}
                         }
                         break;
 
