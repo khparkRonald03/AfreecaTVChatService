@@ -13,10 +13,8 @@ using System.IO;
 using System.Timers;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using Microsoft.Win32;
 using CefSharp;
 using CefSharp.WinForms;
-using System.Net;
 using System.ComponentModel;
 using System.Configuration;
 
@@ -85,7 +83,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "nila25";
+                LoginUserID = "afworldcup01";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";

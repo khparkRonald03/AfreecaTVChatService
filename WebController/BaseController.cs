@@ -39,7 +39,7 @@ namespace WebController
                 Options.AddArgument("headless");
                 Options.AddArgument("mute-audio");
                 Options.AddArgument("--start-maximized");
-                Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
+                //Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
 
                 string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
                 string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";
@@ -62,7 +62,7 @@ namespace WebController
                 Options = new ChromeOptions();
                 Options.AddArgument("mute-audio");
                 Options.AddArgument("--start-maximized");
-                Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
+                //Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
 
                 string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
                 string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";

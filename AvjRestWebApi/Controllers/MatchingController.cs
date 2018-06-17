@@ -105,7 +105,15 @@ namespace AvjRestWebApi.Controllers
         {
             try
             {
-                var resultBj = serverBjs.Find(b => b.BjID == user.ID);
+                var resultBj = new RankBjModel();
+                for (int Idx = 0; Idx < serverBjs.Count(); Idx++)
+                {
+                    if (serverBjs[Idx].BjID == user.ID)
+                    {
+                        resultBj = serverBjs[Idx];
+                        break;
+                    }
+                }
                 if (resultBj == null && string.IsNullOrEmpty(resultBj.BjID))
                     return null;
 
@@ -137,7 +145,14 @@ namespace AvjRestWebApi.Controllers
                 if (clientUsers[clientUserIdx].BJs == null)
                     clientUsers[clientUserIdx].BJs = new List<BjModel>();
 
-                var matchingUser = serverUsers.FindAll(b => b.UserID == clientUsers[clientUserIdx].ID);
+                //var matchingUser = serverUsers.FindAll(b => b.UserID == clientUsers[clientUserIdx].ID);
+                var matchingUser = new List<RankUserModel>();
+                for (int Idx = 0; Idx < serverUsers.Count(); Idx++)
+                {
+                    if (serverUsers[Idx].UserID == clientUsers[clientUserIdx].ID)
+                        matchingUser.Add(serverUsers[Idx]);
+                }
+
                 int mainBigFanRanking = matchingUser?.OrderBy(m => m.BigFanRanking)?.FirstOrDefault()?.BigFanRanking ?? -1;
 
                 if (mainBigFanRanking == 1)
