@@ -33,7 +33,7 @@ namespace ChatClientViewer
                 a.btn-layerClose:hover { border: 1px solid #091940; background-color: #1f326a; color: #fff; }
             </style>
         </head>
-        <body>
+        <body oncontextmenu='return false'onselectstart='return false'>
             <div style='height:100%;width:100%;overflow-y:auto;'>
                 <div class='fan_rank' style='height:auto; border:0px;'>
                     <div class='tit_area' style='width:100%;'>
@@ -261,7 +261,8 @@ namespace ChatClientViewer
             <link rel='stylesheet' type='text/css' href='http://res-cf.afreecatv.com/css/global/flashplayer/main.css' />
             <link rel='stylesheet' type='text/css' href='http://res.afreecatv.com/css/global/mybs.css' />
         </head>
-        <body>
+        <body oncontextmenu='return false'onselectstart='return false'>
+
                 <div id='fan_rank' class='fan_rank' style='height:100%;overflow:auto; margin-top:15px;'>
                 <div class='tit_area' style='width:100%; display:block;'>
                     <div class='title' id='fan_txt'>채팅</div>
@@ -273,7 +274,7 @@ namespace ChatClientViewer
                 </div>
             </div>
             <div id='chat_scroll_down' class='chat_scroll_down on' style='float:none' onclick='ClickChatScrollDown()'>
-                <button type='button'>채팅 아래로 스크롤</button>
+                <button type='button' style='margin-top:100px'>채팅 아래로 스크롤</button>
             </div>
 
             <script>
