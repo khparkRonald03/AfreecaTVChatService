@@ -46,6 +46,19 @@ namespace WebController
             var result = new ResultModel<bool>();
             try
             {
+                for (int Idx = 0; Idx < 4; Idx++)
+                {
+                    Thread.Sleep(200);
+                    if (Driver.WindowHandles.Count > 1)
+                    {
+                        for (int i = 1; i < Driver.WindowHandles.Count; i++)
+                        {
+                            Driver.SwitchTo().Window(Driver.WindowHandles[i]);
+                            Driver.Close();
+                        }
+                    }
+                }
+
                 // 여기서 첫번째 탭으로 이동 하거나 나머지탭 닫기 #######################
                 Driver.SwitchTo().Window(Driver.WindowHandles.First());
 

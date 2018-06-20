@@ -39,7 +39,7 @@ namespace WebController
                 Options.AddArgument("headless");
                 Options.AddArgument("mute-audio");
                 Options.AddArgument("--start-maximized");
-                //Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
+                Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
 
                 string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
                 //string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";
@@ -63,18 +63,18 @@ namespace WebController
                 Options = new ChromeOptions();
                 Options.AddArgument("mute-audio");
                 Options.AddArgument("--start-maximized");
-                //Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
+                Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
 
                 string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
                 //string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";
                 string vpnPath = $"{startupPath}\\UltraSurf-Security,-Privacy-&-Unblock-VPN_v1.5.4.crx";
-                string[] extentionparams = new string[2];
+                string[] extentionparams = new string[1];
 
                 if (File.Exists(adlockPath))
                     extentionparams[0] = adlockPath;
 
-                if (File.Exists(vpnPath))
-                    extentionparams[1] = vpnPath;
+                //if (File.Exists(vpnPath))
+                //    extentionparams[1] = vpnPath;
 
                 if (extentionparams.Length > 0)
                     Options.AddExtensions(extentionparams);

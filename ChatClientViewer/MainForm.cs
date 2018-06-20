@@ -83,7 +83,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "freesias";
+                LoginUserID = "tprtlrkdlrhs";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -196,8 +196,8 @@ namespace ChatClientViewer
             {
                 Thread.Sleep(4000);
                 //광고스킵
-                if (!isStart)
-                    ClickPromotionBtnSkip();
+                //if (!isStart)
+                //    ClickPromotionBtnSkip();
 
                 // 채팅 가져오기
                 //var ttt0 = GetChatNodes("return document.getElementById('chat_memoyo').innerHTML", "//dl");
@@ -307,8 +307,18 @@ namespace ChatClientViewer
         private void InitProc()
         {
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
-            ChromeDriver.ExecuteJS("window.resizeTo(1024, 768);");
+            //ChromeDriver.ExecuteJS("window.resizeTo(1024, 768);");
 
+            //*[@id="livePlayer"]/dl/dd/a
+            for (int Idx = 0; Idx < 4; Idx++)
+            {
+                Thread.Sleep(200);
+                // 플래쉬 설치
+                ChromeDriver.ExecuteJS("$('#livePlayer > dl > dd > a').click()");
+                ChromeDriver.ClickAlert(out string alertText);
+            }
+
+            return;
             Thread.Sleep(400);
             ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > button').click()");
             Thread.Sleep(200);
@@ -702,7 +712,7 @@ namespace ChatClientViewer
                                 var zzz = t.GetCustomAttributes(false).GetValue(0);
                                 var zzzdname = ((DisplayNameAttribute)zzz).DisplayName;
                                 var rnaking = string.Empty;
-                                if (!string.IsNullOrEmpty(zzzdname))
+                                if (!string.IsNullOrEmpty(zzzdname) && ddd != null && ddd.ToString() != "0")
                                     RankingInfoHtml += string.Format(HtmlFormat.BjInfoBjPopUpContents1, zzzdname, ddd);
                             }
                                 
