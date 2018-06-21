@@ -33,6 +33,7 @@ namespace ChatClientViewer
         System.Timers.Timer ChatDisplayTimer = new System.Timers.Timer();
 
         Thread BackGround1;
+        Thread BackGround2;
 
         WebApiCaller webApiCaller = new WebApiCaller();
 
@@ -87,7 +88,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "jkb1277";
+                LoginUserID = "gks2wl";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -139,6 +140,8 @@ namespace ChatClientViewer
             ChatDisplayTimer?.Close();
             BackGround1?.Abort();
             BackGround1 = null;
+            BackGround2?.Abort();
+            BackGround2 = null;
             ChromeDriver?.CloseDriver();
             ChromeDriver?.Close();
 
@@ -251,7 +254,6 @@ namespace ChatClientViewer
                 //CallApiTimer.Elapsed += new ElapsedEventHandler(CallApiTimer_Elapsed);
                 //CallApiTimer.Start();
 
-
                 var ts2 = new ThreadStart(CallApiTimer_Elapsed);
                 BackGround1 = new Thread(ts2)
                 {
@@ -263,9 +265,16 @@ namespace ChatClientViewer
                 DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
                 DataDisplayTimer.Start();
 
-                ChatDisplayTimer.Interval = 100;
-                ChatDisplayTimer.Elapsed += new ElapsedEventHandler(ChatRefreshTimer_Elapsed);
-                ChatDisplayTimer.Start();
+                //ChatDisplayTimer.Interval = 100;
+                //ChatDisplayTimer.Elapsed += new ElapsedEventHandler(ChatRefreshTimer_Elapsed);
+                //ChatDisplayTimer.Start();
+
+                var ts3 = new ThreadStart(ChatRefreshTimer_Elapsed);
+                BackGround2 = new Thread(ts3)
+                {
+                    IsBackground = true
+                };
+                BackGround2.Start();
 
                 //var ts2 = new ThreadStart(GetUserTimer_Elapsed);
                 //BackGround1 = new Thread(ts2)
@@ -561,38 +570,44 @@ namespace ChatClientViewer
                 return;
 
             var nUsers = TmpNewUsersQueue.Dequeue();
-
-            // 입장 사용자 가져오기
-            var tmpInUsers = (from nUser in nUsers
-                             join cUser in cUsers on nUser.ID equals cUser.ID into users
-                             from cUser in users.DefaultIfEmpty()
-                             where cUser is null
-                             select nUser)?.ToList()?.Distinct()?.ToList();
-
-            if (cUsers != null && cUsers.Count > 0)
+            var tmpInUsers = new List<UserModel>();
+            var tmpOutUsers = new List<UserModel>();
+            var tmpcUsers = new List<UserModel>();
+            var cUsersTemp = cUsers; // CloneList<UserModel>(cUsers);
+            lock (LockObject)
             {
-                // 퇴장 사용자 가져오기
-                var tmpOutUsers = (from cUser in cUsers
+                // 입장 사용자 가져오기
+                tmpInUsers = (from nUser in nUsers
+                              join cUser in cUsersTemp on nUser.ID equals cUser.ID into users
+                              from cUser in users.DefaultIfEmpty()
+                              where cUser is null
+                              select nUser)?.ToList()?.Distinct()?.ToList();
+
+                if (cUsersTemp != null && cUsersTemp.Count > 0)
+                {
+                    // 퇴장 사용자 가져오기
+                    tmpOutUsers = (from cUser in cUsersTemp
                                    join nUser in nUsers on cUser.ID equals nUser.ID into users
                                    from nUser in users.DefaultIfEmpty()
                                    where nUser is null
                                    select cUser).ToList();
 
-                //lock (LockObject)
-                //{
+                    //lock (LockObject)
+                    //{
                     DelUsersQueue.Enqueue(tmpOutUsers);
                     OutChatUsersQueue.Enqueue(tmpOutUsers);
-                //}
-            }
+                    //}
+                }
 
-            // 퇴장 사용자 제거
-            var tmpcUsers = (from cUser in cUsers
+                // 퇴장 사용자 제거
+                tmpcUsers = (from cUser in cUsersTemp
                              join nUser in nUsers on cUser.ID equals nUser.ID
                              select cUser).ToList();
 
+            }
             //lock (LockObject)
             //{
-                cUsers = tmpcUsers;
+            cUsers = tmpcUsers;
             //}
 
             ;
@@ -638,13 +653,19 @@ namespace ChatClientViewer
             }
         }
 
-        private void ChatRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //private void ChatRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void ChatRefreshTimer_Elapsed()
         {
-            //lock (LockObject)
-            //{
+            while (true)
+            {
+                //lock (LockObject)
+                //{
                 // 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
                 ChatRefresh();
-            //}
+                //}
+                Thread.Sleep(100);
+            }
+
         }
 
         /// <summary>
@@ -872,11 +893,9 @@ namespace ChatClientViewer
         /// </summary>
         private void ChatRefresh()
         {
-            if (cUsers == null)
+            if (cUsers == null || nChatQueue == null)
                 return;
 
-            if (nChatQueue == null)
-                return;
             //if (cUsers == null || cUsers.Count <= 0)
             //    return;
 
@@ -889,38 +908,31 @@ namespace ChatClientViewer
             // 하단에 추가
             string html = string.Empty;
 
+            var userJoinChats = new List<ChatModel>();
+            var tmpnChats = new List<ChatModel>();
+            var check = new List<ChatModel>();
+            var cChatQueueTemp = cChatQueue;
+            //lock (LockObject)
+            //{
             // test #####
             // 접속 사용자 채팅만 가져오기
-            var userJoinChats = (from nChat in nChatQueue
+            userJoinChats = (from nChat in nChatQueue
                                  join cUser in cUsers on nChat.ID equals cUser.ID
-                                 select nChat).ToList();
+                                 select nChat)?.ToList();
 
             // 기존 채팅 데이터 새 채팅에서 제외 후 중복 제거
-            var tmpnChats = (from nChat in userJoinChats
-                             join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
-                             from cChat in chat.DefaultIfEmpty()
-                             where cChat is null
-                             select nChat)?.Distinct()?.ToList();
-
-
-            // test
-            // 기존 채팅 데이터 새 채팅에서 제외 후 중복 제거
-            //var tmpnChats = (from nChat in nChatQueue
-            //                 join cChat in cChatQueue on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
-            //                 from cChat in chat.DefaultIfEmpty()
-            //                 where cChat is null
-            //                 select nChat)?.Distinct()?.ToList();
-
+            tmpnChats = (from nChat in userJoinChats
+                            join cChat in cChatQueueTemp on new { nChat.ID, nChat.Html } equals new { cChat.ID, cChat.Html } into chat
+                            from cChat in chat.DefaultIfEmpty()
+                            where cChat is null
+                            select nChat)?.Distinct()?.ToList();
 
             // 하... 중복제거 린큐로 하는거 실패해서 이걸로 다시 체크..
-            var check = new List<ChatModel>();
+
             foreach (var tt in tmpnChats)
             {
                 if (check.Any(t => t.ID == tt.ID && t.Html == tt.Html))
-                {
-                    ;
                     continue;
-                }
 
                 check.Add(tt);
             }
@@ -942,6 +954,8 @@ namespace ChatClientViewer
                     html += string.Format(HtmlFormat.ChatHtmlOutUser, outUser.ID, outUser.Nic);
                 }
             }
+
+            //}
 
             // 채팅 추가
             //foreach (var chat in tmpnChats)
