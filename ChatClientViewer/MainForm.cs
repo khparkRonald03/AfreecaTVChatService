@@ -28,7 +28,9 @@ namespace ChatClientViewer
         Thread BackGroundCrawlingThread;
 
         System.Timers.Timer GetUserTimer = new System.Timers.Timer();
+        System.Timers.Timer CallApiTimer = new System.Timers.Timer();
         System.Timers.Timer DataDisplayTimer = new System.Timers.Timer();
+        System.Timers.Timer ChatDisplayTimer = new System.Timers.Timer();
 
         WebApiCaller webApiCaller = new WebApiCaller();
 
@@ -83,7 +85,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "tprtlrkdlrhs";
+                LoginUserID = "player206";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -229,14 +231,21 @@ namespace ChatClientViewer
                 if (!ShowSetboxViewer())
                     continue;
 
-                GetUserTimer.Interval = 2000;
+                GetUserTimer.Interval = 100;
                 GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
                 GetUserTimer.Start();
 
-                DataDisplayTimer.Interval = 2000;
+                CallApiTimer.Interval = 2000;
+                CallApiTimer.Elapsed += new ElapsedEventHandler(CallApiTimer_Elapsed);
+                CallApiTimer.Start();
+
+                DataDisplayTimer.Interval = 100;
                 DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
                 DataDisplayTimer.Start();
 
+                ChatDisplayTimer.Interval = 100;
+                ChatDisplayTimer.Elapsed += new ElapsedEventHandler(ChatRefreshTimer_Elapsed);
+                ChatDisplayTimer.Start();
 
                 //var ts2 = new ThreadStart(GetUserTimer_Elapsed);
                 //BackGround1 = new Thread(ts2)
@@ -260,8 +269,8 @@ namespace ChatClientViewer
         private void GetUserTimer_Elapsed(object sender, ElapsedEventArgs e)
         //private void GetUserTimer_Elapsed()
         {
-            lock (LockObject)
-            {
+            //lock (LockObject)
+            //{
                 var userModels = new List<UserModel>();
                 
                 // 열혈팬 수집
@@ -290,15 +299,17 @@ namespace ChatClientViewer
                     userModels.AddRange(ulUsers);
 
                 TmpNewUsersQueue.Enqueue(userModels);
-
-                // 채팅 수집
-                GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
+            //}
                 
+        }
 
+        private void CallApiTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            lock (LockObject)
+            {
                 // 퇴장 사용자 제거 데이터 매칭 하고 받아오기
                 RemoveLeaveUserAndWebApiMatching();
             }
-                
         }
 
         /// <summary>
@@ -309,24 +320,29 @@ namespace ChatClientViewer
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
             //ChromeDriver.ExecuteJS("window.resizeTo(1024, 768);");
 
-            //*[@id="livePlayer"]/dl/dd/a
-            for (int Idx = 0; Idx < 4; Idx++)
-            {
-                Thread.Sleep(200);
-                // 플래쉬 설치
-                ChromeDriver.ExecuteJS("$('#livePlayer > dl > dd > a').click()");
-                ChromeDriver.ClickAlert(out string alertText);
-            }
+            //for (int Idx = 0; Idx < 4; Idx++)
+            //{
+            //    Thread.Sleep(100);
+            //    // 플래쉬 설치
 
-            return;
+            //    ChromeDriver.ClickTag(ElementsSelectType.XPath, "//*[@id='livePlayer']/dl/dd/a");
+            //    //ChromeDriver.ExecuteJS("$('#livePlayer > dl > dd > a').trigger('click');");
+            //    ChromeDriver.ClickAlert(out string alertText);
+            //}
+
+            //return;
             Thread.Sleep(400);
-            ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > button').click()");
-            Thread.Sleep(200);
-            ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > div > button').click()");
-            Thread.Sleep(200);
-            // html5 변환 버튼
-            ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box.on > div > ul > li:nth-child(1) > button').click()");
-            Thread.Sleep(200);
+            for (int Idx = 0; Idx < 6; Idx++)
+            {
+                ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > button').click()");
+                Thread.Sleep(100);
+                ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > div > button').click()");
+                Thread.Sleep(100);
+                // html5 변환 버튼
+                ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box.on > div > ul > li:nth-child(1) > button').click()");
+                Thread.Sleep(100);
+            }
+                
         }
 
         private List<BeautifulNode> GetChatNodes(string script, string xPath)
@@ -342,7 +358,7 @@ namespace ChatClientViewer
 
                 interval--;
 
-                Thread.Sleep(1500);
+                Thread.Sleep(300);
             }
             while (interval > 0);
 
@@ -400,33 +416,6 @@ namespace ChatClientViewer
             return result;
         }
 
-        private void GetChat(string script, string xPath)
-        {
-            var ttt00 = GetNodes(script, xPath);
-            foreach (var tt in ttt00)
-            {
-                var NicAndId = tt.Text; // nic(id):대화
-                var NicAndIdArray = NicAndId.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
-                if (NicAndIdArray != null && NicAndIdArray.Length == 3)
-                {
-                    nChatQueue.Add(new ChatModel()
-                    {
-                        ID = NicAndIdArray[1],
-                        Nic = NicAndIdArray[0],
-                        Html = $"<dl class=''> {tt.Html} </dl>",
-                        IsNew = true
-                    });
-                }
-                else
-                {
-                    // 채팅이 아닌경우
-                    // 처음 인사말, 퇴장/강퇴
-                }
-
-            }
-        }
-
-
         /// <summary>
         /// 광고 스킵버튼 클릭
         /// </summary>
@@ -483,7 +472,7 @@ namespace ChatClientViewer
         private bool ShowSetboxViewer()
         {
             
-            int interval = 3;
+            int interval = 6;
             do
             {
                 var ttt = GetNode("return document.getElementById('setbox_viewer').innerHTML", "//a");
@@ -499,7 +488,7 @@ namespace ChatClientViewer
                     return true;
                 
                 interval--;
-                Thread.Sleep(300);
+                Thread.Sleep(100);
             }
             while (interval > 0);
 
@@ -617,10 +606,16 @@ namespace ChatClientViewer
 
                 // 접속 사용자 화면에 리프레쉬
                 UsersRefresh();
+            }
+        }
 
+        private void ChatRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //lock (LockObject)
+            //{
                 // 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
                 ChatRefresh();
-            }
+            //}
         }
 
         /// <summary>
@@ -628,12 +623,13 @@ namespace ChatClientViewer
         /// </summary>
         private void ApiDataToUserModel()
         {
-            var tmpUsers = new List<UserModel>();
-            var check = new List<UserModel>();
             while (jsonModels.Count > 0)
             {
                 try
                 {
+                    var tmpUsers = new List<UserModel>();
+                    var check = new List<UserModel>();
+
                     var jModel = jsonModels.Dequeue();
                     var apiUsers = jModel?.UserModels;
                     
@@ -650,6 +646,25 @@ namespace ChatClientViewer
 
                             check.Add(tu);
                         }
+
+                        if (check.Count > 0)
+                        {
+                            InUsersQueue.Enqueue(check);
+                            InChatUsersQueue.Enqueue(check);
+                            cUsers.AddRange(check);
+                            var cUsercheck = new List<UserModel>();
+                            foreach (var tu in cUsers)
+                            {
+                                if (cUsercheck.Any(c => c.ID == tu.ID))
+                                {
+                                    continue;
+                                }
+
+                                cUsercheck.Add(tu);
+                            }
+                            cUsers = cUsercheck;
+                        }
+                        
                     }
                 }
                 catch (Exception e)
@@ -659,24 +674,24 @@ namespace ChatClientViewer
                 }
             }
 
-            lock (LockObject)
-            {
-                InUsersQueue.Enqueue(check);
-                InChatUsersQueue.Enqueue(check);
-                cUsers.AddRange(check);
-                //cUsers = cUsers.Distinct().ToList();
-                var cUsercheck = new List<UserModel>();
-                foreach (var tu in cUsers)
-                {
-                    if (cUsercheck.Any(c => c.ID == tu.ID))
-                    {
-                        continue;
-                    }
+            //lock (LockObject)
+            //{
+            //    InUsersQueue.Enqueue(check);
+            //    InChatUsersQueue.Enqueue(check);
+            //    cUsers.AddRange(check);
+            //    //cUsers = cUsers.Distinct().ToList();
+            //    var cUsercheck = new List<UserModel>();
+            //    foreach (var tu in cUsers)
+            //    {
+            //        if (cUsercheck.Any(c => c.ID == tu.ID))
+            //        {
+            //            continue;
+            //        }
 
-                    cUsercheck.Add(tu);
-                }
-                cUsers = cUsercheck;
-            }
+            //        cUsercheck.Add(tu);
+            //    }
+            //    cUsers = cUsercheck;
+            //}
             
         }
 
@@ -828,11 +843,19 @@ namespace ChatClientViewer
         /// </summary>
         private void ChatRefresh()
         {
-            if (cUsers == null || cUsers.Count <= 0)
+            if (cUsers == null)
                 return;
 
-            if (nChatQueue == null || nChatQueue.Count <= 0)
+            if (nChatQueue == null)
                 return;
+            //if (cUsers == null || cUsers.Count <= 0)
+            //    return;
+
+            //if (nChatQueue == null || nChatQueue.Count <= 0)
+            //    return;
+
+            // 채팅 수집
+            GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
 
             // 하단에 추가
             string html = string.Empty;
@@ -904,6 +927,33 @@ namespace ChatClientViewer
 
             SetChat(html);
         }
+
+        private void GetChat(string script, string xPath)
+        {
+            var ttt00 = GetNodes(script, xPath);
+            foreach (var tt in ttt00)
+            {
+                var NicAndId = tt.Text; // nic(id):대화
+                var NicAndIdArray = NicAndId.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
+                if (NicAndIdArray != null && NicAndIdArray.Length == 3)
+                {
+                    nChatQueue.Add(new ChatModel()
+                    {
+                        ID = NicAndIdArray[1],
+                        Nic = NicAndIdArray[0],
+                        Html = $"<dl class=''> {tt.Html} </dl>",
+                        IsNew = true
+                    });
+                }
+                else
+                {
+                    // 채팅이 아닌경우
+                    // 처음 인사말, 퇴장/강퇴
+                }
+
+            }
+        }
+
 
         private void SetChat(string html)
         {

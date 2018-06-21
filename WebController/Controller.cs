@@ -358,7 +358,8 @@ namespace WebController
                 }
 
                 alertText = Driver.SwitchTo().Alert().Text;
-                Driver.SwitchTo().Alert().Accept();
+                var alert = Driver.SwitchTo().Alert();
+                alert.Accept();
 
                 result.ResultValue = true;
             }

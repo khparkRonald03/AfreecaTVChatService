@@ -123,9 +123,9 @@ namespace ChatClientViewer
 
         private static readonly string BjHtmlChild_Test = @"
         <tr height='20' id='{0}' onclick='javascript:showPopup(this)'>
-            <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-            <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>{1}</td>
-            <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;'>
+            <td style='width:100px; color: #FF0000 !important;font-weight: bold;cursor:pointer'>{0}</td>
+            <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;cursor:pointer'>{1}</td>
+            <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;cursor:pointer'>
                 <img src='{2}' alt='' style='height:20px;' />
                 <div id='{0}_layer' class='pop-layer'>
                     <div class='pop-container'>
@@ -152,7 +152,7 @@ namespace ChatClientViewer
         /// <summary>
         /// 하위요소 [파라미터 - 아이디, 닉네임, 사진url, 팝업 display html]
         ///</summary>
-        public static string BjHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style = 'width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;' >{1}</td><td style = 'color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;' ><img src='{2}' alt='' style='height:20px;' /><div id = '{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}</ul><hr style='text-align:center;width:80%;border:1px;solid:#EAEAEA;border-bottom:0px;'><ul style = 'border-top:1px solid #DDD;' class='vlist'>{4}</ul><div class='btn-r'><a href = '#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
+        public static string BjHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;cursor:pointer'>{0}</td><td style = 'width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;cursor:pointer' >{1}</td><td style = 'color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;cursor:pointer' ><img src='{2}' alt='' style='height:20px;' /><div id = '{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}</ul><hr style='text-align:center;width:80%;border:1px;solid:#EAEAEA;border-bottom:0px;'><ul style = 'border-top:1px solid #DDD;' class='vlist'>{4}</ul><div class='btn-r'><a href = '#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
 
         /// <summary>
         /// BJ 정보 팝업 하위요소 1
@@ -170,9 +170,9 @@ namespace ChatClientViewer
 
         private static readonly string KingHtmlChild_Test = @"
         <tr height='20' id='{0}' onclick='javascript:showPopup(this)'>
-            <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-            <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
-            <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>
+            <td style='width:100px; color: #FF0000 !important;font-weight: bold;cursor:pointer'>{0}</td>
+            <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;cursor:pointer'>{1}</td>
+            <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;cursor:pointer'>
                 {2}
                 <div id='{0}_layer' class='pop-layer'>
                     <div class='pop-container'>
@@ -196,7 +196,7 @@ namespace ChatClientViewer
         /// <summary>
         /// 하위요소 [파라미터 - 아이디, 닉네임, 포함된 bj정보, BJ 랭킹 팝업 콘텐츠]
         ///</summary>
-        public static string KingHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{2}<div id='{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}</ul><div class='btn-r'><a href='#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
+        public static string KingHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this)'><td style='width:100px; color: #FF0000 !important;font-weight: bold;cursor:pointer'>{0}</td><td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;cursor:pointer'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;cursor:pointer'>{2}<div id='{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}</ul><div class='btn-r'><a href='#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
 
         /// <summary>
         /// Bj 하위요소 [파라미터 - 닉네임, 회장 아이콘Url]
@@ -215,9 +215,9 @@ namespace ChatClientViewer
 
         private static readonly string BigFanHtmlChild_Test = @"
         <tr height='20' id='{0}' onclick='javascript:showPopup(this);'>
-            <td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td>
-            <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td>
-            <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>
+            <td style='width:100px; color: #FF0000 !important;font-weight: bold;cursor:pointer'>{0}</td>
+            <td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;cursor:pointer'>{1}</td>
+            <td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;cursor:pointer'>
                 {2}
                 <div id='{0}_layer' class='pop-layer'>
                     <div class='pop-container'>
@@ -240,7 +240,7 @@ namespace ChatClientViewer
         /// <summary>
         ///  - 아이디, 닉네임, BJ정보, BJ 랭킹 팝업 콘텐츠
         ///</summary>
-        public static string BigFanHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this);'><td style='width:100px; color: #FF0000 !important;font-weight: bold;'>{0}</td><td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;'>{2}<div id='{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}</ul><div class='btn-r'><a href='#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
+        public static string BigFanHtmlChild = "<tr height='20' id='{0}' onclick='javascript:showPopup(this);'><td style='width:100px; color: #FF0000 !important;font-weight: bold;cursor:pointer'>{0}</td><td style='width:100px; color: #333 !important;letter-spacing: -1px;font-weight: bold;font-size: 11px !important;white-space:nowrap;cursor:pointer'>{1}</td><td style='color: #0100FF !important;letter-spacing: -1px;font-weight: bold;font-size: 11px!important;white-space: nowrap;cursor:pointer'>{2}<div id='{0}_layer' class='pop-layer'><div class='pop-container'><div class='pop-conts'><ul style='' class='vlist'>{3}</ul><div class='btn-r'><a href='#' class='btn-layerClose'>닫기</a></div></div></div></div></td></tr>";
 
         /// <summary>
         /// - 닉네임, 하트 Url
@@ -267,7 +267,7 @@ namespace ChatClientViewer
                 <div class='tit_area' style='width:100%; display:block;'>
                     <div class='title' id='fan_txt'>채팅</div>
                 </div>
-                <div id='chat_area' class='chat_area' style='margin-top:90px'>
+                <div id='chat_area' class='chat_area' style=''> <!--margin-top:90px-->
                     <div id='chat_memoyo' class='chat_memoyo'>
 
                     </div>
