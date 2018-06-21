@@ -32,6 +32,8 @@ namespace ChatClientViewer
         System.Timers.Timer DataDisplayTimer = new System.Timers.Timer();
         System.Timers.Timer ChatDisplayTimer = new System.Timers.Timer();
 
+        Thread BackGround1;
+
         WebApiCaller webApiCaller = new WebApiCaller();
 
         string StartupPath { get; set; } = string.Empty;
@@ -85,7 +87,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "player206";
+                LoginUserID = "jkb1277";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -133,12 +135,22 @@ namespace ChatClientViewer
             GetUserTimer?.Close();
             DataDisplayTimer?.Stop();
             DataDisplayTimer.Close();
+            ChatDisplayTimer?.Stop();
+            ChatDisplayTimer?.Close();
+            BackGround1?.Abort();
+            BackGround1 = null;
             ChromeDriver?.CloseDriver();
             ChromeDriver?.Close();
 
-            var process = Process.GetProcessesByName("chromedriver.exe");
-            foreach (var p in process)
-                p.Kill();
+            for (int Idx = 0; Idx < 3; Idx++)
+            {
+                var process = Process.GetProcessesByName("chromedriver.exe");
+                foreach (var p in process)
+                    p.Kill();
+
+                Thread.Sleep(300);
+            }
+            
         }
 
 
@@ -231,13 +243,21 @@ namespace ChatClientViewer
                 if (!ShowSetboxViewer())
                     continue;
 
-                GetUserTimer.Interval = 100;
+                GetUserTimer.Interval = 1000;
                 GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
                 GetUserTimer.Start();
 
-                CallApiTimer.Interval = 2000;
-                CallApiTimer.Elapsed += new ElapsedEventHandler(CallApiTimer_Elapsed);
-                CallApiTimer.Start();
+                //CallApiTimer.Interval = 2000;
+                //CallApiTimer.Elapsed += new ElapsedEventHandler(CallApiTimer_Elapsed);
+                //CallApiTimer.Start();
+
+
+                var ts2 = new ThreadStart(CallApiTimer_Elapsed);
+                BackGround1 = new Thread(ts2)
+                {
+                    IsBackground = true
+                };
+                BackGround1.Start();
 
                 DataDisplayTimer.Interval = 100;
                 DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
@@ -269,8 +289,8 @@ namespace ChatClientViewer
         private void GetUserTimer_Elapsed(object sender, ElapsedEventArgs e)
         //private void GetUserTimer_Elapsed()
         {
-            //lock (LockObject)
-            //{
+            lock (LockObject)
+            {
                 var userModels = new List<UserModel>();
                 
                 // 열혈팬 수집
@@ -299,17 +319,26 @@ namespace ChatClientViewer
                     userModels.AddRange(ulUsers);
 
                 TmpNewUsersQueue.Enqueue(userModels);
-            //}
-                
+                ;
+                //// 퇴장 사용자 제거 데이터 매칭 하고 받아오기
+                //RemoveLeaveUserAndWebApiMatching();
+            }
+
         }
 
-        private void CallApiTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //private void CallApiTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void CallApiTimer_Elapsed()
         {
-            lock (LockObject)
+            //lock (LockObject)
+            //{
+            while (true)
             {
                 // 퇴장 사용자 제거 데이터 매칭 하고 받아오기
                 RemoveLeaveUserAndWebApiMatching();
+                Thread.Sleep(1000*5);
             }
+                
+            //}
         }
 
         /// <summary>
@@ -549,11 +578,11 @@ namespace ChatClientViewer
                                    where nUser is null
                                    select cUser).ToList();
 
-                lock (LockObject)
-                {
+                //lock (LockObject)
+                //{
                     DelUsersQueue.Enqueue(tmpOutUsers);
                     OutChatUsersQueue.Enqueue(tmpOutUsers);
-                }
+                //}
             }
 
             // 퇴장 사용자 제거
@@ -561,10 +590,10 @@ namespace ChatClientViewer
                              join nUser in nUsers on cUser.ID equals nUser.ID
                              select cUser).ToList();
 
-            lock (LockObject)
-            {
+            //lock (LockObject)
+            //{
                 cUsers = tmpcUsers;
-            }
+            //}
 
             ;
 
@@ -574,10 +603,10 @@ namespace ChatClientViewer
             // web api 매칭 요청
             var returnJModel = Task.Run(() => CallWebApi(tmpInUsers)).Result;
 
-            lock (LockObject)
-            {
+            //lock (LockObject)
+            //{
                 jsonModels.Enqueue(returnJModel);
-            }
+            //}
 
             ;
         }
@@ -964,7 +993,8 @@ namespace ChatClientViewer
             }
             else
             {
-                ChatBrowser.ExecuteScriptAsync("AddChatHtml", new object[] { html });
+                if (!string.IsNullOrEmpty(html))
+                    ChatBrowser.ExecuteScriptAsync("AddChatHtml", new object[] { html });
             }
 
         }
