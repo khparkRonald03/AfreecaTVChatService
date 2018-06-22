@@ -132,17 +132,7 @@ namespace ChatClientViewer
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
             this.Opacity = 0;
-            BackGroundCrawlingThread?.Abort();
-            GetUserTimer?.Stop();
-            GetUserTimer?.Close();
-            DataDisplayTimer?.Stop();
-            DataDisplayTimer.Close();
-            ChatDisplayTimer?.Stop();
-            ChatDisplayTimer?.Close();
-            BackGround1?.Abort();
-            BackGround1 = null;
-            BackGround2?.Abort();
-            BackGround2 = null;
+            InitThread();
             ChromeDriver?.CloseDriver();
             ChromeDriver?.Close();
 
@@ -162,6 +152,12 @@ namespace ChatClientViewer
 
         public void InitUserBrowser()
         {
+            if (UserBrowser != null)
+            {
+                UserBrowser.LoadHtml(HtmlFormat.UserContainerHtml);
+                return;
+            }
+
             UserBrowser = new ChromiumWebBrowser("")
             {
                 Name = "UserBrowser"
@@ -174,6 +170,12 @@ namespace ChatClientViewer
 
         public void InitChatBrowser()
         {
+            if (ChatBrowser != null)
+            {
+                ChatBrowser.LoadHtml(HtmlFormat.ChatHtml);
+                return;
+            }
+
             ChatBrowser = new ChromiumWebBrowser("")
             {
                 Name = "ChatBrowser"
@@ -1098,7 +1100,10 @@ namespace ChatClientViewer
 
         private void BtnReStart_Click(object sender, EventArgs e)
         {
-            BackGroundCrawlingThread?.Abort();
+            InitUserBrowser();
+            InitChatBrowser();
+            InitDataMember();
+            InitThread();
 
             var ts1 = new ThreadStart(BackGroundCrawling);
             BackGroundCrawlingThread = new Thread(ts1)
@@ -1107,6 +1112,34 @@ namespace ChatClientViewer
             };
             BackGroundCrawlingThread.Start();
             SetLoadingPanelDisplay(true);
+        }
+
+        private void InitDataMember()
+        {
+            cUsers.Clear();
+            DelUsersQueue.Clear();
+            OutChatUsersQueue.Clear();
+            TmpNewUsersQueue.Clear();
+            InUsersQueue.Clear();
+            InChatUsersQueue.Clear();
+            cChatQueue.Clear();
+            nChatQueue.Clear();
+            jsonModels.Clear();
+        }
+
+        private void InitThread()
+        {
+            BackGroundCrawlingThread?.Abort();
+            GetUserTimer?.Stop();
+            GetUserTimer?.Close();
+            DataDisplayTimer?.Stop();
+            DataDisplayTimer.Close();
+            ChatDisplayTimer?.Stop();
+            ChatDisplayTimer?.Close();
+            BackGround1?.Abort();
+            BackGround1 = null;
+            BackGround2?.Abort();
+            BackGround2 = null;
         }
     }
 }
