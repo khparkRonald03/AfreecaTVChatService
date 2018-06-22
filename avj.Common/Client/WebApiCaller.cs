@@ -22,7 +22,7 @@ namespace ChatClientViewer
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<JsonModel> RunAsync(JsonModel jsonModel)
+        public async Task<JsonModel> GetMatchingModelAsync(JsonModel jsonModel)
         {
             try
             {
@@ -38,6 +38,26 @@ namespace ChatClientViewer
             {
                 string log = e.Message;
                 return null;
+            }
+
+        }
+
+        public async Task<string> CheckVersionAsync(string version)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync($"Matching/CheckVersion", version);
+
+                response.EnsureSuccessStatusCode();
+
+                // Deserialize the updated product from the response body.
+                var returnMessage = await response.Content.ReadAsAsync<string>();
+                return returnMessage;
+            }
+            catch (Exception e)
+            {
+                string log = e.Message;
+                return string.Empty;
             }
 
         }

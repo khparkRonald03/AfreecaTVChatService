@@ -17,6 +17,7 @@ using CefSharp;
 using CefSharp.WinForms;
 using System.ComponentModel;
 using System.Configuration;
+using System.Reflection;
 
 namespace ChatClientViewer
 {
@@ -97,6 +98,27 @@ namespace ChatClientViewer
             Bj.ID = LoginUserID;
         }
 
+        private string GetVersion()
+        {
+            try
+            {
+                Assembly assemObj = Assembly.GetExecutingAssembly();
+                Version v = assemObj.GetName().Version; // 현재 실행되는 어셈블리..dll의 버전 가져오기
+
+                int majorV = v.Major; // 주버전
+                int minorV = v.Minor; // 부버전
+                int buildV = v.Build; // 빌드번호
+                int revisionV = v.Revision; // 수정번호
+
+                var version = $"{majorV}.{minorV}.{buildV}.{revisionV}";
+                return version;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
         private void Main_Load(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(LoginUserID))
@@ -110,6 +132,12 @@ namespace ChatClientViewer
                 this.Close();
                 return;
             }
+
+
+            GetVersion();
+
+
+            ;
 
             (new ShowHelper()).ShowDialog();
 
@@ -514,10 +542,6 @@ namespace ChatClientViewer
         /// </summary>
         private void RemoveLeaveUserAndWebApiMatching()
         {
-            // 여긴 cUsers 이거 안들어간 상황
-            //if (cUsers == null || cUsers.Count <= 0)
-            //    return;
-
             if (TmpNewUsersQueue == null || TmpNewUsersQueue.Count <= 0)
                 return;
 
@@ -525,7 +549,7 @@ namespace ChatClientViewer
             var tmpInUsers = new List<UserModel>();
             var tmpOutUsers = new List<UserModel>();
             var tmpcUsers = new List<UserModel>();
-            var cUsersTemp = cUsers; // CloneList<UserModel>(cUsers);
+            var cUsersTemp = cUsers;
             lock (LockObject)
             {
                 // 입장 사용자 가져오기
@@ -544,11 +568,8 @@ namespace ChatClientViewer
                                    where nUser is null
                                    select cUser).ToList();
 
-                    //lock (LockObject)
-                    //{
                     DelUsersQueue.Enqueue(tmpOutUsers);
                     OutChatUsersQueue.Enqueue(tmpOutUsers);
-                    //}
                 }
 
                 // 퇴장 사용자 제거
@@ -557,36 +578,42 @@ namespace ChatClientViewer
                              select cUser).ToList();
 
             }
-            //lock (LockObject)
-            //{
             cUsers = tmpcUsers;
-            //}
-
-            ;
-
-            // test #####
-            //tmpInUsers = nUsers;
 
             // web api 매칭 요청
-            var returnJModel = Task.Run(() => CallWebApi(tmpInUsers)).Result;
-
-            //lock (LockObject)
-            //{
-                jsonModels.Enqueue(returnJModel);
-            //}
-
-            ;
+            var returnJModel = Task.Run(() => CallMatchingWebApi(tmpInUsers)).Result;
+            jsonModels.Enqueue(returnJModel);
         }
 
-        private async Task<JsonModel> CallWebApi(List<UserModel> userModels)
+        private async Task<JsonModel> CallMatchingWebApi(List<UserModel> userModels)
         {
-            var returnJModels = await webApiCaller.RunAsync(new JsonModel()
+            var returnJModels = await webApiCaller.GetMatchingModelAsync(new JsonModel()
             {
                 BjModel = Bj,
                 UserModels = userModels
             }).ConfigureAwait(true);
 
             return returnJModels;
+        }
+
+        private async void CallCheckVersionWebApi(string version)
+        {
+            var returnMessage = await webApiCaller.CheckVersionAsync(version).ConfigureAwait(true);
+            if(!string.IsNullOrEmpty(returnMessage))
+                ShowVersionMessage(returnMessage);
+        }
+
+        private void ShowVersionMessage(string message)
+        {
+            if (ChatBrowser.InvokeRequired)
+            {
+                var ci = new Control_Invoker_ParamStr(ShowVersionMessage);
+                this.BeginInvoke(ci, message);
+            }
+            else
+            {
+                MessageBoxEx.Show(message, "새 버전", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         #endregion
