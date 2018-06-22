@@ -33,6 +33,9 @@
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.ITContainer = new iTalk.iTalk_ThemeContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.LoadingPanel = new iTalk.iTalk_Panel();
+            this.iTalk_LinkLabel1 = new iTalk.iTalk_LinkLabel();
+            this.iTalk_ProgressIndicator1 = new iTalk.iTalk_ProgressIndicator();
             this.PlSetting = new iTalk.iTalk_Panel();
             this.ChkDisplayInOut = new iTalk.iTalk_CheckBox();
             this.ChkIsTop = new iTalk.iTalk_CheckBox();
@@ -44,6 +47,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.LoadingPanel.SuspendLayout();
             this.PlSetting.SuspendLayout();
             this.iTalk_Panel2.SuspendLayout();
             this.SuspendLayout();
@@ -90,6 +94,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.Color.Transparent;
+            this.splitContainer1.Panel1.Controls.Add(this.LoadingPanel);
             this.splitContainer1.Panel1.Controls.Add(this.PlSetting);
             this.splitContainer1.Panel1.ForeColor = System.Drawing.Color.Transparent;
             // 
@@ -99,6 +104,46 @@
             this.splitContainer1.Size = new System.Drawing.Size(334, 788);
             this.splitContainer1.SplitterDistance = 359;
             this.splitContainer1.TabIndex = 6;
+            // 
+            // LoadingPanel
+            // 
+            this.LoadingPanel.BackColor = System.Drawing.Color.White;
+            this.LoadingPanel.Controls.Add(this.iTalk_LinkLabel1);
+            this.LoadingPanel.Controls.Add(this.iTalk_ProgressIndicator1);
+            this.LoadingPanel.Location = new System.Drawing.Point(58, 206);
+            this.LoadingPanel.Name = "LoadingPanel";
+            this.LoadingPanel.Padding = new System.Windows.Forms.Padding(5);
+            this.LoadingPanel.Size = new System.Drawing.Size(219, 141);
+            this.LoadingPanel.TabIndex = 2;
+            this.LoadingPanel.Text = "iTalk_Panel1";
+            // 
+            // iTalk_LinkLabel1
+            // 
+            this.iTalk_LinkLabel1.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(101)))), ((int)(((byte)(202)))));
+            this.iTalk_LinkLabel1.AutoSize = true;
+            this.iTalk_LinkLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.iTalk_LinkLabel1.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.iTalk_LinkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.iTalk_LinkLabel1.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(225)))));
+            this.iTalk_LinkLabel1.Location = new System.Drawing.Point(10, 123);
+            this.iTalk_LinkLabel1.Name = "iTalk_LinkLabel1";
+            this.iTalk_LinkLabel1.Size = new System.Drawing.Size(198, 13);
+            this.iTalk_LinkLabel1.TabIndex = 3;
+            this.iTalk_LinkLabel1.TabStop = true;
+            this.iTalk_LinkLabel1.Text = "로딩 중입니다. 잠시만 기다려주십시오.";
+            this.iTalk_LinkLabel1.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(101)))), ((int)(((byte)(202)))));
+            // 
+            // iTalk_ProgressIndicator1
+            // 
+            this.iTalk_ProgressIndicator1.Location = new System.Drawing.Point(69, 23);
+            this.iTalk_ProgressIndicator1.MinimumSize = new System.Drawing.Size(80, 80);
+            this.iTalk_ProgressIndicator1.Name = "iTalk_ProgressIndicator1";
+            this.iTalk_ProgressIndicator1.P_AnimationColor = System.Drawing.Color.DimGray;
+            this.iTalk_ProgressIndicator1.P_AnimationSpeed = 100;
+            this.iTalk_ProgressIndicator1.P_BaseColor = System.Drawing.Color.DarkGray;
+            this.iTalk_ProgressIndicator1.Size = new System.Drawing.Size(80, 80);
+            this.iTalk_ProgressIndicator1.TabIndex = 2;
+            this.iTalk_ProgressIndicator1.Text = "iTalk_ProgressIndicator1";
             // 
             // PlSetting
             // 
@@ -217,6 +262,8 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.LoadingPanel.ResumeLayout(false);
+            this.LoadingPanel.PerformLayout();
             this.PlSetting.ResumeLayout(false);
             this.iTalk_Panel2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -235,6 +282,9 @@
         private iTalk.iTalk_CheckBox ChkDisplayInOut;
         private iTalk.iTalk_CheckBox ChkIsTop;
         private System.Windows.Forms.Button BtnReStart;
+        private iTalk.iTalk_Panel LoadingPanel;
+        private iTalk.iTalk_LinkLabel iTalk_LinkLabel1;
+        private iTalk.iTalk_ProgressIndicator iTalk_ProgressIndicator1;
     }
 }
 

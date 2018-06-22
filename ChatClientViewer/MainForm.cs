@@ -63,6 +63,7 @@ namespace ChatClientViewer
         Queue<JsonModel> jsonModels = new Queue<JsonModel>();
 
         delegate void Control_Invoker();
+        delegate void Control_Invoker_ParamBool(bool bl);
         delegate void Control_Invoker_ParamStr(string s);
         delegate void Control_Invoker_ParamStrs(string s1, string s2, string s3);
         delegate void Control_Invoker_ParamJsonModel(JsonModel jsonModel);
@@ -88,7 +89,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "gks2wl";
+                LoginUserID = "isung14";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -668,9 +669,6 @@ namespace ChatClientViewer
 
         }
 
-        /// <summary>
-        /// web api에서 받아온 데이터 현재 사용자모델에 추가
-        /// </summary>
         private void ApiDataToUserModel()
         {
             while (jsonModels.Count > 0)
@@ -745,9 +743,6 @@ namespace ChatClientViewer
             
         }
 
-        /// <summary>
-        /// 접속 사용자 화면에 리프레쉬
-        /// </summary>
         private void UsersRefresh()
         {
             if (InUsersQueue == null || InUsersQueue.Count <= 0)
@@ -869,6 +864,8 @@ namespace ChatClientViewer
                 {
                     UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanHtml });
                 }
+
+                SetLoadingPanelDisplay(false);
             }
         }
 
@@ -888,9 +885,6 @@ namespace ChatClientViewer
             }
         }
 
-        /// <summary>
-        /// 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
-        /// </summary>
         private void ChatRefresh()
         {
             if (cUsers == null || nChatQueue == null)
@@ -997,7 +991,6 @@ namespace ChatClientViewer
             }
         }
 
-
         private void SetChat(string html)
         {
             if (ChatBrowser.InvokeRequired)
@@ -1011,6 +1004,19 @@ namespace ChatClientViewer
                     ChatBrowser.ExecuteScriptAsync("AddChatHtml", new object[] { html });
             }
 
+        }
+
+        private void SetLoadingPanelDisplay(bool isShow)
+        {
+            if (LoadingPanel.InvokeRequired)
+            {
+                var ci = new Control_Invoker_ParamBool(SetLoadingPanelDisplay);
+                this.BeginInvoke(ci, isShow);
+            }
+            else
+            {
+                LoadingPanel.Visible = isShow;
+            }
         }
 
         private List<T> CloneList<T>(List<T> oldList)
@@ -1030,6 +1036,7 @@ namespace ChatClientViewer
             stream.Position = 0;
             return (T)formatter.Deserialize(stream);
         }
+
         #endregion
 
         private void BtnSetting_Click(object sender, EventArgs e)
@@ -1050,11 +1057,6 @@ namespace ChatClientViewer
 
         #region App.config 수정 / 가져오기
 
-        /// <summary>
-        /// App.config 파일 설정 데이터 가져오기
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         private string GetConfigData(string key)
         {
             try
@@ -1070,12 +1072,6 @@ namespace ChatClientViewer
             }
         }
 
-        /// <summary>
-        /// App.config 파일 설정 데이터 수정
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
         private bool SetConfigData(string key, string value)
         {
             try
