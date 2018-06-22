@@ -147,7 +147,6 @@ namespace ChatClientViewer
             
         }
 
-
         #region Web Browser Load
 
         public void InitUserBrowser()
@@ -207,22 +206,22 @@ namespace ChatClientViewer
             // 현재 방송 bj 수집
             GetBj();
 
+            int delayCnt = 0;
             // 접속 사용자 버튼 클릭 (접속 성공 시까지 무한 루프)
             while (true)
             {
+                delayCnt++;
                 if (ShowSetboxViewer())
                     break;
 
+                if (delayCnt > 20)
+                    SetDelayLabelDisplay(true);
                 Thread.Sleep(300);
             }
 
             GetUserTimer.Interval = 1000;
             GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
             GetUserTimer.Start();
-
-            //CallApiTimer.Interval = 2000;
-            //CallApiTimer.Elapsed += new ElapsedEventHandler(CallApiTimer_Elapsed);
-            //CallApiTimer.Start();
 
             var ts2 = new ThreadStart(CallApiTimer_Elapsed);
             BackGround1 = new Thread(ts2)
@@ -235,31 +234,12 @@ namespace ChatClientViewer
             DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
             DataDisplayTimer.Start();
 
-            //ChatDisplayTimer.Interval = 100;
-            //ChatDisplayTimer.Elapsed += new ElapsedEventHandler(ChatRefreshTimer_Elapsed);
-            //ChatDisplayTimer.Start();
-
             var ts3 = new ThreadStart(ChatRefreshTimer_Elapsed);
             BackGround2 = new Thread(ts3)
             {
                 IsBackground = true
             };
             BackGround2.Start();
-
-            //var ts2 = new ThreadStart(GetUserTimer_Elapsed);
-            //BackGround1 = new Thread(ts2)
-            //{
-            //    IsBackground = true
-            //};
-            //BackGround1.Start();
-
-            //var ts3 = new ThreadStart(UIRefreshTimer_Elapsed);
-            //BackGround2 = new Thread(ts3)
-            //{
-            //    IsBackground = true
-            //};
-            //BackGround2.Start();
-
         }
 
         // 접속 사용자 수집
@@ -987,6 +967,20 @@ namespace ChatClientViewer
             else
             {
                 LoadingPanel.Visible = isShow;
+                DelayLabel.Visible = false;
+            }
+        }
+
+        private void SetDelayLabelDisplay(bool isShow)
+        {
+            if (DelayLabel.InvokeRequired)
+            {
+                var ci = new Control_Invoker_ParamBool(SetDelayLabelDisplay);
+                this.BeginInvoke(ci, isShow);
+            }
+            else
+            {
+                DelayLabel.Visible = isShow;
             }
         }
 

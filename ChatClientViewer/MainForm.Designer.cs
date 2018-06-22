@@ -43,6 +43,7 @@
             this.iTalk_Panel2 = new iTalk.iTalk_Panel();
             this.BtnReStart = new System.Windows.Forms.Button();
             this.BtnSetting = new System.Windows.Forms.Button();
+            this.DelayLabel = new iTalk.iTalk_LinkLabel();
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -108,6 +109,7 @@
             // LoadingPanel
             // 
             this.LoadingPanel.BackColor = System.Drawing.Color.White;
+            this.LoadingPanel.Controls.Add(this.DelayLabel);
             this.LoadingPanel.Controls.Add(this.iTalk_LinkLabel1);
             this.LoadingPanel.Controls.Add(this.iTalk_ProgressIndicator1);
             this.LoadingPanel.Location = new System.Drawing.Point(58, 206);
@@ -125,7 +127,7 @@
             this.iTalk_LinkLabel1.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.iTalk_LinkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.iTalk_LinkLabel1.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(225)))));
-            this.iTalk_LinkLabel1.Location = new System.Drawing.Point(10, 115);
+            this.iTalk_LinkLabel1.Location = new System.Drawing.Point(10, 107);
             this.iTalk_LinkLabel1.Name = "iTalk_LinkLabel1";
             this.iTalk_LinkLabel1.Size = new System.Drawing.Size(198, 13);
             this.iTalk_LinkLabel1.TabIndex = 3;
@@ -135,7 +137,7 @@
             // 
             // iTalk_ProgressIndicator1
             // 
-            this.iTalk_ProgressIndicator1.Location = new System.Drawing.Point(69, 23);
+            this.iTalk_ProgressIndicator1.Location = new System.Drawing.Point(69, 19);
             this.iTalk_ProgressIndicator1.MinimumSize = new System.Drawing.Size(80, 80);
             this.iTalk_ProgressIndicator1.Name = "iTalk_ProgressIndicator1";
             this.iTalk_ProgressIndicator1.P_AnimationColor = System.Drawing.Color.DimGray;
@@ -245,6 +247,23 @@
             this.BtnSetting.MouseLeave += new System.EventHandler(this.BtnSetting_MouseLeave);
             this.BtnSetting.MouseHover += new System.EventHandler(this.BtnSetting_MouseHover);
             // 
+            // DelayLabel
+            // 
+            this.DelayLabel.ActiveLinkColor = System.Drawing.Color.Red;
+            this.DelayLabel.AutoSize = true;
+            this.DelayLabel.BackColor = System.Drawing.Color.Transparent;
+            this.DelayLabel.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.DelayLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.DelayLabel.LinkColor = System.Drawing.Color.Red;
+            this.DelayLabel.Location = new System.Drawing.Point(21, 122);
+            this.DelayLabel.Name = "DelayLabel";
+            this.DelayLabel.Size = new System.Drawing.Size(176, 13);
+            this.DelayLabel.TabIndex = 3;
+            this.DelayLabel.TabStop = true;
+            this.DelayLabel.Text = "로딩 지연 시 재시작하여 주십시오.";
+            this.DelayLabel.Visible = false;
+            this.DelayLabel.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(101)))), ((int)(((byte)(202)))));
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -286,6 +305,7 @@
         private iTalk.iTalk_Panel LoadingPanel;
         private iTalk.iTalk_LinkLabel iTalk_LinkLabel1;
         private iTalk.iTalk_ProgressIndicator iTalk_ProgressIndicator1;
+        private iTalk.iTalk_LinkLabel DelayLabel;
     }
 }
 
