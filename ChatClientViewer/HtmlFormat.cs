@@ -345,7 +345,7 @@ namespace ChatClientViewer
         /// <summary>
         /// 로딩 완료 메시지
         /// </summary>
-        public static string ChatHtmlStartMessage = "<p class='notice out fanclub' style='color:#0054FF !important'><a style='color:#0054FF !important'>{0}</a>님 ABJ Chat 이 시작 되었습니다.</p>";
+        public static string ChatHtmlStartMessage = "<p class='notice out fanclub' style='color:#0054FF !important'><a style='color:#0054FF !important'>{0}</a> 님 ABJ Chat 이 시작 되었습니다.</p>";
         #endregion
     }
 }

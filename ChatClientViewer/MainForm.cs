@@ -89,7 +89,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "afworldcup02";
+                LoginUserID = "kscry12";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -217,13 +217,12 @@ namespace ChatClientViewer
             }
 
             // 현재 방송 bj 수집
-            if (GetBj())
-            {
-                // 로딩 완료
-                var html = string.Format(HtmlFormat.ChatHtmlStartMessage, Bj.Nic);
-                SetChat(html);
-                SetLoadingPanelDisplay(false);
-            }
+            GetBj();
+
+            // 로딩 완료
+            var html = string.Format(HtmlFormat.ChatHtmlStartMessage, Bj.Nic);
+            SetChat(html);
+            SetLoadingPanelDisplay(false);
 
             GetUserTimer.Interval = 1000;
             GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
