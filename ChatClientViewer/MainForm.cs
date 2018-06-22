@@ -309,20 +309,8 @@ namespace ChatClientViewer
         private void InitProc()
         {
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
-            //ChromeDriver.ExecuteJS("window.resizeTo(1024, 768);");
-
-            //for (int Idx = 0; Idx < 4; Idx++)
-            //{
-            //    Thread.Sleep(100);
-            //    // 플래쉬 설치
-
-            //    ChromeDriver.ClickTag(ElementsSelectType.XPath, "//*[@id='livePlayer']/dl/dd/a");
-            //    //ChromeDriver.ExecuteJS("$('#livePlayer > dl > dd > a').trigger('click');");
-            //    ChromeDriver.ClickAlert(out string alertText);
-            //}
-
-            //return;
-            Thread.Sleep(200);
+            
+            Thread.Sleep(100);
             for (int Idx = 0; Idx < 6; Idx++)
             {
                 var streamingType = ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[6]/div[2]/div[1]/div/button");
