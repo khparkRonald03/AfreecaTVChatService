@@ -342,6 +342,10 @@ namespace ChatClientViewer
         ///</summary>
         public static string ChatHtmlOutUser = "<p class='notice out fanclub' style='color:red !important'><a style='color:red !important' user_id='{0}' user_nick='{1}'>{1}<em>({0})</em></a>님이 대화방에서 나가셨습니다.</p>";
 
+        /// <summary>
+        /// 로딩 완료 메시지
+        /// </summary>
+        public static string ChatHtmlStartMessage = "<p class='notice out fanclub' style='color:#0054FF !important'>로딩이 완료 되었습니다. 시청자 정보를 불러오기 시작합니다.</p>";
         #endregion
     }
 }

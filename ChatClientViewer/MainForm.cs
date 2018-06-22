@@ -89,7 +89,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "isung14";
+                LoginUserID = "rkdtndls11";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -203,9 +203,6 @@ namespace ChatClientViewer
             // 페이지 상태 초기화
             InitProc();
 
-            // 현재 방송 bj 수집
-            GetBj();
-
             int delayCnt = 0;
             // 접속 사용자 버튼 클릭 (접속 성공 시까지 무한 루프)
             while (true)
@@ -217,6 +214,14 @@ namespace ChatClientViewer
                 if (delayCnt > 20)
                     SetDelayLabelDisplay(true);
                 Thread.Sleep(300);
+            }
+
+            // 현재 방송 bj 수집
+            if (GetBj())
+            {
+                // 로딩 완료
+                SetChat(HtmlFormat.ChatHtmlStartMessage);
+                SetLoadingPanelDisplay(false);
             }
 
             GetUserTimer.Interval = 1000;
@@ -355,25 +360,33 @@ namespace ChatClientViewer
             return new List<BeautifulNode>();
         }
 
-        private void GetBj()
+        private bool GetBj()
         {
-            if (Bj != null && !string.IsNullOrEmpty(Bj.ID))
-                return;
-
-            var fanNode = GetNode("return document.getElementById('lv_p_bj').innerHTML", "//a");
-            if (fanNode == null)
-                return;
-
-            var html = fanNode.Html;
-            if (html == null)
-                return;
-
-            var bfs = html.Split(new string[] { "<span>", "</span>", "<em>", "</em>" }, StringSplitOptions.RemoveEmptyEntries);
-            if (bfs != null && bfs.Length == 2)
+            for (int Idx = 0; Idx < 4; Idx++)
             {
-                Bj.ID = bfs[1];
-                Bj.Nic = bfs[0];
+                if (Bj != null)
+                    return false;
+
+                var bjNode = GetNode("return document.getElementById('lv_p_bj').innerHTML", "//a");
+                if (bjNode == null)
+                    return false;
+
+                var html = bjNode.Html;
+                if (html == null)
+                    return false;
+
+                var bfs = html.Split(new string[] { "<span>", "</span>", "<em>", "</em>" }, StringSplitOptions.RemoveEmptyEntries);
+                if (bfs != null && bfs.Length == 2)
+                {
+                    Bj.ID = bfs[0];
+                    Bj.Nic = bfs[1];
+                    return true;
+                }
+
+                Thread.Sleep(200);
             }
+
+            return false;
         }
 
         /// <summary>
@@ -816,7 +829,7 @@ namespace ChatClientViewer
                     UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanHtml });
                 }
 
-                SetLoadingPanelDisplay(false);
+                //SetLoadingPanelDisplay(false);
             }
         }
 
