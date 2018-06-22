@@ -44,6 +44,7 @@
             this.BtnReStart = new System.Windows.Forms.Button();
             this.BtnSetting = new System.Windows.Forms.Button();
             this.DelayLabel = new iTalk.iTalk_LinkLabel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -223,6 +224,7 @@
             this.BtnReStart.Name = "BtnReStart";
             this.BtnReStart.Size = new System.Drawing.Size(28, 23);
             this.BtnReStart.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.BtnReStart, "재시작");
             this.BtnReStart.UseVisualStyleBackColor = true;
             this.BtnReStart.Click += new System.EventHandler(this.BtnReStart_Click);
             this.BtnReStart.MouseLeave += new System.EventHandler(this.BtnReStart_MouseLeave);
@@ -242,6 +244,7 @@
             this.BtnSetting.Name = "BtnSetting";
             this.BtnSetting.Size = new System.Drawing.Size(28, 23);
             this.BtnSetting.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.BtnSetting, "설정");
             this.BtnSetting.UseVisualStyleBackColor = true;
             this.BtnSetting.Click += new System.EventHandler(this.BtnSetting_Click);
             this.BtnSetting.MouseLeave += new System.EventHandler(this.BtnSetting_MouseLeave);
@@ -262,7 +265,11 @@
             this.DelayLabel.TabStop = true;
             this.DelayLabel.Text = "로딩 지연 시 재시작하여 주십시오.";
             this.DelayLabel.Visible = false;
-            this.DelayLabel.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(101)))), ((int)(((byte)(202)))));
+            this.DelayLabel.VisitedLinkColor = System.Drawing.Color.Red;
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.IsBalloon = true;
             // 
             // Main
             // 
@@ -306,6 +313,7 @@
         private iTalk.iTalk_LinkLabel iTalk_LinkLabel1;
         private iTalk.iTalk_ProgressIndicator iTalk_ProgressIndicator1;
         private iTalk.iTalk_LinkLabel DelayLabel;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
