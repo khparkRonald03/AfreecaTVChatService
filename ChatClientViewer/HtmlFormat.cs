@@ -157,12 +157,12 @@ namespace ChatClientViewer
         /// <summary>
         /// BJ 정보 팝업 하위요소 1
         /// </summary>
-        public static string BjInfoBjPopUpContents1 = "<li style='font-weight:bold;width:160px'><div style='font-weight:bold;display:inline-block; width:80px;'>{0}:</div><spann style='color: #FF5E00'>{1}위</spann></li>";
+        public static string BjInfoBjPopUpContents1 = "<li style='font-weight:bold;width:160px'><div style='font-weight:bold;display:inline-block; width:80px;'>{0}:</div><spann style='color: #FF5E00'>{1}&nbsp;</spann>위</li>";
 
         /// <summary>
         /// BJ 정보 팝업 하위요소 2
         /// </summary>
-        public static string BjInfoBjPopUpContents2 = "<li style='font-weight:bold;width:160px'><div style='font-weight:bold;display:inline-block; width:80px;'>{0}:</div><spann style='color: #FF5E00'>{1}{2}</spann></li>";
+        public static string BjInfoBjPopUpContents2 = "<li style='font-weight:bold;width:160px'><div style='font-weight:bold;display:inline-block; width:80px;'>{0}:</div><spann style='color: #FF5E00'>{1}&nbsp;</spann>{2}</li>";
 
         #endregion
 
@@ -345,7 +345,7 @@ namespace ChatClientViewer
         /// <summary>
         /// 로딩 완료 메시지
         /// </summary>
-        public static string ChatHtmlStartMessage = "<p class='notice out fanclub' style='color:#0054FF !important'>로딩이 완료 되었습니다. 시청자 정보를 불러오기 시작합니다.</p>";
+        public static string ChatHtmlStartMessage = "<p class='notice out fanclub' style='color:#0054FF !important'><a style='color:#0054FF !important'>{0}</a>님 ABJ Chat 이 시작 되었습니다.</p>";
         #endregion
     }
 }

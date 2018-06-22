@@ -89,7 +89,7 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "rkdtndls11";
+                LoginUserID = "afworldcup02";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "test";
@@ -220,7 +220,8 @@ namespace ChatClientViewer
             if (GetBj())
             {
                 // 로딩 완료
-                SetChat(HtmlFormat.ChatHtmlStartMessage);
+                var html = string.Format(HtmlFormat.ChatHtmlStartMessage, Bj.Nic);
+                SetChat(html);
                 SetLoadingPanelDisplay(false);
             }
 
@@ -350,9 +351,9 @@ namespace ChatClientViewer
 
         private bool GetBj()
         {
-            for (int Idx = 0; Idx < 10; Idx++)
+            for (int Idx = 0; Idx < 30; Idx++)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(200);
                 if (Bj == null)
                     return false;
 
