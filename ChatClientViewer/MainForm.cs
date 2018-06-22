@@ -362,18 +362,19 @@ namespace ChatClientViewer
 
         private bool GetBj()
         {
-            for (int Idx = 0; Idx < 4; Idx++)
+            for (int Idx = 0; Idx < 10; Idx++)
             {
-                if (Bj != null)
+                Thread.Sleep(100);
+                if (Bj == null)
                     return false;
 
                 var bjNode = GetNode("return document.getElementById('lv_p_bj').innerHTML", "//a");
                 if (bjNode == null)
-                    return false;
+                    continue;
 
                 var html = bjNode.Html;
-                if (html == null)
-                    return false;
+                if (string.IsNullOrEmpty(html))
+                    continue;
 
                 var bfs = html.Split(new string[] { "<span>", "</span>", "<em>", "</em>" }, StringSplitOptions.RemoveEmptyEntries);
                 if (bfs != null && bfs.Length == 2)
@@ -382,8 +383,6 @@ namespace ChatClientViewer
                     Bj.Nic = bfs[1];
                     return true;
                 }
-
-                Thread.Sleep(200);
             }
 
             return false;
