@@ -195,104 +195,69 @@ namespace ChatClientViewer
             // test ###########
             ChromeDriver = new Controller(false, StartupPath);
 
-            // 먹통 됐을때 다시 시작
-            reStart:
-
             var startResult = ChromeDriver.Start();
             if (!startResult.ResultValue)
-            {
-                // 
                 return;
-            }
 
             // 페이지 상태 초기화
             InitProc();
-            bool isFirst = true;
-            bool isStart = false;
-            int startInterval = 10;
+
+            // 현재 방송 bj 수집
+            GetBj();
+
+            // 접속 사용자 버튼 클릭 (접속 성공 시까지 무한 루프)
             while (true)
             {
-                Thread.Sleep(4000);
-                //광고스킵
-                //if (!isStart)
-                //    ClickPromotionBtnSkip();
+                if (ShowSetboxViewer())
+                    break;
 
-                // 채팅 가져오기
-                //var ttt0 = GetChatNodes("return document.getElementById('chat_memoyo').innerHTML", "//dl");
-                var pageSource = ChromeDriver.GetPageSource();
-                var ttt0 = GetChatNodes(pageSource.ResultValue, "//*[@id='chat_memoyo']/dl");
-
-                if (ttt0.Count <= 1)
-                {
-                    Thread.Sleep(300);
-                    startInterval--;
-                    if (startInterval == 0)
-                    {
-                        ChromeDriver.Close();
-                        goto reStart;
-                    }
-                    continue;
-                }
-
-                // 현재 방송 bj 수집
-                if (isFirst)
-                {
-                    GetBj();
-                    isFirst = false;
-                }
-
-                isStart = true;
-
-                // 접속 사용자 버튼 클릭
-                if (!ShowSetboxViewer())
-                    continue;
-
-                GetUserTimer.Interval = 1000;
-                GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
-                GetUserTimer.Start();
-
-                //CallApiTimer.Interval = 2000;
-                //CallApiTimer.Elapsed += new ElapsedEventHandler(CallApiTimer_Elapsed);
-                //CallApiTimer.Start();
-
-                var ts2 = new ThreadStart(CallApiTimer_Elapsed);
-                BackGround1 = new Thread(ts2)
-                {
-                    IsBackground = true
-                };
-                BackGround1.Start();
-
-                DataDisplayTimer.Interval = 100;
-                DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
-                DataDisplayTimer.Start();
-
-                //ChatDisplayTimer.Interval = 100;
-                //ChatDisplayTimer.Elapsed += new ElapsedEventHandler(ChatRefreshTimer_Elapsed);
-                //ChatDisplayTimer.Start();
-
-                var ts3 = new ThreadStart(ChatRefreshTimer_Elapsed);
-                BackGround2 = new Thread(ts3)
-                {
-                    IsBackground = true
-                };
-                BackGround2.Start();
-
-                //var ts2 = new ThreadStart(GetUserTimer_Elapsed);
-                //BackGround1 = new Thread(ts2)
-                //{
-                //    IsBackground = true
-                //};
-                //BackGround1.Start();
-
-                //var ts3 = new ThreadStart(UIRefreshTimer_Elapsed);
-                //BackGround2 = new Thread(ts3)
-                //{
-                //    IsBackground = true
-                //};
-                //BackGround2.Start();
-
-                break;
+                Thread.Sleep(300);
             }
+
+            GetUserTimer.Interval = 1000;
+            GetUserTimer.Elapsed += new ElapsedEventHandler(GetUserTimer_Elapsed);
+            GetUserTimer.Start();
+
+            //CallApiTimer.Interval = 2000;
+            //CallApiTimer.Elapsed += new ElapsedEventHandler(CallApiTimer_Elapsed);
+            //CallApiTimer.Start();
+
+            var ts2 = new ThreadStart(CallApiTimer_Elapsed);
+            BackGround1 = new Thread(ts2)
+            {
+                IsBackground = true
+            };
+            BackGround1.Start();
+
+            DataDisplayTimer.Interval = 100;
+            DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
+            DataDisplayTimer.Start();
+
+            //ChatDisplayTimer.Interval = 100;
+            //ChatDisplayTimer.Elapsed += new ElapsedEventHandler(ChatRefreshTimer_Elapsed);
+            //ChatDisplayTimer.Start();
+
+            var ts3 = new ThreadStart(ChatRefreshTimer_Elapsed);
+            BackGround2 = new Thread(ts3)
+            {
+                IsBackground = true
+            };
+            BackGround2.Start();
+
+            //var ts2 = new ThreadStart(GetUserTimer_Elapsed);
+            //BackGround1 = new Thread(ts2)
+            //{
+            //    IsBackground = true
+            //};
+            //BackGround1.Start();
+
+            //var ts3 = new ThreadStart(UIRefreshTimer_Elapsed);
+            //BackGround2 = new Thread(ts3)
+            //{
+            //    IsBackground = true
+            //};
+            //BackGround2.Start();
+
         }
 
         // 접속 사용자 수집
@@ -370,9 +335,13 @@ namespace ChatClientViewer
             //}
 
             //return;
-            Thread.Sleep(400);
+            Thread.Sleep(200);
             for (int Idx = 0; Idx < 6; Idx++)
             {
+                var streamingType = ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[6]/div[2]/div[1]/div/button");
+                if (!string.IsNullOrEmpty(streamingType.ResultValue) && streamingType.ResultValue == "HTML5")
+                    break;
+
                 ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > button').click()");
                 Thread.Sleep(100);
                 ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box > div > button').click()");
@@ -1125,6 +1094,19 @@ namespace ChatClientViewer
         private void BtnReStart_MouseLeave(object sender, EventArgs e)
         {
             BtnReStart.ImageIndex = 6;
+        }
+
+        private void BtnReStart_Click(object sender, EventArgs e)
+        {
+            BackGroundCrawlingThread?.Abort();
+
+            var ts1 = new ThreadStart(BackGroundCrawling);
+            BackGroundCrawlingThread = new Thread(ts1)
+            {
+                IsBackground = true
+            };
+            BackGroundCrawlingThread.Start();
+            SetLoadingPanelDisplay(true);
         }
     }
 }

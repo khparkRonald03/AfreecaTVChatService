@@ -125,7 +125,7 @@
             this.iTalk_LinkLabel1.Font = new System.Drawing.Font("Segoe UI", 8F);
             this.iTalk_LinkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.iTalk_LinkLabel1.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(225)))));
-            this.iTalk_LinkLabel1.Location = new System.Drawing.Point(10, 123);
+            this.iTalk_LinkLabel1.Location = new System.Drawing.Point(10, 115);
             this.iTalk_LinkLabel1.Name = "iTalk_LinkLabel1";
             this.iTalk_LinkLabel1.Size = new System.Drawing.Size(198, 13);
             this.iTalk_LinkLabel1.TabIndex = 3;
@@ -222,6 +222,7 @@
             this.BtnReStart.Size = new System.Drawing.Size(28, 23);
             this.BtnReStart.TabIndex = 1;
             this.BtnReStart.UseVisualStyleBackColor = true;
+            this.BtnReStart.Click += new System.EventHandler(this.BtnReStart_Click);
             this.BtnReStart.MouseLeave += new System.EventHandler(this.BtnReStart_MouseLeave);
             this.BtnReStart.MouseHover += new System.EventHandler(this.BtnReStart_MouseHover);
             // 
