@@ -12,7 +12,6 @@ namespace avj.BizDac
     {
         public RankCollectorSettingsModel GetSettings(string sqlQuery)
         {
-            //목록데이터반환
             return GetDataModel<RankCollectorSettingsModel>(sqlQuery);
         }
 

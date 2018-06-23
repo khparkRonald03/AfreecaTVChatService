@@ -15,6 +15,10 @@ namespace DataModels
 
         public int EndPageNum { get; set; }
 
+        public string ClientVersion { get; set; }
+
+        public string AbjIDSplitString { get; set; }
+
         public DateTime? LastActionDate { get; set; }
     }
 }

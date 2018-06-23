@@ -23,5 +23,13 @@ namespace avj.BizDac
             var result = Dac.GetAllG5_memberModels(query);
             return result;
         }
+
+        public List<G5_memberModel> GetG5_memberModelsByAbjID(string abjID)
+        {
+            string query = string.Format(G5_memberQuery.SelectAllG5_memberByAbjID, abjID);
+
+            var result = Dac.GetAllG5_memberModels(query);
+            return result;
+        }
     }
 }

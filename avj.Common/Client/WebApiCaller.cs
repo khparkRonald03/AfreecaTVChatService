@@ -42,7 +42,7 @@ namespace ChatClientViewer
 
         }
 
-        public async Task<string> CheckVersionAsync(string version)
+        public async Task<JsonModel> CheckVersionAsync(JsonModel version)
         {
             try
             {
@@ -51,13 +51,13 @@ namespace ChatClientViewer
                 response.EnsureSuccessStatusCode();
 
                 // Deserialize the updated product from the response body.
-                var returnMessage = await response.Content.ReadAsAsync<string>();
+                var returnMessage = await response.Content.ReadAsAsync<JsonModel>();
                 return returnMessage;
             }
             catch (Exception e)
             {
                 string log = e.Message;
-                return string.Empty;
+                return null;
             }
 
         }

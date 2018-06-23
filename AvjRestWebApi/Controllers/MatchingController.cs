@@ -1,4 +1,5 @@
-﻿using AvjRestWebApi.DataCache;
+﻿using avj.BizDac;
+using AvjRestWebApi.DataCache;
 using DataModels;
 using System;
 using System.Collections.Generic;
@@ -26,12 +27,7 @@ namespace AvjRestWebApi.Controllers
             if (users == null || users.Count <= 0)
                 return null;
 
-            // bj 확인 -> 테스트때는 
-            //var G5Member = G5_memberDataCache.Instance.GetG5MemberModels;
-
-            //if (!G5Member.Any(g => g.mb_id == bj.ID))
-            //    return null;
-
+            // 여기는 bj 필터 -> jsonModel에 필터할 값 bj아이디 넣기
 
             var result = new JsonModel
             {
@@ -214,6 +210,76 @@ namespace AvjRestWebApi.Controllers
             });
 
             return clientUsers;
+        }
+
+        [HttpPost]
+        [Route("Matching/CheckVersion")]
+        public JsonModel CheckVersion(JsonModel jsonModel)
+        {
+            if (jsonModel == null)
+                return null;
+
+            if (jsonModel.BjModel == null)
+                return null;
+
+            if (string.IsNullOrEmpty(jsonModel.BjModel.LoginID))
+                return null;
+
+            var settingBiz = new BizRankCollectorSettings();
+            var setting = settingBiz.GetSettings();
+
+            var loginIdArray = jsonModel.BjModel.LoginID.Split(new string[] { setting.AbjIDSplitString }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (loginIdArray.Length == 1)
+            {
+                jsonModel.BjModel.LoginID2 = loginIdArray[0];
+                jsonModel.BjModel.ChatID = loginIdArray[0];
+            }
+            else if (loginIdArray.Length == 2)
+            {
+                jsonModel.BjModel.LoginID2 = loginIdArray[1];
+                jsonModel.BjModel.ChatID = loginIdArray[0];
+            }
+
+            var g5Biz = new BizG5_member();
+            var result = g5Biz.GetG5_memberModelsByAbjID(jsonModel.BjModel.LoginID2);
+
+            if (result != null && result.Count > 0)
+            {
+                var member = result.FirstOrDefault();
+
+                var level = member.mb_level;
+                var date = member.mb_3;
+                DateTime.TryParse(date, out DateTime expireDate);
+                var days = (DateTime.Now - expireDate).Days;
+
+                if (level >= 4)
+                {
+                    jsonModel.BjModel.CertificationFlag = true;
+                }
+                else if (level < 4)
+                {
+                    jsonModel.BjModel.CertificationFlag = false;
+                    jsonModel.BjModel.ExpireMessage = "사용기간이 만료되어 프로그램이 종료 됩니다.";
+                }
+                if (string.IsNullOrEmpty(date) || days > 0)
+                {
+                    // 만료
+                    jsonModel.BjModel.ExpireFlag = true;
+                    jsonModel.BjModel.ExpireMessage = "사용기간이 만료되어 프로그램이 종료 됩니다.";
+                }
+                else
+                {
+                    jsonModel.BjModel.IsNewUpload = true;
+                    jsonModel.BjModel.VersionMessage = "새 버전이 업로드 되었습니다. \r\n사이트에서 새 버전을 다운받아주세요.";
+                }
+
+                jsonModel.BjModel.ExpireDate = expireDate;
+                jsonModel.BjModel.ClientLevel = member.mb_level;
+
+            }
+
+            return jsonModel;
         }
     }
 }

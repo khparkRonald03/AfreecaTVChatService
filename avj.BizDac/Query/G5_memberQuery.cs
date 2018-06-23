@@ -6,5 +6,11 @@
             SELECT *
               FROM `abjchat`.`g5_member`;
             ";
+
+        public static string SelectAllG5_memberByAbjID = @"
+            SELECT *
+              FROM `abjchat`.`g5_member`
+             WHERE mb_1 = '{0}';
+            ";
     }
 }

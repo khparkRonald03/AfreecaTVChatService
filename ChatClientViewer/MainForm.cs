@@ -66,6 +66,7 @@ namespace ChatClientViewer
         delegate void Control_Invoker();
         delegate void Control_Invoker_ParamBool(bool bl);
         delegate void Control_Invoker_ParamStr(string s);
+        delegate void Control_Invoker_ParamMsgBox(string msg, string title, MessageBoxButtons buttons, MessageBoxIcon icon);
         delegate void Control_Invoker_ParamStrs(string s1, string s2, string s3);
         delegate void Control_Invoker_ParamJsonModel(JsonModel jsonModel);
         delegate void Control_Invoker_ParamUserModles(List<UserModel> userModels);
@@ -96,6 +97,8 @@ namespace ChatClientViewer
                 LoginuserPW = "test";
 #endif
             Bj.ID = LoginUserID;
+
+            CallCheckVersionWebApi();
         }
 
         private string GetVersion()
@@ -132,12 +135,6 @@ namespace ChatClientViewer
                 this.Close();
                 return;
             }
-
-
-            GetVersion();
-
-
-            ;
 
             (new ShowHelper()).ShowDialog();
 
@@ -596,23 +593,58 @@ namespace ChatClientViewer
             return returnJModels;
         }
 
-        private async void CallCheckVersionWebApi(string version)
+        private async void CallCheckVersionWebApi()
         {
+            var version = new JsonModel
+            {
+                BjModel = new BjModel()
+                {
+                    LoginID = LoginUserID,
+                    ClientVersion = GetVersion()
+                }
+            };
+
             var returnMessage = await webApiCaller.CheckVersionAsync(version).ConfigureAwait(true);
-            if(!string.IsNullOrEmpty(returnMessage))
-                ShowVersionMessage(returnMessage);
+
+            if (returnMessage == null || returnMessage.BjModel == null)
+            {
+                ShowMessageBox("인증이 실패 되어 프로그램이 종료 됩니다.", "인증 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                this.Close();
+                return;
+            }
+
+            if (!returnMessage.BjModel.CertificationFlag)
+            {
+                ShowMessageBox(returnMessage.BjModel.CertificationMessage, "인증 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                this.Close();
+                return;
+            }
+
+            if (returnMessage.BjModel.ExpireFlag)
+            {
+                // 만료 결제를 하여주십시오.
+                ShowMessageBox(returnMessage.BjModel.ExpireMessage, "사용기간 만료", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                this.Close();
+                return;
+            }
+
+            if (returnMessage.BjModel.IsNewUpload)
+            {
+                ShowMessageBox(returnMessage.BjModel.VersionMessage, "버전 확인", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
         }
 
-        private void ShowVersionMessage(string message)
+        private void ShowMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon msgIcon)
         {
             if (ChatBrowser.InvokeRequired)
             {
-                var ci = new Control_Invoker_ParamStr(ShowVersionMessage);
-                this.BeginInvoke(ci, message);
+                var ci = new Control_Invoker_ParamMsgBox(ShowMessageBox);
+                this.BeginInvoke(ci, message, title, buttons, msgIcon);
             }
             else
             {
-                MessageBoxEx.Show(message, "새 버전", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxEx.Show(message, title, MessageBoxButtons.OK, msgIcon);
             }
         }
 

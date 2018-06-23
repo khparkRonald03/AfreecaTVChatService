@@ -36,5 +36,77 @@ namespace DataModels
         /// </summary>
         [DataMember(Name = "IconUrl")]
         public string IconUrl { get; set; }
+
+        /// <summary>
+        /// 클라이언트 버전
+        /// </summary>
+        [DataMember(Name = "ClientVersion")]
+        public string ClientVersion { get; set; }
+
+        /// <summary>
+        /// 클라이언트 버전 업로드 여부
+        /// </summary>
+        [DataMember(Name = "IsNewUpload")]
+        public bool IsNewUpload { get; set; }
+
+        /// <summary>
+        /// 클라이언트 버전 업로드 여부
+        /// </summary>
+        [DataMember(Name = "VersionMessage")]
+        public string VersionMessage { get; set; }
+
+        /// <summary>
+        /// 클라이언트 레벨
+        /// </summary>
+        [DataMember(Name = "ClientLevel")]
+        public int ClientLevel { get; set; }
+
+        /// <summary>
+        /// 로그인 아이디
+        /// </summary>
+        [DataMember(Name = "LoginID")]
+        public string LoginID { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [DataMember(Name = "ChatID")]
+        public string ChatID { get; set; }
+
+        /// <summary>
+        /// 로그인 아이디
+        /// </summary>
+        [DataMember(Name = "LoginID2")]
+        public string LoginID2 { get; set; }
+
+        /// <summary>
+        /// 만료 여부
+        /// </summary>
+        [DataMember(Name = "ExpireFlag")]
+        public bool ExpireFlag { get; set; }
+
+        /// <summary>
+        /// 인증 여부
+        /// </summary>
+        [DataMember(Name = "FaildFalg")]
+        public bool CertificationFlag { get; set; }
+
+        /// <summary>
+        /// 인증 메시지
+        /// </summary>
+        [DataMember(Name = "CertificationMessage")]
+        public string CertificationMessage { get; set; }
+
+        /// <summary>
+        /// 만료 여부
+        /// </summary>
+        [DataMember(Name = "ExpireMessage")]
+        public string ExpireMessage { get; set; }
+
+        /// <summary>
+        /// 만료일
+        /// </summary>
+        [DataMember(Name = "ExpireDate")]
+        public DateTime? ExpireDate { get; set; }
     }
 }
