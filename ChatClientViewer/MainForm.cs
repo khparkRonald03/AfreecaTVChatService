@@ -42,7 +42,7 @@ namespace ChatClientViewer
         string ChatID { get; set; } = string.Empty;
         string LoginUserID { get; set; } = string.Empty;
         string LoginuserPW { get; set; } = string.Empty;
-        bool? IsCert { get; set; }
+        bool IsCert { get; set; }
         ChromiumWebBrowser UserBrowser { get; set; }
         ChromiumWebBrowser ChatBrowser { get; set; }
 
@@ -91,12 +91,12 @@ namespace ChatClientViewer
             }
 
 #if DEBUG
-            // test #####
-            if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "kscry12";
+            //// test #####
+            //if (string.IsNullOrEmpty(LoginUserID))
+            //    LoginUserID = "kscry12";
 
-            if (string.IsNullOrEmpty(LoginuserPW))
-                LoginuserPW = "test";
+            //if (string.IsNullOrEmpty(LoginuserPW))
+            //    LoginuserPW = "test";
 #endif
             Bj.ID = LoginUserID;
         }
@@ -230,7 +230,7 @@ namespace ChatClientViewer
             // 체크 까지 기다리기
             while(true)
             {
-                if (IsCert != null)
+                if (IsCert)
                     break;
 
                 Thread.Sleep(200);
@@ -949,9 +949,7 @@ namespace ChatClientViewer
             var tmpnChats = new List<ChatModel>();
             var check = new List<ChatModel>();
             var cChatQueueTemp = cChatQueue;
-            //lock (LockObject)
-            //{
-            // test #####
+            
             // 접속 사용자 채팅만 가져오기
             userJoinChats = (from nChat in nChatQueue
                                  join cUser in cUsers on nChat.ID equals cUser.ID
@@ -1226,6 +1224,7 @@ namespace ChatClientViewer
             BackGround1 = null;
             BackGround2?.Abort();
             BackGround2 = null;
+            IsCert = false;
         }
     }
 }
