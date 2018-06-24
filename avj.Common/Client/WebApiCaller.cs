@@ -62,5 +62,25 @@ namespace ChatClientViewer
 
         }
 
+        public async Task<string> RefreshAsync(string text)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync($"Matching/Refresh", text);
+
+                response.EnsureSuccessStatusCode();
+
+                // Deserialize the updated product from the response body.
+                var returnMessage = await response.Content.ReadAsAsync<string>();
+                return returnMessage;
+            }
+            catch (Exception e)
+            {
+                string log = e.Message;
+                return null;
+            }
+
+        }
+
     }
 }

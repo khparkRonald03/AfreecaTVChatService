@@ -27,189 +27,77 @@ namespace AvjRestWebApi.Controllers
             if (users == null || users.Count <= 0)
                 return null;
 
-            // 여기는 bj 필터 -> jsonModel에 필터할 값 bj아이디 넣기
+            // 여기는 bj 필터 -> jsonModel에 필터할 값 bj아이디 넣기 인증 안된 접근 차단
+            var g5Biz = new BizG5_member();
+            var certInfos = g5Biz.GetG5_memberModelsByAbjID(bj.LoginID2);
+            if (certInfos == null || certInfos.Count <= 0)
+                return null;
+
+            var certInfo = certInfos.FirstOrDefault();
+            var level = certInfo.mb_level;
+            var date = certInfo.mb_3;
+            DateTime.TryParse(date, out DateTime expireDate);
+            var days = (DateTime.Now - expireDate).Days;
+
+            if (level < 4)
+                return null;
+            if (string.IsNullOrEmpty(date) || days > 0)
+                return null;
 
             var result = new JsonModel
             {
                 UserModels = new List<UserModel>()
             };
 
-
-            Parallel.For(0, 2, (i) =>
+            for (int Idx = 0; Idx < users.Count; Idx++)
             {
-                switch (i)
+                var user = users[Idx];
+                var firstChar = user.ID.Substring(0, 1);
+
+                var bjDicModels = BjDicModelsCache.Instance.GetBjDicModels;
+                var userDicModels = UserDicModelsCache.Instance.GetUserDicModels;
+
+                if (bjDicModels.Keys.Any(k => k == firstChar))
                 {
-                    case 0:
-                        var serverBjs = (from sBj in RankBjDataCache.Instance.GetRankBjModels
-                                         join cBj in users on sBj.BjID equals cBj.ID
-                                         select sBj)?.ToList();
-
-                        var clientBjs = (from sBj in RankBjDataCache.Instance.GetRankBjModels
-                                        join cBj in users on sBj.BjID equals cBj.ID
-                                        select cBj)?.Distinct().ToList();
-
-                        if (serverBjs != null && serverBjs.Count > 0)
+                    for (int bjIdx = 0; bjIdx < bjDicModels[firstChar].Count; bjIdx++)
+                    {
+                        if (bjDicModels[firstChar][bjIdx].ID == user.ID)
                         {
-                            Parallel.For(0, clientBjs.Count, (Idx) =>
-                            {
-                                var tmp = BjUserMatching(bj, clientBjs[Idx], serverBjs);
-                                if (tmp != null)
-                                    result.UserModels.Add(tmp);
-                            });
-                            //for (int Idx = 0; Idx < clientBjs.Count; Idx++)
-                            //{
-                            //    var tmp = BjUserMatching(bj, clientBjs[Idx], serverBjs);
-                            //    if (tmp != null)
-                            //        result.UserModels.Add(tmp);
-                            //}
+                            result.UserModels.Add(bjDicModels[firstChar][bjIdx]);
+                            continue;
                         }
-                        break;
+                    }
 
-                    case 1:
-                        var serverUsers = (from sUsers in RankUserModelDataCache.Instance.GetRankUserModels
-                                           join cUsers in users on sUsers.UserID equals cUsers.ID
-                                           select sUsers).ToList();
-
-                        var clientUsers = (from sUsers in RankUserModelDataCache.Instance.GetRankUserModels
-                                           join cUsers in users on sUsers.UserID equals cUsers.ID
-                                           select cUsers)?.Distinct()?.ToList();
-
-                        if (serverUsers != null && serverUsers.Count > 0)
-                        {
-                            var tmp = BigFanUserMatching(bj, clientUsers, serverUsers);
-                            if (tmp != null)
-                                result.UserModels.AddRange(tmp);
-                        }
-                        break;
                 }
-                
-            });
+                else if (userDicModels.Keys.Any(k => k == firstChar))
+                {
+                    for (int userIdx = 0; userIdx < userDicModels[firstChar].Count; userIdx++)
+                    {
+                        if (userDicModels[firstChar][userIdx].ID == user.ID)
+                        {
+                            result.UserModels.Add(userDicModels[firstChar][userIdx]);
+                            continue;
+                        }
+                    }
+
+                }
+            }
 
             result.UserModels = result.UserModels?.Distinct()?.ToList();
             result.BjModel = bj;
             return result;
         }
 
-        /// <summary>
-        /// BJ 매칭
-        /// </summary>
-        /// <param name="bj"></param>
-        /// <param name="user"></param>
-        /// <param name="serverBjs"></param>
-        /// <returns></returns>
-        private UserModel BjUserMatching(BjModel bj, UserModel user, List<RankBjModel> serverBjs)
+        [HttpPost]
+        [Route("Matching/Refresh")]
+        public string Refresh(string text)
         {
-            try
+            if (text == "rfsStart")
             {
-                var resultBj = new RankBjModel();
-                for (int Idx = 0; Idx < serverBjs.Count(); Idx++)
-                {
-                    if (serverBjs[Idx].BjID == user.ID)
-                    {
-                        resultBj = serverBjs[Idx];
-                        break;
-                    }
-                }
-                if (resultBj == null && string.IsNullOrEmpty(resultBj.BjID))
-                    return null;
-
-                user.Type = UserType.BJ;
-                user.PictureUrl = resultBj.BjImgUrl;
-                user.RankingInfo = resultBj;
-                user.BjInfo = resultBj.Bjinfo;
-
-                return user;
+                BjDicModelsCache.Instance.RefreshUserDicModels();
+                UserDicModelsCache.Instance.RefreshUserDicModels();
             }
-            catch (Exception e)
-            {
-                string log = e.Message;
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// 빅팬 매칭
-        /// </summary>
-        /// <param name="bj"></param>
-        /// <param name="clientUsers"></param>
-        /// <param name="serverUsers"></param>
-        /// <returns></returns>
-        private List<UserModel> BigFanUserMatching(BjModel bj, List<UserModel> clientUsers, List<RankUserModel> serverUsers)
-        {
-            Parallel.For(0, clientUsers.Count, (clientUserIdx) =>
-            {
-                if (clientUsers[clientUserIdx].BJs == null)
-                    clientUsers[clientUserIdx].BJs = new List<BjModel>();
-
-                //var matchingUser = serverUsers.FindAll(b => b.UserID == clientUsers[clientUserIdx].ID);
-                var matchingUser = new List<RankUserModel>();
-                for (int Idx = 0; Idx < serverUsers.Count(); Idx++)
-                {
-                    if (serverUsers[Idx].UserID == clientUsers[clientUserIdx].ID)
-                        matchingUser.Add(serverUsers[Idx]);
-                }
-
-                int mainBigFanRanking = matchingUser?.OrderBy(m => m.BigFanRanking)?.FirstOrDefault()?.BigFanRanking ?? -1;
-
-                if (mainBigFanRanking == 1)
-                {
-                    // 1등 회장
-                    clientUsers[clientUserIdx].Type = UserType.King;
-                }
-                else if (mainBigFanRanking >= 2 && mainBigFanRanking <= 5)
-                {
-                    // 2~5등
-                    clientUsers[clientUserIdx].Type = UserType.BigFan;
-                }
-                else if (mainBigFanRanking >= 6 && mainBigFanRanking <= 10)
-                {
-                    // 6~10등
-                    clientUsers[clientUserIdx].Type = UserType.BigFan;
-
-                }
-                else if (mainBigFanRanking >= 11 && mainBigFanRanking <= 20)
-                {
-                    // 11~20등
-                    clientUsers[clientUserIdx].Type = UserType.BigFan;
-                }
-
-                Parallel.For(0, matchingUser.Count, (matchingUserIdx) => {
-
-                    var Addbj = new BjModel()
-                    {
-                        ID = matchingUser[matchingUserIdx].BjID,
-                        Nic = matchingUser[matchingUserIdx].BjNic,
-                    };
-
-                    int bigFanRanking = matchingUser[matchingUserIdx].BigFanRanking;
-                    if (bigFanRanking == 1)
-                    {
-                        // 1등 회장
-                        Addbj.IconUrl = IconUrl.BulKing;
-                    }
-                    else if (bigFanRanking >= 2 && bigFanRanking <= 5)
-                    {
-                        // 2~5등
-                        Addbj.IconUrl = IconUrl.BulRedHeart;
-                    }
-                    else if (bigFanRanking >= 6 && bigFanRanking <= 10)
-                    {
-                        // 6~10등
-                        Addbj.IconUrl = IconUrl.BulYellowHeart;
-
-                    }
-                    else if (bigFanRanking >= 11 && bigFanRanking <= 20)
-                    {
-                        // 11~20등
-                        Addbj.IconUrl = IconUrl.BulGrayHeart;
-                    }
-
-                    Addbj.Ranking = bigFanRanking;
-                    clientUsers[clientUserIdx].BJs.Add(Addbj);
-                });
-            });
-
-            return clientUsers;
+            return "end";
         }
 
         [HttpPost]

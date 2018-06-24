@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using avj.BizDac;
+using ChatClientViewer;
 using DataModels;
 using RankCollector;
 
@@ -156,6 +157,9 @@ namespace RankCollectorFront
 
             bizSettings.SetAferSettings();
             ;
+
+            var webApiCaller = new WebApiCaller();
+            webApiCaller.RefreshAsync("rfsStart").ConfigureAwait(true);
         }
     }
 }

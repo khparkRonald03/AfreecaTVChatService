@@ -49,5 +49,7 @@ namespace DataModels
         /// 추가된 날짜
         /// </summary>
         public DateTime? AddDate { get; set; }
+
+        //public bool IsUsed { get; set; }
     }
 }

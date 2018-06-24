@@ -30,7 +30,7 @@ namespace DataModels
         /// 포함된 bj정보
         /// </summary>
         [DataMember(Name = "BJs")]
-        public List<BjModel> BJs { get; set; }
+        public List<BjModel> BJs { get; set; } = new List<BjModel>();
 
         /// <summary>
         /// 사진url (BJ일경우)
