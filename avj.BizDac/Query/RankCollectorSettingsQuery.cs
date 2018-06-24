@@ -5,8 +5,7 @@
         #region 랭킹 수집
 
         public static string SelectSettings = @"
-            SELECT Idx
-                 , LastHistoryDepth 
+            SELECT *
               FROM abjchat.abj_RankCollectorSettings
              WHERE Idx = 1;
         ";

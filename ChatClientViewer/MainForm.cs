@@ -91,12 +91,12 @@ namespace ChatClientViewer
             }
 
 #if DEBUG
-            //// test #####
-            //if (string.IsNullOrEmpty(LoginUserID))
-            //    LoginUserID = "kscry12";
+            // test #####
+            if (string.IsNullOrEmpty(LoginUserID))
+                LoginUserID = "dkdleliii||ronald03";
 
-            //if (string.IsNullOrEmpty(LoginuserPW))
-            //    LoginuserPW = "test";
+            if (string.IsNullOrEmpty(LoginuserPW))
+                LoginuserPW = "ky850224!@#";
 #endif
             Bj.ID = LoginUserID;
         }
