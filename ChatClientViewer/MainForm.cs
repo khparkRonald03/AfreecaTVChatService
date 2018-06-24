@@ -39,8 +39,10 @@ namespace ChatClientViewer
         WebApiCaller webApiCaller = new WebApiCaller();
 
         string StartupPath { get; set; } = string.Empty;
+        string ChatID { get; set; } = string.Empty;
         string LoginUserID { get; set; } = string.Empty;
         string LoginuserPW { get; set; } = string.Empty;
+        bool? IsCert { get; set; }
         ChromiumWebBrowser UserBrowser { get; set; }
         ChromiumWebBrowser ChatBrowser { get; set; }
 
@@ -97,8 +99,6 @@ namespace ChatClientViewer
                 LoginuserPW = "test";
 #endif
             Bj.ID = LoginUserID;
-
-            CallCheckVersionWebApi();
         }
 
         private string GetVersion()
@@ -218,12 +218,23 @@ namespace ChatClientViewer
 
         private void BackGroundCrawling()
         {
+            CallCheckVersionWebApi();
+
             // test ###########
             ChromeDriver = new Controller(false, StartupPath);
 
             var startResult = ChromeDriver.Start();
             if (!startResult.ResultValue)
                 return;
+
+            // 체크 까지 기다리기
+            while(true)
+            {
+                if (IsCert != null)
+                    break;
+
+                Thread.Sleep(200);
+            }
 
             // 페이지 상태 초기화
             InitProc();
@@ -306,9 +317,6 @@ namespace ChatClientViewer
                     userModels.AddRange(ulUsers);
 
                 TmpNewUsersQueue.Enqueue(userModels);
-                ;
-                //// 퇴장 사용자 제거 데이터 매칭 하고 받아오기
-                //RemoveLeaveUserAndWebApiMatching();
             }
 
         }
@@ -333,7 +341,28 @@ namespace ChatClientViewer
         /// </summary>
         private void InitProc()
         {
-            ChromeDriver.SetUrl($"http://play.afreecatv.com/{LoginUserID}");
+            ChromeDriver.SetUrl($"https://login.afreecatv.com/afreeca/login.php?szFrom=full&request_uri=http%3A%2F%2Fwww.afreecatv.com%2F");
+
+            ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "uid", LoginUserID);
+            ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "password", LoginuserPW);
+            ChromeDriver.ClickTag(ElementsSelectType.XPath, "/html/body/form[3]/div/fieldset/p[3]/button");
+
+            int cnt = 0;
+            while (true)
+            {
+                cnt++;
+                if (ChromeDriver.GetPageSource().ResultValue == "http://www.afreecatv.com/")
+                    break;
+
+                if (cnt == 30)
+                {
+                    ShowMessageBox("로그인 실패로 프로그램이 종료 됩니다.", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    this.Close();
+                }
+                Thread.Sleep(200);
+            }
+
+            ChromeDriver.SetUrl($"http://play.afreecatv.com/{ChatID}");
             
             Thread.Sleep(100);
             for (int Idx = 0; Idx < 6; Idx++)
@@ -633,6 +662,10 @@ namespace ChatClientViewer
                 ShowMessageBox(returnMessage.BjModel.VersionMessage, "버전 확인", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+
+            IsCert = true;
+            ChatID = returnMessage.BjModel?.ChatID ?? string.Empty;
+            LoginUserID = returnMessage.BjModel?.LoginID2 ?? string.Empty;
         }
 
         private void ShowMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon msgIcon)
