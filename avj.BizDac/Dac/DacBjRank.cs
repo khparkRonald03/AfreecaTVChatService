@@ -120,9 +120,9 @@ namespace avj.BizDac
             return result;
         }
 
-        public List<string> GetFirstCharListByRankBjModels(string query)
+        public List<FirstCharModel> GetFirstCharListByRankBjModels(string query)
         {
-            var result = GetDataModel<List<string>>(query);
+            var result = GetDataModel<List<FirstCharModel>>(query);
             return result;
         }
 

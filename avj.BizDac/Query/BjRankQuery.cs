@@ -82,7 +82,7 @@
         ";
 
         public static string SelectFirstCharList = @"
-            SELECT left(bjid, 1)
+            SELECT left(bjid, 1) as FirstChar
               FROM abjchat.abj_BjRank 
              WHERE valid = 'Y'
                and left(BjID, 1) != ''

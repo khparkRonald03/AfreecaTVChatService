@@ -53,7 +53,7 @@ namespace AvjRestWebApi.DataCache
                         var firstChars = biz.GetFirstCharListByRankUserModels();
                         foreach (var firstChar in firstChars)
                         {
-                            var rankUserModels = biz.GetFirstCharRankUserModels(firstChar);
+                            var rankUserModels = biz.GetFirstCharRankUserModels(firstChar.FirstChar);
 
                             var userModels = new List<UserModel>();
                             Parallel.For(0, rankUserModels.Count, (index) =>
@@ -62,7 +62,7 @@ namespace AvjRestWebApi.DataCache
                                 userModels.Add(tmp);
                             });
 
-                            userDicModels.Add(firstChar, userModels);
+                            userDicModels.Add(firstChar.FirstChar, userModels);
                         }
                         return userDicModels;
                     });

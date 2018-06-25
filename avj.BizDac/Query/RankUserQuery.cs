@@ -58,7 +58,7 @@
         ";
 
         public static string SelectFirstCharList = @"
-            SELECT LEFT(userid, 1)
+            SELECT LEFT(userid, 1) as FirstChar
               FROM abjchat.abj_UserRank 
              WHERE valid = 'Y'
                AND LEFT(userid, 1) != ''

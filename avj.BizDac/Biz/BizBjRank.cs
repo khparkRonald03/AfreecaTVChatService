@@ -81,7 +81,7 @@ namespace avj.BizDac
             return result;
         }
 
-        public List<string> GetFirstCharListByRankBjModels()
+        public List<FirstCharModel> GetFirstCharListByRankBjModels()
         {
             string query = BjRankQuery.SelectFirstCharList;
 
