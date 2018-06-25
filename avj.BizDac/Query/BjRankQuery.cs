@@ -74,10 +74,19 @@
               WHERE Valid = 'Y';
         ";
 
-        public static string SelectAllValidYBjInfo = @"
+        public static string SelectFirstCharValidYBjRank = @"
             SELECT * 
-              FROM abjchat.abj_BjInfo
-              WHERE Valid = 'Y';
+              FROM abjchat.abj_BjRank
+              WHERE Valid = 'Y'
+                AND left(BjID, 1) = '{0}';
+        ";
+
+        public static string SelectFirstCharList = @"
+            SELECT left(bjid, 1)
+              FROM abjchat.abj_BjRank 
+             WHERE valid = 'Y'
+               and left(BjID, 1) != ''
+             group by left(BjID, 1);
         ";
     }
 }

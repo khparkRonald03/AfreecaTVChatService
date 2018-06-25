@@ -1,4 +1,5 @@
-﻿using DataModels;
+﻿using avj.BizDac;
+using DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,31 +48,21 @@ namespace AvjRestWebApi.DataCache
                     Set(key, () => {
 
                         var bjDicModels = new Dictionary<string, List<UserModel>>();
-
-                        if (RankBjDataCache.Instance.GetRankBjModels != null && RankBjDataCache.Instance.GetRankBjModels.Count > 0)
+                        var biz = new BizBjRank();
+                        var firstChars = biz.GetFirstCharListByRankBjModels();
+                        foreach (var firstChar in firstChars)
                         {
-                            Parallel.For(0, RankBjDataCache.Instance.GetRankBjModels.Count, (Idx) =>
+                            var rankUserModels = biz.GetFirstCharRankBjModels(firstChar);
+
+                            var userModels = new List<UserModel>();
+                            Parallel.For(0, rankUserModels.Count, (index) =>
                             {
-                                var bjModel = RankBjDataCache.Instance.GetRankBjModels[Idx];
-
-                                var tmp = RankBjModelToUserModel(bjModel);
+                                var tmp = RankBjModelToUserModel(rankUserModels[index]);
                                 if (tmp != null)
-                                {
-                                    var indexKey = tmp.ID.Substring(0, 1);
-                                    if (bjDicModels.Keys.Any(d => d == indexKey))
-                                    {
-                                        if (bjDicModels[indexKey] == null)
-                                            bjDicModels[indexKey] = new List<UserModel>();
-                                    }
-                                    else
-                                    {
-                                        bjDicModels.Add(indexKey, new List<UserModel>());
-                                    }
-
-                                    bjDicModels[indexKey].Add(tmp);
-                                }
-
+                                    userModels.Add(tmp);
                             });
+
+                            bjDicModels.Add(firstChar, userModels);
                         }
 
                         return bjDicModels;

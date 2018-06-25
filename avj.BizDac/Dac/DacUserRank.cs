@@ -79,5 +79,12 @@ namespace avj.BizDac
             var result = GetDataModel<List<RankUserModel>>(query);
             return result;
         }
+
+        public List<string> GetFirstCharListByRankUserModels(string query)
+        {
+            var result = GetDataModel<List<string>>(query);
+            return result;
+        }
+
     }
 }

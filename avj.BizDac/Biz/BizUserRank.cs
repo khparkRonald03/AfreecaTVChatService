@@ -1,9 +1,5 @@
 ﻿using DataModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace avj.BizDac
 {
@@ -70,6 +66,30 @@ namespace avj.BizDac
             string query = RankUserQuery.SelectAllValidYUserRank;
 
             var result = Dac.GetAllRankUserModels(query);
+            return result;
+        }
+
+        public List<RankUserModel> GetAllRankUserModelsByUserID(string userID)
+        {
+            string query = string.Format(RankUserQuery.SelectAllValidYUserRankByUserID, userID);
+
+            var result = Dac.GetAllRankUserModels(query);
+            return result;
+        }
+
+        public List<RankUserModel> GetFirstCharRankUserModels(string firstChar)
+        {
+            string query = string.Format(RankUserQuery.SelectAllValidYUserRank, firstChar);
+
+            var result = Dac.GetAllRankUserModels(query);
+            return result;
+        }
+
+        public List<string> GetFirstCharListByRankUserModels()
+        {
+            string query = RankUserQuery.SelectFirstCharList;
+
+            var result = Dac.GetFirstCharListByRankUserModels(query);
             return result;
         }
     }

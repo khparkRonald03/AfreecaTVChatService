@@ -16,7 +16,7 @@ namespace AvjRestWebApi.Controllers
     {
         [HttpPost]
         [Route("Matching/UsersMatching")]
-        public JsonModel UsersMatching (JsonModel jsonModel)
+        public JsonModel UsersMatching(JsonModel jsonModel)
         {
             var bj = jsonModel.BjModel;
             var users = jsonModel.UserModels;

@@ -51,15 +51,41 @@ namespace avj.BizDac
             string query1 = BjRankQuery.SelectAllValidYBjRank;
             var result = Dac.GetAllRankBjModels(query1);
 
-            string query2 = BjRankQuery.SelectAllValidYBjInfo;
+            string query2 = BjInfoQuery.SelectAllValidYBjInfo;
             var bjInfoModels = Dac.GetAllBjInfoModels(query2);
-            foreach (var rankBjModel in result)
+            for (int Idx = 0; Idx < result.Count; Idx++)
             {
+                var rankBjModel = result[Idx];
                 var findBjInfo = bjInfoModels.FindAll(b => b.BjID == rankBjModel.BjID);
                 if (findBjInfo != null)
                     rankBjModel.Bjinfo = findBjInfo;
             }
 
+            return result;
+        }
+
+        public List<RankBjModel> GetFirstCharRankBjModels(string firstChar)
+        {
+            string query1 = string.Format(BjRankQuery.SelectFirstCharValidYBjRank, firstChar);
+            var result = Dac.GetAllRankBjModels(query1);
+
+            for (int Idx = 0; Idx < result.Count; Idx++)
+            {
+                var rankBjModel = result[Idx];
+                string query2 = string.Format(BjInfoQuery.SelectAllValidYBjInfoByBjID, rankBjModel.BjID);
+                var findBjInfo = Dac.GetAllBjInfoModels(query2);
+                if (findBjInfo != null)
+                    rankBjModel.Bjinfo = findBjInfo;
+            }
+
+            return result;
+        }
+
+        public List<string> GetFirstCharListByRankBjModels()
+        {
+            string query = BjRankQuery.SelectFirstCharList;
+
+            var result = Dac.GetFirstCharListByRankBjModels(query);
             return result;
         }
     }

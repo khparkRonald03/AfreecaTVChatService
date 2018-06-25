@@ -39,8 +39,6 @@ namespace ChatClientViewer
         WebApiCaller webApiCaller = new WebApiCaller();
 
         string StartupPath { get; set; } = string.Empty;
-        string ChatID { get; set; } = string.Empty;
-        string LoginUserID { get; set; } = string.Empty;
         string LoginuserPW { get; set; } = string.Empty;
         bool IsCert { get; set; }
         ChromiumWebBrowser UserBrowser { get; set; }
@@ -86,19 +84,19 @@ namespace ChatClientViewer
 
             if (args != null && args.Length == 2)
             {
-                LoginUserID = args[0];
+                Bj.LoginID = args[0];
                 LoginuserPW = args[1];
             }
 
 #if DEBUG
             // test #####
-            if (string.IsNullOrEmpty(LoginUserID))
-                LoginUserID = "dkdleliii||ronald03";
+            if (string.IsNullOrEmpty(Bj.LoginID))
+                Bj.LoginID = "unitelshaki||ronald03";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "ky850224!@#";
 #endif
-            Bj.ID = LoginUserID;
+            Bj.ClientVersion = GetVersion();
         }
 
         private string GetVersion()
@@ -124,7 +122,7 @@ namespace ChatClientViewer
 
         private void Main_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(LoginUserID))
+            if (string.IsNullOrEmpty(Bj.LoginID))
             {
                 this.Close();
                 return;
@@ -324,16 +322,12 @@ namespace ChatClientViewer
         //private void CallApiTimer_Elapsed(object sender, ElapsedEventArgs e)
         private void CallApiTimer_Elapsed()
         {
-            //lock (LockObject)
-            //{
             while (true)
             {
                 // 퇴장 사용자 제거 데이터 매칭 하고 받아오기
                 RemoveLeaveUserAndWebApiMatching();
                 Thread.Sleep(1000*5);
             }
-                
-            //}
         }
 
         /// <summary>
@@ -343,7 +337,7 @@ namespace ChatClientViewer
         {
             ChromeDriver.SetUrl($"https://login.afreecatv.com/afreeca/login.php?szFrom=full&request_uri=http%3A%2F%2Fwww.afreecatv.com%2F");
 
-            ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "uid", LoginUserID);
+            ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "uid", Bj.LoginID2);
             ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "password", LoginuserPW);
             ChromeDriver.ClickTag(ElementsSelectType.XPath, "/html/body/form[3]/div/fieldset/p[3]/button");
 
@@ -351,7 +345,7 @@ namespace ChatClientViewer
             while (true)
             {
                 cnt++;
-                if (ChromeDriver.GetPageSource().ResultValue == "http://www.afreecatv.com/")
+                if (ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='logArea']/a").ResultValue == Bj.LoginID2)
                     break;
 
                 if (cnt == 30)
@@ -362,7 +356,7 @@ namespace ChatClientViewer
                 Thread.Sleep(200);
             }
 
-            ChromeDriver.SetUrl($"http://play.afreecatv.com/{ChatID}");
+            ChromeDriver.SetUrl($"http://play.afreecatv.com/{Bj.ChatID}");
             
             Thread.Sleep(100);
             for (int Idx = 0; Idx < 6; Idx++)
@@ -626,11 +620,7 @@ namespace ChatClientViewer
         {
             var version = new JsonModel
             {
-                BjModel = new BjModel()
-                {
-                    LoginID = LoginUserID,
-                    ClientVersion = GetVersion()
-                }
+                BjModel = Bj
             };
 
             var returnMessage = await webApiCaller.CheckVersionAsync(version).ConfigureAwait(true);
@@ -660,12 +650,10 @@ namespace ChatClientViewer
             if (returnMessage.BjModel.IsNewUpload)
             {
                 ShowMessageBox(returnMessage.BjModel.VersionMessage, "버전 확인", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
             }
 
             IsCert = true;
-            ChatID = returnMessage.BjModel?.ChatID ?? string.Empty;
-            LoginUserID = returnMessage.BjModel?.LoginID2 ?? string.Empty;
+            Bj = returnMessage.BjModel;
         }
 
         private void ShowMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon msgIcon)
@@ -677,7 +665,7 @@ namespace ChatClientViewer
             }
             else
             {
-                MessageBoxEx.Show(message, title, MessageBoxButtons.OK, msgIcon);
+                MessageBoxEx.Show(this, message, title, MessageBoxButtons.OK, msgIcon);
             }
         }
 

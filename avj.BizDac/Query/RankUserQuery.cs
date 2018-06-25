@@ -41,6 +41,30 @@
                AND BigFanRanking != 0;
         ";
 
+        public static string SelectAllValidYUserRankByUserID = @"
+            SELECT * 
+              FROM abjchat.abj_UserRank
+             WHERE Valid = 'Y'
+               AND BigFanRanking != 0
+               AND UserID = {0};
+        ";
+
+        public static string SelectFirstCharAndValidYUserRank = @"
+            SELECT *
+              FROM abjchat.abj_UserRank 
+             WHERE valid = 'Y'
+               AND BigFanRanking != 0
+               AND LEFT(userid, 1) = '{0}';
+        ";
+
+        public static string SelectFirstCharList = @"
+            SELECT LEFT(userid, 1)
+              FROM abjchat.abj_UserRank 
+             WHERE valid = 'Y'
+               AND LEFT(userid, 1) != ''
+             GROUP BY LEFT(userid, 1);
+        ";
+
         #endregion
     }
 }

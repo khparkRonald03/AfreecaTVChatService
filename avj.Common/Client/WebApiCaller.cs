@@ -17,7 +17,8 @@ namespace ChatClientViewer
         public WebApiCaller()
         {
             // Update port # in the following line.
-            client.BaseAddress = new Uri("http://203.245.0.193/");
+            //client.BaseAddress = new Uri("http://203.245.0.193/");
+            client.BaseAddress = new Uri("http://localhost:11351/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -31,8 +32,8 @@ namespace ChatClientViewer
                 response.EnsureSuccessStatusCode();
 
                 // Deserialize the updated product from the response body.
-                jsonModel = await response.Content.ReadAsAsync<JsonModel>();
-                return jsonModel;
+                var result = await response.Content.ReadAsAsync<JsonModel>();
+                return result;
             }
             catch (Exception e)
             {

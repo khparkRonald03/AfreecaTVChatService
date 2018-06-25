@@ -1,4 +1,5 @@
-﻿using DataModels;
+﻿using avj.BizDac;
+using DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,32 +49,21 @@ namespace AvjRestWebApi.DataCache
                     Set(key, () => {
 
                         var userDicModels = new Dictionary<string, List<UserModel>>();
-
-                        // 중복 제거 후 루프 돌리기
-                        var firstList = RankUserModelDataCache.Instance.GetRankUserModels.GroupBy(u => u.UserID).Select(c => c.First()).ToList();
-
-                        Parallel.For(0, firstList.Count, (firstListIndex) =>
+                        var biz = new BizUserRank();
+                        var firstChars = biz.GetFirstCharListByRankUserModels();
+                        foreach (var firstChar in firstChars)
                         {
-                            var tmp = RankUserModelToUserModel(firstList[firstListIndex]);
+                            var rankUserModels = biz.GetFirstCharRankUserModels(firstChar);
 
-                            if (tmp != null)
+                            var userModels = new List<UserModel>();
+                            Parallel.For(0, rankUserModels.Count, (index) =>
                             {
-                                var indexKey = tmp.ID.Substring(0, 1);
-                                if (userDicModels.Keys.Any(d => d == indexKey))
-                                {
-                                    if (userDicModels[indexKey] == null)
-                                        userDicModels[indexKey] = new List<UserModel>();
-                                }
-                                else
-                                {
-                                    userDicModels.Add(indexKey, new List<UserModel>());
-                                }
+                                var tmp = RankUserModelToUserModel(rankUserModels[index]);
+                                userModels.Add(tmp);
+                            });
 
-                                userDicModels[indexKey].Add(tmp);
-                            }
-
-                        });
-
+                            userDicModels.Add(firstChar, userModels);
+                        }
                         return userDicModels;
                     });
                 }
@@ -91,14 +81,8 @@ namespace AvjRestWebApi.DataCache
                 Nic = rankUser.UserNick,
             };
 
-            var matchingUser = new List<RankUserModel>();
-            for (int Idx = 0; Idx < RankUserModelDataCache.Instance.GetRankUserModels.Count(); Idx++)
-            {
-                if (RankUserModelDataCache.Instance.GetRankUserModels[Idx].UserID == rankUser.UserID)
-                {
-                    matchingUser.Add(RankUserModelDataCache.Instance.GetRankUserModels[Idx]);
-                }
-            }
+            var biz = new BizUserRank();
+            var matchingUser = biz.GetAllRankUserModelsByUserID(rankUser.UserID);
 
             int mainBigFanRanking = matchingUser?.OrderBy(m => m.BigFanRanking)?.FirstOrDefault()?.BigFanRanking ?? -1;
 

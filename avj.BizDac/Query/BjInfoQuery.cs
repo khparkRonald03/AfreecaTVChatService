@@ -23,5 +23,18 @@
             @HistoryDepth,
             now());
             ";
+
+        public static string SelectAllValidYBjInfo = @"
+            SELECT * 
+              FROM abjchat.abj_BjInfo
+              WHERE Valid = 'Y';
+        ";
+
+        public static string SelectAllValidYBjInfoByBjID = @"
+            SELECT * 
+              FROM abjchat.abj_BjInfo
+              WHERE Valid = 'Y'
+                AND BjID = '{0}';
+        ";
     }
 }

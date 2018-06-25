@@ -88,7 +88,7 @@ namespace DataModels
         /// <summary>
         /// 인증 여부
         /// </summary>
-        [DataMember(Name = "FaildFalg")]
+        [DataMember(Name = "CertificationFlag")]
         public bool CertificationFlag { get; set; }
 
         /// <summary>
