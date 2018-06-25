@@ -47,23 +47,28 @@ namespace AvjRestWebApi.DataCache
                 {
                     Set(key, () => {
 
+                        var start = DateTime.Now;
+
                         var bjDicModels = new Dictionary<string, List<UserModel>>();
                         var biz = new BizBjRank();
                         var firstChars = biz.GetFirstCharListByRankBjModels();
-                        foreach (var firstChar in firstChars)
+                        for (int Idx = 0; Idx < firstChars.Count; Idx++)
                         {
+                            var firstChar = firstChars[Idx];
                             var rankUserModels = biz.GetFirstCharRankBjModels(firstChar.FirstChar);
 
                             var userModels = new List<UserModel>();
-                            Parallel.For(0, rankUserModels.Count, (index) =>
+                            for (int index = 0; index < rankUserModels.Count;  index++)
                             {
                                 var tmp = RankBjModelToUserModel(rankUserModels[index]);
                                 if (tmp != null)
                                     userModels.Add(tmp);
-                            });
+                            }
 
                             bjDicModels.Add(firstChar.FirstChar, userModels);
                         }
+
+                        var end = (DateTime.Now - start).Minutes;
 
                         return bjDicModels;
                     });

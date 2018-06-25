@@ -79,7 +79,7 @@ namespace avj.BizDac
 
         public List<RankUserModel> GetFirstCharRankUserModels(string firstChar)
         {
-            string query = string.Format(RankUserQuery.SelectAllValidYUserRank, firstChar);
+            string query = string.Format(RankUserQuery.SelectFirstCharAndValidYUserRank, firstChar);
 
             var result = Dac.GetAllRankUserModels(query);
             return result;

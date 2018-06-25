@@ -48,22 +48,36 @@ namespace AvjRestWebApi.DataCache
                 {
                     Set(key, () => {
 
+                        var start = DateTime.Now;
+
                         var userDicModels = new Dictionary<string, List<UserModel>>();
                         var biz = new BizUserRank();
                         var firstChars = biz.GetFirstCharListByRankUserModels();
-                        foreach (var firstChar in firstChars)
+                        var allUserModels = biz.GetAllRankUserModels();
+                        // 36건
+                        for (int Idx = 0; Idx < firstChars.Count; Idx++)
                         {
+                            var firstChar = firstChars[Idx];
                             var rankUserModels = biz.GetFirstCharRankUserModels(firstChar.FirstChar);
 
                             var userModels = new List<UserModel>();
-                            Parallel.For(0, rankUserModels.Count, (index) =>
-                            {
-                                var tmp = RankUserModelToUserModel(rankUserModels[index]);
-                                userModels.Add(tmp);
+
+                            // 몇백 ~ 몇천
+                            Parallel.For(0, rankUserModels.Count, (index) => {
+                            //for (int index = 0; index < rankUserModels.Count; index++)
+                            //{
+                                var tmp = RankUserModelToUserModel(rankUserModels[index], allUserModels);
+                                lock (SycStaticLock)
+                                {
+                                    userModels.Add(tmp);
+                                }
                             });
 
                             userDicModels.Add(firstChar.FirstChar, userModels);
                         }
+
+                        var end = (DateTime.Now - start).Minutes;
+
                         return userDicModels;
                     });
                 }
@@ -73,7 +87,7 @@ namespace AvjRestWebApi.DataCache
             }
         }
 
-        private UserModel RankUserModelToUserModel(RankUserModel rankUser)
+        private UserModel RankUserModelToUserModel(RankUserModel rankUser, List<RankUserModel> allUserModels)
         {
             var userModel = new UserModel()
             {
@@ -81,8 +95,9 @@ namespace AvjRestWebApi.DataCache
                 Nic = rankUser.UserNick,
             };
 
-            var biz = new BizUserRank();
-            var matchingUser = biz.GetAllRankUserModelsByUserID(rankUser.UserID);
+            //var biz = new BizUserRank();
+            //var matchingUser = biz.GetAllRankUserModelsByUserID(rankUser.UserID);
+            var matchingUser = allUserModels.FindAll(a => a.UserID == rankUser.UserID);
 
             int mainBigFanRanking = matchingUser?.OrderBy(m => m.BigFanRanking)?.FirstOrDefault()?.BigFanRanking ?? -1;
 
@@ -107,15 +122,16 @@ namespace AvjRestWebApi.DataCache
                 userModel.Type = UserType.BigFan;
             }
 
-            Parallel.For(0, matchingUser.Count, (matchingUserIdx) => {
-
+            // 몇건 ~ 십몇건
+            for (int Idx = 0; Idx < matchingUser.Count; Idx++)
+            {
                 var Addbj = new BjModel()
                 {
-                    ID = matchingUser[matchingUserIdx].BjID,
-                    Nic = matchingUser[matchingUserIdx].BjNic,
+                    ID = matchingUser[Idx].BjID,
+                    Nic = matchingUser[Idx].BjNic,
                 };
 
-                int bigFanRanking = matchingUser[matchingUserIdx].BigFanRanking;
+                int bigFanRanking = matchingUser[Idx].BigFanRanking;
                 if (bigFanRanking == 1)
                 {
                     // 1등 회장
@@ -140,7 +156,7 @@ namespace AvjRestWebApi.DataCache
 
                 Addbj.Ranking = bigFanRanking;
                 userModel.BJs.Add(Addbj);
-            });
+            }
 
             return userModel;
         }

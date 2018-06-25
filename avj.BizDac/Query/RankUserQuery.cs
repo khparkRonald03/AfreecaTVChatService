@@ -46,7 +46,7 @@
               FROM abjchat.abj_UserRank
              WHERE Valid = 'Y'
                AND BigFanRanking != 0
-               AND UserID = {0};
+               AND UserID = '{0}';
         ";
 
         public static string SelectFirstCharAndValidYUserRank = @"
