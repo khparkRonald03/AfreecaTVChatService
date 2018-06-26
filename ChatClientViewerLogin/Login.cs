@@ -27,7 +27,21 @@ namespace ChatClientViewerLogin
         {
             (new ShowHelper()).ShowDialog();
 
-            TxtId.Text = IdText;
+            var idSave = GetConfigData("CbIdSave");
+            if (idSave == true.ToString())
+            {
+                CbIdSave.Checked = true;
+                var id = GetConfigData("TxtId");
+                if (!string.IsNullOrEmpty(id))
+                    TxtId.Text = id;
+                else
+                    TxtId.Text = IdText;
+            }
+            else
+            {
+                TxtId.Text = IdText;
+            }
+            
             TxtPw.Text = PwText;
             TxtId.Focus();
         }
@@ -76,6 +90,11 @@ namespace ChatClientViewerLogin
 
         private void BtnLogin_Click(object sender, EventArgs e)
         {
+            if (CbIdSave.Checked)
+            {
+                SetConfigData("CbIdSave", CbIdSave.Checked.ToString());
+                SetConfigData("TxtId", TxtId.Text);
+            }
             LoginProc();
         }
 
@@ -87,10 +106,11 @@ namespace ChatClientViewerLogin
                 return;
             }
 
-            //if (TxtPw.Text == PwText)
-            //{
-            //    return;
-            //}
+            if (TxtPw.Text == PwText)
+            {
+                MessageBoxEx.Show("비밀번호를 입력하여주십시오.", "비밀번호 입력", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             string id = TxtId.Text;
             string pw = TxtPw.Text;
@@ -106,7 +126,7 @@ namespace ChatClientViewerLogin
 
         private void DoLogin(string id, string pw)
         {
-            string argu = $"{id} {pw}";
+            string argu = $"{id} {pw} {ChkDoNotLogin.Checked.ToString()}";
 
             using (Process ps = new Process())
             {

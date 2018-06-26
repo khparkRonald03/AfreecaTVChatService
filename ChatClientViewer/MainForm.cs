@@ -40,6 +40,7 @@ namespace ChatClientViewer
 
         string StartupPath { get; set; } = string.Empty;
         string LoginuserPW { get; set; } = string.Empty;
+        bool IsDoNotLogin { get; set; }
         bool IsCert { get; set; }
         ChromiumWebBrowser UserBrowser { get; set; }
         ChromiumWebBrowser ChatBrowser { get; set; }
@@ -82,10 +83,13 @@ namespace ChatClientViewer
             InitUserBrowser();
             InitChatBrowser();
 
-            if (args != null && args.Length == 2)
+            if (args != null && args.Length == 3)
             {
                 Bj.LoginID = args[0];
                 LoginuserPW = args[1];
+
+                if (args[2] == true.ToString())
+                    IsDoNotLogin = true;
             }
 
 #if DEBUG
@@ -335,25 +339,28 @@ namespace ChatClientViewer
         /// </summary>
         private void InitProc()
         {
-            ChromeDriver.SetUrl($"https://login.afreecatv.com/afreeca/login.php?szFrom=full&request_uri=http%3A%2F%2Fwww.afreecatv.com%2F");
-
-            ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "uid", Bj.LoginID2);
-            ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "password", LoginuserPW);
-            ChromeDriver.ClickTag(ElementsSelectType.XPath, "/html/body/form[3]/div/fieldset/p[3]/button");
-
-            int cnt = 0;
-            while (true)
+            if (IsDoNotLogin)
             {
-                cnt++;
-                if (ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='logArea']/a").ResultValue == Bj.LoginID2)
-                    break;
+                ChromeDriver.SetUrl($"https://login.afreecatv.com/afreeca/login.php?szFrom=full&request_uri=http%3A%2F%2Fwww.afreecatv.com%2F");
 
-                if (cnt == 30)
+                ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "uid", Bj.LoginID2);
+                ChromeDriver.SetTextInputTag(ElementsSelectType.Id, "password", LoginuserPW);
+                ChromeDriver.ClickTag(ElementsSelectType.XPath, "/html/body/form[3]/div/fieldset/p[3]/button");
+
+                int cnt = 0;
+                while (true)
                 {
-                    ShowMessageBox("로그인 실패로 프로그램이 종료 됩니다.", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                    this.Close();
+                    cnt++;
+                    if (ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='logArea']/a").ResultValue == Bj.LoginID2)
+                        break;
+
+                    if (cnt == 30)
+                    {
+                        ShowMessageBox("로그인 실패로 프로그램이 종료 됩니다.", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        this.Close();
+                    }
+                    Thread.Sleep(200);
                 }
-                Thread.Sleep(200);
             }
 
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{Bj.ChatID}");

@@ -35,12 +35,14 @@
             this.TxtId = new iTalk.iTalk_TextBox_Big();
             this.BtnLogin = new iTalk.iTalk_Button_2();
             this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
+            this.ChkDoNotLogin = new iTalk.iTalk_CheckBox();
             this.iTalk_ThemeContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // iTalk_ThemeContainer1
             // 
             this.iTalk_ThemeContainer1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(246)))), ((int)(((byte)(246)))));
+            this.iTalk_ThemeContainer1.Controls.Add(this.ChkDoNotLogin);
             this.iTalk_ThemeContainer1.Controls.Add(this.CbIdSave);
             this.iTalk_ThemeContainer1.Controls.Add(this.TxtPw);
             this.iTalk_ThemeContainer1.Controls.Add(this.TxtId);
@@ -137,6 +139,17 @@
             this.iTalk_ControlBox1.TabIndex = 0;
             this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
             // 
+            // ChkDoNotLogin
+            // 
+            this.ChkDoNotLogin.BackColor = System.Drawing.Color.Transparent;
+            this.ChkDoNotLogin.Checked = false;
+            this.ChkDoNotLogin.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.ChkDoNotLogin.Location = new System.Drawing.Point(255, 247);
+            this.ChkDoNotLogin.Name = "ChkDoNotLogin";
+            this.ChkDoNotLogin.Size = new System.Drawing.Size(130, 15);
+            this.ChkDoNotLogin.TabIndex = 5;
+            this.ChkDoNotLogin.Text = "아프리카 비로그인";
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -168,5 +181,6 @@
         private iTalk.iTalk_TextBox_Big TxtId;
         private iTalk.iTalk_Button_2 BtnLogin;
         private iTalk.iTalk_CheckBox CbIdSave;
+        private iTalk.iTalk_CheckBox ChkDoNotLogin;
     }
 }
