@@ -336,6 +336,19 @@ namespace ChatClientViewer
             }
         }
 
+        private void ThisClose(string stc)
+        {
+            if (ChatBrowser.InvokeRequired)
+            {
+                var ci = new Control_Invoker_ParamStr(ThisClose);
+                this.BeginInvoke(ci, stc);
+            }
+            else
+            {
+                this.Close();
+            }
+        }
+
         /// <summary>
         /// 페이지 상태 초기화
         /// </summary>
@@ -359,7 +372,7 @@ namespace ChatClientViewer
                     if (cnt == 30)
                     {
                         ShowMessageBox("로그인 실패로 프로그램이 종료 됩니다.", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        this.Close();
+                        ThisClose("");
                     }
                     Thread.Sleep(200);
                 }
@@ -654,14 +667,14 @@ namespace ChatClientViewer
             if (returnMessage == null || returnMessage.BjModel == null)
             {
                 ShowMessageBox("인증이 실패 되어 프로그램이 종료 됩니다.", "인증 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                this.Close();
+                ThisClose("");
                 return;
             }
 
             if (!returnMessage.BjModel.CertificationFlag)
             {
                 ShowMessageBox(returnMessage.BjModel.CertificationMessage, "인증 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                this.Close();
+                ThisClose("");
                 return;
             }
 
@@ -669,7 +682,7 @@ namespace ChatClientViewer
             {
                 // 만료 결제를 하여주십시오.
                 ShowMessageBox(returnMessage.BjModel.ExpireMessage, "사용기간 만료", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                this.Close();
+                ThisClose("");
                 return;
             }
 

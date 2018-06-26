@@ -347,7 +347,7 @@ namespace AvjRestWebApi.Controllers
                     jsonModel.BjModel.ExpireFlag = true;
                     jsonModel.BjModel.ExpireMessage = "사용기간이 만료되어 프로그램이 종료 됩니다.";
                 }
-                else
+                else if (!string.IsNullOrEmpty(setting.ClientVersion) && setting.ClientVersion != jsonModel.BjModel.ClientVersion)
                 {
                     jsonModel.BjModel.IsNewUpload = true;
                     jsonModel.BjModel.VersionMessage = "새 버전이 업로드 되었습니다. \r\n사이트에서 새 버전을 다운받아주세요.";
