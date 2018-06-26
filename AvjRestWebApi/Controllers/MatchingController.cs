@@ -21,7 +21,7 @@ namespace AvjRestWebApi.Controllers
             var bj = jsonModel.BjModel;
             var users = jsonModel.UserModels;
 
-            if (bj == null || string.IsNullOrEmpty(bj.ID))
+            if (bj == null)
                 return null;
 
             if (users == null || users.Count <= 0)

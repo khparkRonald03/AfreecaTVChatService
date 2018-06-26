@@ -104,7 +104,7 @@ namespace AvjRestWebApi.DataCache
         public bool IsCache()
         {
             var t1 = ContainsKey(KeyOfGetBjDicModels);
-            var t2 = GetValue(KeyOfGetBjDicModels).Values?.Count ?? 0;
+            var t2 = GetValue(KeyOfGetBjDicModels)?.Count ?? 0;
             return t1 && t2 > 0;
         }
 

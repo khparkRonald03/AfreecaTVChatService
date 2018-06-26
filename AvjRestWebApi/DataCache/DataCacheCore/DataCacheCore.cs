@@ -86,7 +86,14 @@ namespace AvjRestWebApi.DataCache
         {
             try
             {
-                return List[key].Value;
+                if (List.ContainsKey(key))
+                {
+                    return List[key].Value;
+                }
+                else
+                {
+                    return default(T);
+                }
             }
             catch (Exception ex)
             {
