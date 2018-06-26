@@ -193,5 +193,13 @@ namespace ChatClientViewerLogin
         {
             TxtId.ImeMode = ImeMode.Alpha;
         }
+
+        private void TxtPw_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BtnLogin_Click(null, null);
+            }
+        }
     }
 }

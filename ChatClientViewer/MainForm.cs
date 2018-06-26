@@ -88,19 +88,19 @@ namespace ChatClientViewer
                 Bj.LoginID = args[0];
                 LoginuserPW = args[1];
 
-                if (args[2] == true.ToString())
+                if (args[2] == false.ToString())
                     IsDoNotLogin = true;
             }
 
 #if DEBUG
             // test #####
-            if (string.IsNullOrEmpty(Bj.LoginID))
-                Bj.LoginID = "killgusdnk||ronald03";
+            //if (string.IsNullOrEmpty(Bj.LoginID))
+            //    Bj.LoginID = "killgusdnk||ronald03";
 
-            if (string.IsNullOrEmpty(LoginuserPW))
-                LoginuserPW = "ky850224!@#";
+            //if (string.IsNullOrEmpty(LoginuserPW))
+            //    LoginuserPW = "ky850224!@#";
 
-            IsDoNotLogin = true;
+            //IsDoNotLogin = true;
 #endif
             Bj.ClientVersion = GetVersion();
         }
@@ -381,7 +381,7 @@ namespace ChatClientViewer
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{Bj.ChatID}");
 
             Thread.Sleep(100);
-            for (int Idx = 0; Idx < 6; Idx++)
+            for (int Idx = 0; Idx < 30; Idx++)
             {
                 var streamingType = ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[6]/div[2]/div[1]/div/button");
                 if (!string.IsNullOrEmpty(streamingType.ResultValue) && streamingType.ResultValue == "HTML5")

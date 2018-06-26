@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
             this.iTalk_ThemeContainer1 = new iTalk.iTalk_ThemeContainer();
+            this.ChkDoNotLogin = new iTalk.iTalk_CheckBox();
             this.CbIdSave = new iTalk.iTalk_CheckBox();
             this.TxtPw = new iTalk.iTalk_TextBox_Big();
             this.TxtId = new iTalk.iTalk_TextBox_Big();
             this.BtnLogin = new iTalk.iTalk_Button_2();
             this.iTalk_ControlBox1 = new iTalk.iTalk_ControlBox();
-            this.ChkDoNotLogin = new iTalk.iTalk_CheckBox();
             this.iTalk_ThemeContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,6 +62,17 @@
             this.iTalk_ThemeContainer1.TabIndex = 0;
             this.iTalk_ThemeContainer1.Text = "ABJ v1.1";
             // 
+            // ChkDoNotLogin
+            // 
+            this.ChkDoNotLogin.BackColor = System.Drawing.Color.Transparent;
+            this.ChkDoNotLogin.Checked = false;
+            this.ChkDoNotLogin.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.ChkDoNotLogin.Location = new System.Drawing.Point(255, 247);
+            this.ChkDoNotLogin.Name = "ChkDoNotLogin";
+            this.ChkDoNotLogin.Size = new System.Drawing.Size(130, 15);
+            this.ChkDoNotLogin.TabIndex = 5;
+            this.ChkDoNotLogin.Text = "아프리카 비로그인";
+            // 
             // CbIdSave
             // 
             this.CbIdSave.BackColor = System.Drawing.Color.Transparent;
@@ -80,7 +91,7 @@
             this.TxtPw.ForeColor = System.Drawing.Color.DimGray;
             this.TxtPw.Image = null;
             this.TxtPw.ImeMode = System.Windows.Forms.ImeMode.Alpha;
-            this.TxtPw.Location = new System.Drawing.Point(102, 127);
+            this.TxtPw.Location = new System.Drawing.Point(102, 130);
             this.TxtPw.MaxLength = 32767;
             this.TxtPw.Multiline = false;
             this.TxtPw.Name = "TxtPw";
@@ -91,6 +102,7 @@
             this.TxtPw.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
             this.TxtPw.UseSystemPasswordChar = true;
             this.TxtPw.Enter += new System.EventHandler(this.TxtPw_Enter);
+            this.TxtPw.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtPw_KeyDown);
             this.TxtPw.Leave += new System.EventHandler(this.TxtPw_Leave);
             // 
             // TxtId
@@ -100,7 +112,7 @@
             this.TxtId.ForeColor = System.Drawing.Color.DimGray;
             this.TxtId.Image = null;
             this.TxtId.ImeMode = System.Windows.Forms.ImeMode.Alpha;
-            this.TxtId.Location = new System.Drawing.Point(102, 76);
+            this.TxtId.Location = new System.Drawing.Point(102, 83);
             this.TxtId.MaxLength = 32767;
             this.TxtId.Multiline = false;
             this.TxtId.Name = "TxtId";
@@ -138,17 +150,6 @@
             this.iTalk_ControlBox1.Size = new System.Drawing.Size(77, 19);
             this.iTalk_ControlBox1.TabIndex = 0;
             this.iTalk_ControlBox1.Text = "iTalk_ControlBox1";
-            // 
-            // ChkDoNotLogin
-            // 
-            this.ChkDoNotLogin.BackColor = System.Drawing.Color.Transparent;
-            this.ChkDoNotLogin.Checked = false;
-            this.ChkDoNotLogin.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.ChkDoNotLogin.Location = new System.Drawing.Point(255, 247);
-            this.ChkDoNotLogin.Name = "ChkDoNotLogin";
-            this.ChkDoNotLogin.Size = new System.Drawing.Size(130, 15);
-            this.ChkDoNotLogin.TabIndex = 5;
-            this.ChkDoNotLogin.Text = "아프리카 비로그인";
             // 
             // Login
             // 

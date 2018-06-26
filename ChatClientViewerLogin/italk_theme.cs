@@ -2405,6 +2405,8 @@ namespace iTalk
                 iTalkTB.Copy();
                 e.SuppressKeyPress = true;
             }
+
+            base.OnKeyDown(e);
         }
 
         protected override void OnResize(System.EventArgs e)
