@@ -55,12 +55,12 @@ namespace AvjRestWebApi.DataCache
         {
             try
             {
-                return 10;
+                return 24 * 100;
             }
             catch (Exception ex)
             {
                 string log = ex.Message;
-                return 10;
+                return 24 * 100;
             }
         }
         
