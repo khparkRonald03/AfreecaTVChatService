@@ -95,10 +95,12 @@ namespace ChatClientViewer
 #if DEBUG
             // test #####
             if (string.IsNullOrEmpty(Bj.LoginID))
-                Bj.LoginID = "durim1028||ronald03";
+                Bj.LoginID = "dltjsrl0||ronald03";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "ky850224!@#";
+
+            IsDoNotLogin = true;
 #endif
             Bj.ClientVersion = GetVersion();
         }
@@ -364,7 +366,7 @@ namespace ChatClientViewer
             }
 
             ChromeDriver.SetUrl($"http://play.afreecatv.com/{Bj.ChatID}");
-            
+
             Thread.Sleep(100);
             for (int Idx = 0; Idx < 6; Idx++)
             {
@@ -380,7 +382,24 @@ namespace ChatClientViewer
                 ChromeDriver.ExecuteJS("$('#afreecatv_player > div.player_ctrlBox > div.right_ctrl > div.setting_box.on > div > ul > li:nth-child(1) > button').click()");
                 Thread.Sleep(100);
             }
-                
+
+            Thread.Sleep(100);
+            for (int Idx = 0; Idx < 6; Idx++)
+            {
+                var text19 = ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[9]/div/div/div[3]/h2");
+                if (string.IsNullOrEmpty(text19.ResultValue) && text19.ResultValue != "19")
+                    break;
+
+                ChromeDriver.ClickTag(ElementsSelectType.XPath, "//*[@id='layer_high_quality']/div/span/a/span");
+                Thread.Sleep(100);
+
+                ChromeDriver.ClickTag(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[9]/div/div/div[3]/div/button[1]");
+                Thread.Sleep(100);
+
+                //ChromeDriver.ExecuteJS("$('#afreecatv_player > div.video_blind > div.video_blind_in > div.content > div.dialog.type_adult > div.btn_set > button').click()");
+                //Thread.Sleep(100);
+            }
+
         }
 
         private List<BeautifulNode> GetChatNodes(string script, string xPath)
