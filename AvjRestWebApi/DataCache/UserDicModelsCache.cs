@@ -161,9 +161,14 @@ namespace AvjRestWebApi.DataCache
             return userModel;
         }
 
+        public bool IsCache()
+        {
+            return ContainsKey(KeyOfUserDicModels);
+        }
+
         public void RefreshUserDicModels()
         {
-            Refresh(KeyOfUserDicModels);
+            var refresh = GetUserDicModels;
         }
 
         /// <summary>

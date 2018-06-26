@@ -13,6 +13,18 @@ namespace RankCollectorFront
     {
         static void Main(string[] args)
         {
+            var jsonModel = new JsonModel()
+            {
+                Text = "rfsStart"
+            };
+            var webApiCaller = new WebApiCaller();
+            var test = webApiCaller.RefreshAsync(jsonModel).ConfigureAwait(true);
+            Console.WriteLine("end");
+            while(true)
+            {
+                Thread.Sleep(100000);
+            }
+            return;
             // test
             //var bjPagePaser = new BjPagePaser();
             //RankBjModel test = new RankBjModel()
@@ -158,8 +170,12 @@ namespace RankCollectorFront
             bizSettings.SetAferSettings();
             ;
 
+            var jsonModel = new JsonModel()
+            {
+                Text = "rfsStart"
+            };
             var webApiCaller = new WebApiCaller();
-            webApiCaller.RefreshAsync("rfsStart").ConfigureAwait(true);
+            var result = webApiCaller.RefreshAsync(jsonModel).ConfigureAwait(true);
         }
     }
 }

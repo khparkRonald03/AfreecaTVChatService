@@ -16,5 +16,10 @@ namespace DataModels
         [JsonProperty("UserModels")]
         //[DataMember(Name = "UserModels")]
         public List<UserModel> UserModels { get; set; }
+
+        [JsonProperty("text")]
+        //[DataMember(Name = "UserModels")]
+        public string Text { get; set; }
+        
     }
 }

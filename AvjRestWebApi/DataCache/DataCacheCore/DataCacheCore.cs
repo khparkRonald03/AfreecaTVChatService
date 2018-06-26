@@ -55,7 +55,6 @@ namespace AvjRestWebApi.DataCache
         {
             try
             {
-                // DB에서 가져오는 걸로 바꾸기####################    
                 return 10;
             }
             catch (Exception ex)
