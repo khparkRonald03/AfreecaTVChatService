@@ -82,6 +82,19 @@ namespace AvjRestWebApi.DataCache
             }
         }
 
+        protected T GetValue(string key)
+        {
+            try
+            {
+                return List[key].Value;
+            }
+            catch (Exception ex)
+            {
+                string log = ex.Message;
+                return default(T);
+            }
+        }
+
         /// <summary>
         /// 캐시에 저장
         /// </summary>

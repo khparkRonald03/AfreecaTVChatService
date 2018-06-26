@@ -163,7 +163,9 @@ namespace AvjRestWebApi.DataCache
 
         public bool IsCache()
         {
-            return ContainsKey(KeyOfUserDicModels);
+            var t1 = ContainsKey(KeyOfUserDicModels);
+            var t2 = GetValue(KeyOfUserDicModels)?.Count ?? 0;
+            return  t1 && t2 > 0;
         }
 
         public void RefreshUserDicModels()
