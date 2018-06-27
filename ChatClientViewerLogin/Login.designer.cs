@@ -60,7 +60,7 @@
             this.iTalk_ThemeContainer1.SmartBounds = false;
             this.iTalk_ThemeContainer1.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.iTalk_ThemeContainer1.TabIndex = 0;
-            this.iTalk_ThemeContainer1.Text = "ABJ v1.1";
+            this.iTalk_ThemeContainer1.Text = "ABJ";
             // 
             // ChkDoNotLogin
             // 
@@ -90,7 +90,6 @@
             this.TxtPw.Font = new System.Drawing.Font("Tahoma", 11F);
             this.TxtPw.ForeColor = System.Drawing.Color.DimGray;
             this.TxtPw.Image = null;
-            this.TxtPw.ImeMode = System.Windows.Forms.ImeMode.Alpha;
             this.TxtPw.Location = new System.Drawing.Point(102, 130);
             this.TxtPw.MaxLength = 32767;
             this.TxtPw.Multiline = false;
@@ -164,7 +163,7 @@
             this.Name = "Login";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ABJ v1.1";
+            this.Text = "ABJ";
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.Load += new System.EventHandler(this.Login_Load);
             this.Shown += new System.EventHandler(this.Login_Shown);
