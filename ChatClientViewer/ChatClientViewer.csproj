@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>abj-logo2.ico</ApplicationIcon>
+    <ApplicationIcon>abjchat_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="abj-logo2.ico" />
+    <Content Include="abjchat_icon.ico" />
     <None Include="Resources\settings.png" />
   </ItemGroup>
   <ItemGroup>

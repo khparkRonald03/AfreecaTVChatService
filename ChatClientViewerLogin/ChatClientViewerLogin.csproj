@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>abj-logo2.ico</ApplicationIcon>
+    <ApplicationIcon>abjchat_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="abj-logo2.ico" />
+    <Content Include="abjchat_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
