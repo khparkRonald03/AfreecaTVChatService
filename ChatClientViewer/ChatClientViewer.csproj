@@ -168,7 +168,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="abj-logo2.ico" />
     <Content Include="abjchat_icon.ico" />
     <None Include="Resources\settings.png" />
   </ItemGroup>
