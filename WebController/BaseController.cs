@@ -44,7 +44,7 @@ namespace WebController
                 string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
                 //string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";
                 //string vpnPath = $"{startupPath}\\UltraSurf-Security,-Privacy-&-Unblock-VPN_v1.5.4.crx";
-                string[] extentionparams = new string[2];
+                string[] extentionparams = new string[1];
 
                 if (File.Exists(adlockPath))
                     extentionparams[0] = adlockPath;
