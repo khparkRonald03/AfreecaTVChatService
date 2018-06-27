@@ -44,6 +44,8 @@ namespace ChatClientViewerLogin
             
             TxtPw.Text = PwText;
             TxtId.Focus();
+            TxtPw.Focus();
+            TxtId.Focus();
         }
 
         private void TxtId_Enter(object sender, EventArgs e)

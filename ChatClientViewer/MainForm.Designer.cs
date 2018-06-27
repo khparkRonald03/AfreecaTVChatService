@@ -34,6 +34,7 @@
             this.ITContainer = new iTalk.iTalk_ThemeContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.LoadingPanel = new iTalk.iTalk_Panel();
+            this.DelayLabel = new iTalk.iTalk_LinkLabel();
             this.iTalk_LinkLabel1 = new iTalk.iTalk_LinkLabel();
             this.iTalk_ProgressIndicator1 = new iTalk.iTalk_ProgressIndicator();
             this.PlSetting = new iTalk.iTalk_Panel();
@@ -43,7 +44,6 @@
             this.iTalk_Panel2 = new iTalk.iTalk_Panel();
             this.BtnReStart = new System.Windows.Forms.Button();
             this.BtnSetting = new System.Windows.Forms.Button();
-            this.DelayLabel = new iTalk.iTalk_LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.ITContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -83,7 +83,7 @@
             this.ITContainer.Sizable = true;
             this.ITContainer.Size = new System.Drawing.Size(340, 877);
             this.ITContainer.SmartBounds = false;
-            this.ITContainer.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultLocation;
+            this.ITContainer.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.ITContainer.TabIndex = 0;
             // 
             // splitContainer1
@@ -119,6 +119,23 @@
             this.LoadingPanel.Size = new System.Drawing.Size(219, 141);
             this.LoadingPanel.TabIndex = 2;
             this.LoadingPanel.Text = "iTalk_Panel1";
+            // 
+            // DelayLabel
+            // 
+            this.DelayLabel.ActiveLinkColor = System.Drawing.Color.Red;
+            this.DelayLabel.AutoSize = true;
+            this.DelayLabel.BackColor = System.Drawing.Color.Transparent;
+            this.DelayLabel.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.DelayLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.DelayLabel.LinkColor = System.Drawing.Color.Red;
+            this.DelayLabel.Location = new System.Drawing.Point(21, 122);
+            this.DelayLabel.Name = "DelayLabel";
+            this.DelayLabel.Size = new System.Drawing.Size(176, 13);
+            this.DelayLabel.TabIndex = 3;
+            this.DelayLabel.TabStop = true;
+            this.DelayLabel.Text = "로딩 지연 시 재시작하여 주십시오.";
+            this.DelayLabel.Visible = false;
+            this.DelayLabel.VisitedLinkColor = System.Drawing.Color.Red;
             // 
             // iTalk_LinkLabel1
             // 
@@ -250,23 +267,6 @@
             this.BtnSetting.MouseLeave += new System.EventHandler(this.BtnSetting_MouseLeave);
             this.BtnSetting.MouseHover += new System.EventHandler(this.BtnSetting_MouseHover);
             // 
-            // DelayLabel
-            // 
-            this.DelayLabel.ActiveLinkColor = System.Drawing.Color.Red;
-            this.DelayLabel.AutoSize = true;
-            this.DelayLabel.BackColor = System.Drawing.Color.Transparent;
-            this.DelayLabel.Font = new System.Drawing.Font("Segoe UI", 8F);
-            this.DelayLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.DelayLabel.LinkColor = System.Drawing.Color.Red;
-            this.DelayLabel.Location = new System.Drawing.Point(21, 122);
-            this.DelayLabel.Name = "DelayLabel";
-            this.DelayLabel.Size = new System.Drawing.Size(176, 13);
-            this.DelayLabel.TabIndex = 3;
-            this.DelayLabel.TabStop = true;
-            this.DelayLabel.Text = "로딩 지연 시 재시작하여 주십시오.";
-            this.DelayLabel.Visible = false;
-            this.DelayLabel.VisitedLinkColor = System.Drawing.Color.Red;
-            // 
             // toolTip1
             // 
             this.toolTip1.IsBalloon = true;
@@ -282,6 +282,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(126, 39);
             this.Name = "Main";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TransparencyKey = System.Drawing.Color.Fuchsia;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.Load += new System.EventHandler(this.Main_Load);

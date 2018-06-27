@@ -12,6 +12,9 @@ namespace AvjRestWebApi.DataCache
     {
         private static UserDicModelsCache instance = null;
         private static readonly object SycStaticLock = new object();
+
+        private BizAbjLog bizAbjLog = new BizAbjLog();
+
         /// <summary>
         /// Singleton Instance
         /// </summary>
@@ -43,12 +46,16 @@ namespace AvjRestWebApi.DataCache
                 // 1. 캐시에 저장할 키는  하나로 공유하여 전체가 사용할 수 있도록 합니다.
                 string key = KeyOfUserDicModels;
 
+                bizAbjLog.SetAbjLog($"UserDicModelsCache 캐시 있는지 확인 : {ContainsKey(key).ToString()}");
                 // 2. 캐시 된 데이터가 없는 경우 조회하여 캐시합니다.
                 if (!ContainsKey(key))
                 {
+                    bizAbjLog.SetAbjLog($"UserDicModelsCache 캐시 없음 Set함수 시작");
+
                     Set(key, () => {
 
                         var start = DateTime.Now;
+                        bizAbjLog.SetAbjLog($"UserDicModelsCache Set함수 시작 시간 : {start.ToString()}");
 
                         var userDicModels = new Dictionary<string, List<UserModel>>();
                         var biz = new BizUserRank();
@@ -63,20 +70,22 @@ namespace AvjRestWebApi.DataCache
                             var userModels = new List<UserModel>();
 
                             // 몇백 ~ 몇천
-                            Parallel.For(0, rankUserModels.Count, (index) => {
-                            //for (int index = 0; index < rankUserModels.Count; index++)
-                            //{
+                            //Parallel.For(0, rankUserModels.Count, (index) => {
+                            for (int index = 0; index < rankUserModels.Count; index++)
+                            {
                                 var tmp = RankUserModelToUserModel(rankUserModels[index], allUserModels);
                                 lock (SycStaticLock)
                                 {
                                     userModels.Add(tmp);
                                 }
-                            });
+                            }
+                            //);
 
                             userDicModels.Add(firstChar.FirstChar, userModels);
                         }
 
                         var end = (DateTime.Now - start).Minutes;
+                        bizAbjLog.SetAbjLog($"UserDicModelsCache Set함수 종료 시간 : {DateTime.Now.ToString()}, 런닝타임 : {end.ToString()}");
 
                         return userDicModels;
                     });
@@ -170,7 +179,10 @@ namespace AvjRestWebApi.DataCache
 
         public void RefreshUserDicModels()
         {
-            var refresh = GetUserDicModels;
+            if (!Refresh(KeyOfUserDicModels))
+            {
+                var ttt = GetUserDicModels;
+            }
         }
 
         /// <summary>

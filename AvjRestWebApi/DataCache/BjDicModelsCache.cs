@@ -32,6 +32,7 @@ namespace AvjRestWebApi.DataCache
             }
         }
 
+        private BizAbjLog bizAbjLog = new BizAbjLog();
         // 0. 캐시 데이터 별 고유 키를 정의하여 줍니다.
         private readonly string KeyOfGetBjDicModels = "KeyOfGetBjDicModels";
 
@@ -42,12 +43,16 @@ namespace AvjRestWebApi.DataCache
                 // 1. 캐시에 저장할 키는  하나로 공유하여 전체가 사용할 수 있도록 합니다.
                 string key = KeyOfGetBjDicModels;
 
+                bizAbjLog.SetAbjLog($"BjDicModelsCache 캐시 있는지 확인 : {ContainsKey(key).ToString()}");
                 // 2. 캐시 된 데이터가 없는 경우 조회하여 캐시합니다.
                 if (!ContainsKey(key))
                 {
+                    bizAbjLog.SetAbjLog($"BjDicModelsCache 캐시 없음 Set함수 시작");
+
                     Set(key, () => {
 
                         var start = DateTime.Now;
+                        bizAbjLog.SetAbjLog($"BjDicModelsCache Set함수 시작 시간 : {start.ToString()}");
 
                         var bjDicModels = new Dictionary<string, List<UserModel>>();
                         var biz = new BizBjRank();
@@ -69,6 +74,7 @@ namespace AvjRestWebApi.DataCache
                         }
 
                         var end = (DateTime.Now - start).Minutes;
+                        bizAbjLog.SetAbjLog($"BjDicModelsCache Set함수 종료 시간 : {DateTime.Now.ToString()}, 런닝타임 : {end.ToString()}");
 
                         return bjDicModels;
                     });
@@ -110,7 +116,10 @@ namespace AvjRestWebApi.DataCache
 
         public void RefreshUserDicModels()
         {
-            var refresh = GetBjDicModels;
+            if (!Refresh(KeyOfGetBjDicModels))
+            {
+                var ttt = GetBjDicModels;
+            }
         }
 
         /// <summary>

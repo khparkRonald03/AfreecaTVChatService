@@ -76,15 +76,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Biz\BizAbjLog.cs" />
     <Compile Include="Biz\BizBjRank.cs" />
     <Compile Include="Biz\BizG5_member.cs" />
     <Compile Include="Biz\BizRankCollectorSettings.cs" />
     <Compile Include="Biz\BizUserRank.cs" />
+    <Compile Include="Dac\DacAbjLog.cs" />
     <Compile Include="Dac\DacBjRank.cs" />
     <Compile Include="Dac\DacG5_member.cs" />
     <Compile Include="Dac\DacRankCollectorSettings.cs" />
     <Compile Include="Dac\DacUserRank.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\ApiLog.cs" />
     <Compile Include="Query\BjInfoQuery.cs" />
     <Compile Include="Query\BjRankQuery.cs" />
     <Compile Include="Query\G5_memberQuery.cs" />

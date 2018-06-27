@@ -111,7 +111,6 @@
             this.TxtId.Font = new System.Drawing.Font("Tahoma", 11F);
             this.TxtId.ForeColor = System.Drawing.Color.DimGray;
             this.TxtId.Image = null;
-            this.TxtId.ImeMode = System.Windows.Forms.ImeMode.Alpha;
             this.TxtId.Location = new System.Drawing.Point(102, 83);
             this.TxtId.MaxLength = 32767;
             this.TxtId.Multiline = false;

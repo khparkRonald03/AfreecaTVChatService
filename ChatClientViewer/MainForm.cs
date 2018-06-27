@@ -67,7 +67,7 @@ namespace ChatClientViewer
         delegate void Control_Invoker();
         delegate void Control_Invoker_ParamBool(bool bl);
         delegate void Control_Invoker_ParamStr(string s);
-        delegate void Control_Invoker_ParamMsgBox(string msg, string title, MessageBoxButtons buttons, MessageBoxIcon icon);
+        delegate void Control_Invoker_ParamMsgBox(string msg, string title, MessageBoxButtons buttons, MessageBoxIcon icon, bool close);
         delegate void Control_Invoker_ParamStrs(string s1, string s2, string s3);
         delegate void Control_Invoker_ParamJsonModel(JsonModel jsonModel);
         delegate void Control_Invoker_ParamUserModles(List<UserModel> userModels);
@@ -93,9 +93,9 @@ namespace ChatClientViewer
             }
 
 #if DEBUG
-            // test #####
+            ////test #####
             //if (string.IsNullOrEmpty(Bj.LoginID))
-            //    Bj.LoginID = "killgusdnk||ronald03";
+            //    Bj.LoginID = "nila25||ronald03";
 
             //if (string.IsNullOrEmpty(LoginuserPW))
             //    LoginuserPW = "ky850224!@#";
@@ -225,7 +225,7 @@ namespace ChatClientViewer
             CallCheckVersionWebApi();
 
             // test ###########
-            ChromeDriver = new Controller(false, StartupPath);
+            ChromeDriver = new Controller(true, StartupPath);
 
             var startResult = ChromeDriver.Start();
             if (!startResult.ResultValue)
@@ -366,13 +366,13 @@ namespace ChatClientViewer
                 while (true)
                 {
                     cnt++;
-                    if (ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='logArea']/a").ResultValue == Bj.LoginID2)
+                    var nicName = ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='logArea']/a").ResultValue;
+                    if (!string.IsNullOrEmpty(nicName))
                         break;
 
                     if (cnt == 30)
                     {
-                        ShowMessageBox("로그인 실패로 프로그램이 종료 됩니다.", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                        ThisClose("");
+                        ShowMessageBox("로그인 실패로 프로그램이 종료 됩니다.", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop, true);
                     }
                     Thread.Sleep(200);
                 }
@@ -666,23 +666,20 @@ namespace ChatClientViewer
 
             if (returnMessage == null || returnMessage.BjModel == null)
             {
-                ShowMessageBox("인증이 실패 되어 프로그램이 종료 됩니다.", "인증 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                ThisClose("");
+                ShowMessageBox("인증이 실패 되어 프로그램이 종료 됩니다.", "인증 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop, true);
                 return;
             }
 
             if (!returnMessage.BjModel.CertificationFlag)
             {
-                ShowMessageBox(returnMessage.BjModel.CertificationMessage, "인증 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                ThisClose("");
+                ShowMessageBox(returnMessage.BjModel.CertificationMessage, "인증 실패", MessageBoxButtons.OK, MessageBoxIcon.Stop, true);
                 return;
             }
 
             if (returnMessage.BjModel.ExpireFlag)
             {
                 // 만료 결제를 하여주십시오.
-                ShowMessageBox(returnMessage.BjModel.ExpireMessage, "사용기간 만료", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                ThisClose("");
+                ShowMessageBox(returnMessage.BjModel.ExpireMessage, "사용기간 만료", MessageBoxButtons.OK, MessageBoxIcon.Stop, true);
                 return;
             }
 
@@ -695,16 +692,18 @@ namespace ChatClientViewer
             Bj = returnMessage.BjModel;
         }
 
-        private void ShowMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon msgIcon)
+        private void ShowMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon msgIcon, bool isClose = false)
         {
             if (ChatBrowser.InvokeRequired)
             {
                 var ci = new Control_Invoker_ParamMsgBox(ShowMessageBox);
-                this.BeginInvoke(ci, message, title, buttons, msgIcon);
+                this.BeginInvoke(ci, message, title, buttons, msgIcon, isClose);
             }
             else
             {
                 MessageBoxEx.Show(this, message, title, MessageBoxButtons.OK, msgIcon);
+                if (isClose)
+                    this.Close();
             }
         }
 

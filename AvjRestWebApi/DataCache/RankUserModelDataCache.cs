@@ -67,7 +67,7 @@ namespace AvjRestWebApi.DataCache
         /// <returns></returns>
         protected override int GetDuration()
         {
-            return 0;
+            return 24;
         }
     }
 }

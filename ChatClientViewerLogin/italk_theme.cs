@@ -2252,6 +2252,7 @@ namespace iTalk
         private bool isPasswordMasked = false;
         private Pen P1;
         private SolidBrush B1;
+        private ImeMode _ImeMode;
 
         #endregion
         #region Properties
@@ -2298,6 +2299,19 @@ namespace iTalk
                 }
             }
         }
+        public new ImeMode ImeMode
+        {
+            get { return _ImeMode; }
+            set
+            {
+                _ImeMode = value;
+                if (iTalkTB != null)
+                {
+                    iTalkTB.ImeMode = value;
+                }
+            }
+        }
+
         public bool Multiline
         {
             get { return _Multiline; }
@@ -2468,6 +2482,7 @@ namespace iTalk
             Font = new Font("Tahoma", 11);
             Size = new Size(135, 43);
             DoubleBuffered = true;
+            ImeMode = ImeMode.Alpha;
         }
         protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
         {

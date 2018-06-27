@@ -14,6 +14,8 @@ namespace AvjRestWebApi.Controllers
     //[RoutePrefix("api/users")]
     public class MatchingController : ApiController
     {
+        BizAbjLog bizAbjLog = new BizAbjLog();
+
         [HttpPost]
         [Route("Matching/UsersMatching")]
         public JsonModel UsersMatching(JsonModel jsonModel)
@@ -45,13 +47,17 @@ namespace AvjRestWebApi.Controllers
                 return null;
 
             var result = new JsonModel();
-            if (BjDicModelsCache.Instance.IsCache() && UserDicModelsCache.Instance.IsCache())
+            if (false && BjDicModelsCache.Instance.IsCache() && UserDicModelsCache.Instance.IsCache())
             {
+                bizAbjLog.SetAbjLog($"{bj.ID} : ActionType1 시작");
                 result = ActionType1(users);
+                bizAbjLog.SetAbjLog($"{bj.ID} : ActionType1 종료");
             }
             else
             {
+                bizAbjLog.SetAbjLog($"{bj.ID} : ActionType2 시작");
                 result = ActionType2(bj, users);
+                bizAbjLog.SetAbjLog($"{bj.ID} : ActionType2 종료");
             }
 
             result.UserModels = result.UserModels?.Distinct()?.ToList();
@@ -66,39 +72,56 @@ namespace AvjRestWebApi.Controllers
                 UserModels = new List<UserModel>()
             };
 
+            bizAbjLog.SetAbjLog($"ActionType1 캐시 데이터 받아오기 시작");
+            var bjDicModels = BjDicModelsCache.Instance.GetBjDicModels;
+            var userDicModels = UserDicModelsCache.Instance.GetUserDicModels;
+            bizAbjLog.SetAbjLog($"ActionType1 캐시 데이터 받아오기 종료");
+
+            bizAbjLog.SetAbjLog($"-유저 수 : {users.Count.ToString()}");
             for (int Idx = 0; Idx < users.Count; Idx++)
             {
                 var user = users[Idx];
-                var firstChar = user.ID.Substring(0, 1);
 
-                var bjDicModels = BjDicModelsCache.Instance.GetBjDicModels;
-                var userDicModels = UserDicModelsCache.Instance.GetUserDicModels;
+                bizAbjLog.SetAbjLog($"{Idx}. 유저 루프 시작 : {user.ID}");
+                if (string.IsNullOrEmpty(user.ID))
+                    continue;
+
+                bizAbjLog.SetAbjLog($"{Idx}. 유저 루프 동작 시작 : {user.ID}");
+
+                var firstChar = user.ID.Substring(0, 1);
 
                 if (bjDicModels.Keys.Any(k => k == firstChar))
                 {
+                    bizAbjLog.SetAbjLog($"{Idx}. Bj인덱스 문자로 가져오기 시작 : {firstChar}");
+
                     for (int bjIdx = 0; bjIdx < bjDicModels[firstChar].Count; bjIdx++)
                     {
                         if (bjDicModels[firstChar][bjIdx].ID == user.ID)
                         {
                             result.UserModels.Add(bjDicModels[firstChar][bjIdx]);
-                            continue;
                         }
                     }
+
+                    bizAbjLog.SetAbjLog($"{Idx}. Bj인덱스 문자로 가져오기 끝 : {firstChar}");
 
                 }
                 else if (userDicModels.Keys.Any(k => k == firstChar))
                 {
+                    bizAbjLog.SetAbjLog($"{Idx}. user인덱스 문자로 가져오기 시작 : {firstChar}");
+
                     for (int userIdx = 0; userIdx < userDicModels[firstChar].Count; userIdx++)
                     {
                         if (userDicModels[firstChar][userIdx].ID == user.ID)
                         {
                             result.UserModels.Add(userDicModels[firstChar][userIdx]);
-                            continue;
                         }
                     }
 
+                    bizAbjLog.SetAbjLog($"{Idx}. user인덱스 문자로 가져오기 끝 : {firstChar}");
                 }
             }
+
+            bizAbjLog.SetAbjLog($"ActionType1 완료");
 
             return result;
         }
@@ -208,7 +231,6 @@ namespace AvjRestWebApi.Controllers
                 if (clientUsers[clientUserIdx].BJs == null)
                     clientUsers[clientUserIdx].BJs = new List<BjModel>();
 
-                //var matchingUser = serverUsers.FindAll(b => b.UserID == clientUsers[clientUserIdx].ID);
                 var matchingUser = new List<RankUserModel>();
                 for (int Idx = 0; Idx < serverUsers.Count(); Idx++)
                 {
@@ -282,10 +304,20 @@ namespace AvjRestWebApi.Controllers
         [Route("Matching/Refresh")]
         public JsonModel Refresh(JsonModel text)
         {
+            bizAbjLog.SetAbjLog($"Refresh 진입");
             if (text.Text == "rfsStart")
             {
+                bizAbjLog.SetAbjLog($"Refresh 시작");
                 BjDicModelsCache.Instance.RefreshUserDicModels();
                 UserDicModelsCache.Instance.RefreshUserDicModels();
+                //var bjDicModels = BjDicModelsCache.Instance.GetBjDicModels;
+                //var userDicModels = UserDicModelsCache.Instance.GetUserDicModels;
+                var rankBjModels = RankBjDataCache.Instance.GetRankBjModels;
+                var rankUserModels = RankUserModelDataCache.Instance.GetRankUserModels;
+                
+                bizAbjLog.SetAbjLog($"Refresh 종료");
+                bizAbjLog.SetAbjLog($"BjDicModelsCache : {BjDicModelsCache.Instance.IsCache().ToString()}");
+                bizAbjLog.SetAbjLog($"UserDicModelsCache : {UserDicModelsCache.Instance.IsCache().ToString()}");
             }
             text.Text = "end";
             return text;
@@ -339,7 +371,7 @@ namespace AvjRestWebApi.Controllers
                 else if (level < 4)
                 {
                     jsonModel.BjModel.CertificationFlag = false;
-                    jsonModel.BjModel.ExpireMessage = "사용기간이 만료되어 프로그램이 종료 됩니다.";
+                    jsonModel.BjModel.CertificationMessage = "사용기간이 만료되어 프로그램이 종료 됩니다.";
                 }
                 if (string.IsNullOrEmpty(date) || days > 0)
                 {
