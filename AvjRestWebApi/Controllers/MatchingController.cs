@@ -368,10 +368,8 @@ namespace AvjRestWebApi.Controllers
                 {
                     jsonModel.BjModel.CertificationFlag = false;
                     jsonModel.BjModel.CertificationMessage = "잘못된 접근입니다.";
-                    return jsonModel;
                 }
-
-                if (level >= 4)
+                else if (level >= 4)
                 {
                     jsonModel.BjModel.CertificationFlag = true;
                 }
