@@ -27,6 +27,8 @@ namespace ChatClientViewerLogin
         {
             (new ShowHelper()).ShowDialog();
 
+            var chkDoNotLogin = GetConfigData("ChkDoNotLogin");
+            ChkDoNotLogin.Checked = chkDoNotLogin == true.ToString();
             var idSave = GetConfigData("CbIdSave");
             if (idSave == true.ToString())
             {
@@ -202,6 +204,16 @@ namespace ChatClientViewerLogin
             {
                 BtnLogin_Click(null, null);
             }
+        }
+
+        private void CbIdSave_CheckedChanged(object sender)
+        {
+            SetConfigData("CbIdSave", CbIdSave.Checked.ToString());
+        }
+
+        private void ChkDoNotLogin_CheckedChanged(object sender)
+        {
+            SetConfigData("ChkDoNotLogin", ChkDoNotLogin.Checked.ToString());
         }
     }
 }

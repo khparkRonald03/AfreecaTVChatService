@@ -72,6 +72,7 @@
             this.ChkDoNotLogin.Size = new System.Drawing.Size(130, 15);
             this.ChkDoNotLogin.TabIndex = 5;
             this.ChkDoNotLogin.Text = "아프리카 비로그인";
+            this.ChkDoNotLogin.CheckedChanged += new iTalk.iTalk_CheckBox.CheckedChangedEventHandler(this.ChkDoNotLogin_CheckedChanged);
             // 
             // CbIdSave
             // 
@@ -83,6 +84,7 @@
             this.CbIdSave.Size = new System.Drawing.Size(98, 15);
             this.CbIdSave.TabIndex = 4;
             this.CbIdSave.Text = "아이디 저장";
+            this.CbIdSave.CheckedChanged += new iTalk.iTalk_CheckBox.CheckedChangedEventHandler(this.CbIdSave_CheckedChanged);
             // 
             // TxtPw
             // 

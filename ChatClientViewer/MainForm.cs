@@ -92,16 +92,6 @@ namespace ChatClientViewer
                     IsDoNotLogin = true;
             }
 
-//#if DEBUG
-            //test #####
-            if (string.IsNullOrEmpty(Bj.LoginID))
-                Bj.LoginID = "mercia||ronald03";
-
-            if (string.IsNullOrEmpty(LoginuserPW))
-                LoginuserPW = "ky850224!@#";
-
-            IsDoNotLogin = true;
-//#endif
             Bj.ClientVersion = GetVersion();
         }
 
