@@ -37,23 +37,18 @@ namespace WebController
             {
                 Options = new ChromeOptions();
                 Options.AddArgument("headless");
+                Options.AddArgument("lang=ko_KR");
                 Options.AddArgument("mute-audio");
                 Options.AddArgument("--start-maximized");
-                //Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
 
-                string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
-                //string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";
-                //string vpnPath = $"{startupPath}\\UltraSurf-Security,-Privacy-&-Unblock-VPN_v1.5.4.crx";
-                string[] extentionparams = new string[1];
+                //string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
+                //string[] extentionparams = new string[1];
 
-                if (File.Exists(adlockPath))
-                    extentionparams[0] = adlockPath;
+                //if (File.Exists(adlockPath))
+                //    extentionparams[0] = adlockPath;
 
-                //if (File.Exists(vpnPath))
-                //    extentionparams[1] = vpnPath;
-
-                if (extentionparams.Length > 0)
-                    Options.AddExtensions(extentionparams);
+                //if (extentionparams.Length > 0)
+                //    Options.AddExtensions(extentionparams);
 
                 Service = ChromeDriverService.CreateDefaultService();
                 Service.HideCommandPromptWindow = true;
@@ -62,22 +57,14 @@ namespace WebController
             {
                 Options = new ChromeOptions();
                 Options.AddArgument("mute-audio");
+                Options.AddArgument("lang=ko_KR");
                 Options.AddArgument("--start-maximized");
-                //Options.AddArguments("user-data-dir=/path/to/your/custom/profile");
 
                 string adlockPath = $"{startupPath}\\Adblock-Plus_v3.1.crx";
-                //string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-Hola_v1.99.348.crx";
-                //string vpnPath = $"{startupPath}\\UltraSurf-Security,-Privacy-&-Unblock-VPN_v1.5.4.crx";
-                //string vpnPath = $"{startupPath}\\ZenMate-VPN-Best-Cyber-Security-&-Unblock_v6.2.4.crx";
-                //string vpnPath = $"{startupPath}\\Unlimited-Free-VPN-+-Unblock-Sites-_-FishVPN_v1.0.5.crx";
-
                 string[] extentionparams = new string[1];
 
                 if (File.Exists(adlockPath))
                     extentionparams[0] = adlockPath;
-
-                //if (File.Exists(vpnPath))
-                //    extentionparams[1] = vpnPath;
 
                 if (extentionparams.Length > 0)
                     Options.AddExtensions(extentionparams);

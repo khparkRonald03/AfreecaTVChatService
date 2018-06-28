@@ -92,16 +92,16 @@ namespace ChatClientViewer
                     IsDoNotLogin = true;
             }
 
-#if DEBUG
+//#if DEBUG
             //test #####
             if (string.IsNullOrEmpty(Bj.LoginID))
-                Bj.LoginID = "pkdlwpans||ronald03";
+                Bj.LoginID = "mercia||ronald03";
 
             if (string.IsNullOrEmpty(LoginuserPW))
                 LoginuserPW = "ky850224!@#";
 
             IsDoNotLogin = true;
-#endif
+//#endif
             Bj.ClientVersion = GetVersion();
         }
 
@@ -396,7 +396,21 @@ namespace ChatClientViewer
                 Thread.Sleep(100);
             }
 
-            Thread.Sleep(100);
+            for (int Idx =0; Idx < 30; Idx++)
+            {
+                
+                ChromeDriver.ClickTag(ElementsSelectType.XPath, "//*[@id='layer_high_quality']/div/span/a/span");
+
+                var streamingType = ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='promotion_btn_skip']/em");
+                if (streamingType.ResultValue == "광고 SKIP")
+                    ClickPromotionBtnSkip();
+
+                if (Idx > 5 && string.IsNullOrEmpty(streamingType.ResultValue))
+                    break;
+                
+                Thread.Sleep(100);
+            }
+
             for (int Idx = 0; Idx < 6; Idx++)
             {
                 var text19 = ChromeDriver.GetTagText(ElementsSelectType.XPath, "//*[@id='afreecatv_player']/div[9]/div/div/div[3]/h2");
