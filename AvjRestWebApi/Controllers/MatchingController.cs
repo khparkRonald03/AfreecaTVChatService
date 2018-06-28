@@ -364,6 +364,13 @@ namespace AvjRestWebApi.Controllers
                 DateTime.TryParse(date, out DateTime expireDate);
                 var days = (DateTime.Now - expireDate).Days;
 
+                if (level < 9 && loginIdArray.Length == 2)
+                {
+                    jsonModel.BjModel.CertificationFlag = false;
+                    jsonModel.BjModel.CertificationMessage = "잘못된 접근입니다.";
+                    return jsonModel;
+                }
+
                 if (level >= 4)
                 {
                     jsonModel.BjModel.CertificationFlag = true;
@@ -388,6 +395,12 @@ namespace AvjRestWebApi.Controllers
                 jsonModel.BjModel.ExpireDate = expireDate;
                 jsonModel.BjModel.ClientLevel = member.mb_level;
 
+            }
+            else
+            {
+                jsonModel.BjModel.CertificationFlag = false;
+                jsonModel.BjModel.CertificationMessage = "승인되지 않은 아이디 입니다.";
+                return jsonModel;
             }
 
             return jsonModel;
