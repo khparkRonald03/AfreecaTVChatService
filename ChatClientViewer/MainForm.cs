@@ -35,6 +35,7 @@ namespace ChatClientViewer
 
         Thread BackGround1;
         Thread BackGround2;
+        Thread BackGround3;
 
         WebApiCaller webApiCaller = new WebApiCaller();
 
@@ -269,6 +270,13 @@ namespace ChatClientViewer
             DataDisplayTimer.Elapsed += new ElapsedEventHandler(UIRefreshTimer_Elapsed);
             DataDisplayTimer.Start();
 
+            var ts4 = new ThreadStart(RemoveUserTimer_Elapsed);
+            BackGround3 = new Thread(ts4)
+            {
+                IsBackground = true
+            };
+            BackGround3.Start();
+
             var ts3 = new ThreadStart(ChatRefreshTimer_Elapsed);
             BackGround2 = new Thread(ts3)
             {
@@ -279,7 +287,6 @@ namespace ChatClientViewer
 
         // 접속 사용자 수집
         private void GetUserTimer_Elapsed(object sender, ElapsedEventArgs e)
-        //private void GetUserTimer_Elapsed()
         {
             lock (LockObject)
             {
@@ -315,14 +322,13 @@ namespace ChatClientViewer
 
         }
 
-        //private void CallApiTimer_Elapsed(object sender, ElapsedEventArgs e)
         private void CallApiTimer_Elapsed()
         {
             while (true)
             {
                 // 퇴장 사용자 제거 데이터 매칭 하고 받아오기
                 RemoveLeaveUserAndWebApiMatching();
-                Thread.Sleep(1000*5);
+                Thread.Sleep(100);
             }
         }
 
@@ -611,6 +617,7 @@ namespace ChatClientViewer
             var nUsers = TmpNewUsersQueue.Dequeue();
             var tmpInUsers = new List<UserModel>();
             var tmpOutUsers = new List<UserModel>();
+            var tmpOutUsers2 = new List<UserModel>();
             var tmpcUsers = new List<UserModel>();
             var cUsersTemp = cUsers;
             lock (LockObject)
@@ -631,8 +638,17 @@ namespace ChatClientViewer
                                    where nUser is null
                                    select cUser).ToList();
 
-                    DelUsersQueue.Enqueue(tmpOutUsers);
-                    OutChatUsersQueue.Enqueue(tmpOutUsers);
+                    tmpOutUsers2 = (from cUser in cUsersTemp
+                                   join nUser in nUsers on cUser.ID equals nUser.ID into users
+                                   from nUser in users.DefaultIfEmpty()
+                                   where nUser is null
+                                   select cUser).ToList();
+
+                    if (tmpOutUsers != null && tmpOutUsers.Count > 0)
+                    {
+                        DelUsersQueue.Enqueue(tmpOutUsers);
+                        OutChatUsersQueue.Enqueue(tmpOutUsers2);
+                    }
                 }
 
                 // 퇴장 사용자 제거
@@ -727,16 +743,32 @@ namespace ChatClientViewer
             }
         }
 
-        //private void ChatRefreshTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void RemoveUserTimer_Elapsed()
+        {
+            while (true)
+            {
+                if (DelUsersQueue != null && DelUsersQueue.Count > 0)
+                {
+                    var tempUsers = new List<string>();
+                    var outUsers = DelUsersQueue.Dequeue();
+                    foreach (var user in outUsers)
+                        tempUsers.Add(user.ID);
+
+                    var hideUsers = string.Join("|", tempUsers.ToArray());
+                    DellUserTable(hideUsers);
+                }
+                
+                Thread.Sleep(100);
+            }
+
+        }
+
         private void ChatRefreshTimer_Elapsed()
         {
             while (true)
             {
-                //lock (LockObject)
-                //{
                 // 수집 된 채팅 정보 필요없는 것 걸러내고 화면에 리프레쉬
                 ChatRefresh();
-                //}
                 Thread.Sleep(100);
             }
 
@@ -794,26 +826,6 @@ namespace ChatClientViewer
                     return;
                 }
             }
-
-            //lock (LockObject)
-            //{
-            //    InUsersQueue.Enqueue(check);
-            //    InChatUsersQueue.Enqueue(check);
-            //    cUsers.AddRange(check);
-            //    //cUsers = cUsers.Distinct().ToList();
-            //    var cUsercheck = new List<UserModel>();
-            //    foreach (var tu in cUsers)
-            //    {
-            //        if (cUsercheck.Any(c => c.ID == tu.ID))
-            //        {
-            //            continue;
-            //        }
-
-            //        cUsercheck.Add(tu);
-            //    }
-            //    cUsers = cUsercheck;
-            //}
-            
         }
 
         private void UsersRefresh()
@@ -901,17 +913,6 @@ namespace ChatClientViewer
             }
 
             AddUserTable(bjHtml, kingHtml, bigFanHtml);
-
-            if (DelUsersQueue == null || DelUsersQueue.Count <= 0)
-                return;
-
-            var tempUsers = new List<string>();
-            var outUsers = DelUsersQueue.Dequeue();
-            foreach (var user in outUsers)
-                tempUsers.Add(user.ID);
-
-            var hideUsers = string.Join("|", tempUsers.ToArray());
-            DellUserTable(hideUsers);
         }
 
         private void AddUserTable(string bjHtml, string kingHtml, string bigFanHtml)
@@ -937,8 +938,6 @@ namespace ChatClientViewer
                 {
                     UserBrowser.ExecuteScriptAsync("AddUserHtml", new object[] { "sTopFanStarBalloon_BigFan", bigFanHtml });
                 }
-
-                //SetLoadingPanelDisplay(false);
             }
         }
 
@@ -962,13 +961,7 @@ namespace ChatClientViewer
         {
             if (cUsers == null || nChatQueue == null)
                 return;
-
-            //if (cUsers == null || cUsers.Count <= 0)
-            //    return;
-
-            //if (nChatQueue == null || nChatQueue.Count <= 0)
-            //    return;
-
+            
             // 채팅 수집
             GetChat("return document.getElementById('chat_memoyo').innerHTML", "//dl");
 

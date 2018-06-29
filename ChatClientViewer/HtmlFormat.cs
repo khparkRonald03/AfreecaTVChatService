@@ -79,9 +79,8 @@ namespace ChatClientViewer
 
                     var ids = idStr.split('|');
                     for (var i = 0; i < ids.length; i++) {
-
-                        $('#' + ids[i]).css('display', 'none');
                         $('#' + ids[i]).attr('id', 'del_' + $('#' + ids[i]).attr('id'));
+                        $('#del_' + ids[i]).css('display', 'none');
                     }
 
                 }
@@ -157,12 +156,12 @@ namespace ChatClientViewer
         /// <summary>
         /// BJ 정보 팝업 하위요소 1
         /// </summary>
-        public static string BjInfoBjPopUpContents1 = "<li style='font-weight:bold;width:160px'><div style='font-weight:bold;display:inline-block; width:80px;'>{0}:</div><spann style='color: #FF5E00'>{1}&nbsp;</spann>위</li>";
+        public static string BjInfoBjPopUpContents1 = "<li style='font-weight:bold;width:160px'><div style='font-weight:bold;display:inline-block; width:80px;'>{0}:</div><spann style='color: #FF0000'>{1}&nbsp;</spann>위</li>";
 
         /// <summary>
         /// BJ 정보 팝업 하위요소 2
         /// </summary>
-        public static string BjInfoBjPopUpContents2 = "<li style='font-weight:bold;width:160px'><div style='font-weight:bold;display:inline-block; width:80px;'>{0}:</div><spann style='color: #FF5E00'>{1}&nbsp;</spann>{2}</li>";
+        public static string BjInfoBjPopUpContents2 = "<li style='font-weight:bold;width:160px'><div style='font-weight:bold;display:inline-block; width:80px;'>{0}:</div><spann style='color: #FF0000'>{1}&nbsp;</spann>{2}</li>";
 
         #endregion
 
@@ -201,7 +200,7 @@ namespace ChatClientViewer
         /// <summary>
         /// Bj 하위요소 [파라미터 - 닉네임, 회장 아이콘Url]
         ///</summary>
-        public static string KingHtmlBjChild = "<span>{0}</span><img src='{1}' alt='' />";
+        public static string KingHtmlBjChild = "<span>{0}</span>&nbsp;<img src='{1}' alt='' />&nbsp;";
 
         #endregion
 
@@ -245,7 +244,7 @@ namespace ChatClientViewer
         /// <summary>
         /// - 닉네임, 하트 Url
         ///</summary>
-        public static string BigFanHtmlBjChild = "<span>{0}</span><img src='{1}' alt='' />";
+        public static string BigFanHtmlBjChild = "<span>{0}</span>&nbsp;<img src='{1}' alt='' />&nbsp;";
 
         #endregion
 
