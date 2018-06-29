@@ -79,8 +79,10 @@ namespace ChatClientViewer
 
                     var ids = idStr.split('|');
                     for (var i = 0; i < ids.length; i++) {
-                        $('#' + ids[i]).attr('id', 'del_' + $('#' + ids[i]).attr('id'));
-                        $('#del_' + ids[i]).css('display', 'none');
+
+                        $('#' + ids[i]).remove();
+                        //$('#' + ids[i]).attr('id', 'del_' + $('#' + ids[i]).attr('id'));
+                        //$('#del_' + ids[i]).css('display', 'none');
                     }
 
                 }

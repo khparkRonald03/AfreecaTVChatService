@@ -774,6 +774,7 @@ namespace ChatClientViewer
 
         }
 
+        List<UserModel> BeforeUserModels = new List<UserModel>();
         private void ApiDataToUserModel()
         {
             while (jsonModels.Count > 0)
@@ -785,7 +786,29 @@ namespace ChatClientViewer
 
                     var jModel = jsonModels.Dequeue();
                     var apiUsers = jModel?.UserModels;
-                    
+
+                    if (BeforeUserModels != null && BeforeUserModels.Count > 0)
+                    {
+                        if (BeforeUserModels.Count == apiUsers.Count)
+                        {
+                            bool isEquals = false;
+                            for (int Idx = 0; Idx < BeforeUserModels.Count; Idx++)
+                            {
+                                if (BeforeUserModels[Idx].ID != apiUsers[Idx].ID)
+                                {
+                                    BeforeUserModels = apiUsers;
+                                    break;
+                                }
+
+                                if (Idx == BeforeUserModels.Count -1)
+                                    isEquals = true;
+                            }
+
+                            if (isEquals)
+                                continue;
+                        }
+                    }
+
                     if (apiUsers != null)
                     {
                         tmpUsers.AddRange(apiUsers);
@@ -793,9 +816,7 @@ namespace ChatClientViewer
                         foreach (var tu in tmpUsers)
                         {
                             if (check.Any(c => c.ID == tu.ID))
-                            {
                                 continue;
-                            }
 
                             check.Add(tu);
                         }
@@ -809,11 +830,10 @@ namespace ChatClientViewer
                             foreach (var tu in cUsers)
                             {
                                 if (cUsercheck.Any(c => c.ID == tu.ID))
-                                {
                                     continue;
-                                }
 
-                                cUsercheck.Add(tu);
+                                lock (LockObject)
+                                    cUsercheck.Add(tu);
                             }
                             cUsers = cUsercheck;
                         }
@@ -833,11 +853,24 @@ namespace ChatClientViewer
             if (InUsersQueue == null || InUsersQueue.Count <= 0)
                 return;
 
-            var inUsers = InUsersQueue.Dequeue();
+            List<UserModel> inUsersTemp = new List<UserModel>();
+            List<UserModel> inUsers = new List<UserModel>();
+
+            lock (LockObject)
+                inUsersTemp = InUsersQueue.Dequeue();
 
             string bjHtml = string.Empty;
             string kingHtml = string.Empty;
             string bigFanHtml = string.Empty;
+
+            for (int Idx = 0; Idx < inUsersTemp.Count; Idx++)
+            {
+                var user = inUsersTemp[Idx];
+                if (inUsers.Any(i => i.ID == user.ID) || inUsers.Any(i => i.Nic == user.Nic))
+                    continue;
+
+                inUsers.Add(user);
+            }
 
             // 입장 사용자 추가 동작
             foreach (var user in inUsers)
@@ -997,7 +1030,18 @@ namespace ChatClientViewer
 
             if (ChkDisplayInOut.Checked && InChatUsersQueue != null && InChatUsersQueue.Count > 0)
             {
-                var inUsers = InChatUsersQueue.Dequeue();
+                var inUsers = new List<UserModel>();
+                var inUsersTmp = InChatUsersQueue.Dequeue();
+
+                for (int Idx = 0; Idx < inUsersTmp.Count; Idx++)
+                {
+                    var user = inUsersTmp[Idx];
+                    if (inUsers.Any(i => i.ID == user.ID) || inUsers.Any(i => i.Nic == user.Nic))
+                        continue;
+
+                    inUsers.Add(user);
+                }
+
                 foreach (var inUser in inUsers)
                 {
                     html += string.Format(HtmlFormat.ChatHtmlInUser, inUser.ID, inUser.Nic);
@@ -1016,7 +1060,6 @@ namespace ChatClientViewer
             //}
 
             // 채팅 추가
-            //foreach (var chat in tmpnChats)
             foreach (var chat in check)
             {
                 html += chat.Html;
