@@ -58,7 +58,10 @@ namespace AvjRestWebApi.DataCache
 
         public void RefreshRankBjModels()
         {
-            Refresh(KeyOfGetRankBjModels);
+            if (!Refresh(KeyOfGetRankBjModels))
+            {
+                var ttt = GetRankBjModels;
+            }
         }
 
         /// <summary>
