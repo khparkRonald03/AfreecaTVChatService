@@ -308,12 +308,10 @@ namespace AvjRestWebApi.Controllers
             if (text.Text == "rfsStart")
             {
                 bizAbjLog.SetAbjLog($"Refresh 시작");
-                BjDicModelsCache.Instance.RefreshUserDicModels();
-                UserDicModelsCache.Instance.RefreshUserDicModels();
-                //var bjDicModels = BjDicModelsCache.Instance.GetBjDicModels;
-                //var userDicModels = UserDicModelsCache.Instance.GetUserDicModels;
-                var rankBjModels = RankBjDataCache.Instance.GetRankBjModels;
-                var rankUserModels = RankUserModelDataCache.Instance.GetRankUserModels;
+                //BjDicModelsCache.Instance.RefreshUserDicModels();
+                //UserDicModelsCache.Instance.RefreshUserDicModels();
+                RankBjDataCache.Instance.RefreshRankBjModels();
+                RankUserModelDataCache.Instance.RefreshRankUserModels();
                 
                 bizAbjLog.SetAbjLog($"Refresh 종료");
                 bizAbjLog.SetAbjLog($"BjDicModelsCache : {BjDicModelsCache.Instance.IsCache().ToString()}");
