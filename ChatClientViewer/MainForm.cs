@@ -795,10 +795,7 @@ namespace ChatClientViewer
                             for (int Idx = 0; Idx < BeforeUserModels.Count; Idx++)
                             {
                                 if (BeforeUserModels[Idx].ID != apiUsers[Idx].ID)
-                                {
-                                    BeforeUserModels = apiUsers;
                                     break;
-                                }
 
                                 if (Idx == BeforeUserModels.Count -1)
                                     isEquals = true;
@@ -806,6 +803,18 @@ namespace ChatClientViewer
 
                             if (isEquals)
                                 continue;
+
+                            var tmpUserModels = new List<UserModel>();
+                            foreach (var tmp in apiUsers)
+                            {
+                                if (BeforeUserModels.Any(b => b.ID == tmp.ID))
+                                    continue;
+
+                                tmpUserModels.Add(tmp);
+                            }
+
+                            apiUsers = tmpUserModels;
+                            BeforeUserModels = apiUsers;
                         }
                     }
 
