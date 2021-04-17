@@ -13,32 +13,6 @@ namespace RankCollectorFront
     {
         static void Main(string[] args)
         {
-            var jsonModel = new JsonModel()
-            {
-                Text = "rfsStart"
-            };
-            var webApiCaller = new WebApiCaller();
-            var test = webApiCaller.RefreshAsync(jsonModel).ConfigureAwait(true);
-            Console.WriteLine("end");
-            while(true)
-            {
-                Thread.Sleep(100000);
-            }
-            return;
-            // test
-            //var bjPagePaser = new BjPagePaser();
-            //RankBjModel test = new RankBjModel()
-            //{
-            //    BjID = "lolbjmatch"
-            //};
-            //bjPagePaser.GetBjInfo(test);
-            //return;
-            //test
-            GoRankCollector(20);
-
-            //Thread.Sleep(5000 * 60 * 60 * 60);
-            return;
-
             var autoEvent = new AutoResetEvent(false);
 
             var GoRankTimer = new Timer(

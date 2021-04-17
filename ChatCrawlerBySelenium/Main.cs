@@ -69,7 +69,7 @@ namespace ChatCrawlerBySelenium
 
         private void Open()
         {
-            ChromeDriver = new Controller(false);
+            ChromeDriver = new Controller();
 
             var startResult = ChromeDriver.Start();
             if (!startResult.ResultValue)
